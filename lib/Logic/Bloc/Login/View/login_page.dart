@@ -44,20 +44,9 @@ class LoginPage extends StatelessWidget {
                 const Text(
                     'This is the demo text. Add a relevant text field here.'),
                 const ColumnSpacer(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      onPressed: FirebaseAuthService().signInWithGoogle,
-                      icon: Image.asset('Assets/google.png'),
-                    ),
-                    const RowSpacer(width: 25),
-                    IconButton(
-                      onPressed: () {},
-                      icon: Image.asset('Assets/fb.png'),
-                    ),
-                  ],
-                ),
+                ElevatedButton(
+                    onPressed: FirebaseAuthService().signInWithGoogle,
+                    child: const Text('Sign Up With Google')),
                 const ColumnSpacer(height: 10),
                 Container(
                   height: 5,

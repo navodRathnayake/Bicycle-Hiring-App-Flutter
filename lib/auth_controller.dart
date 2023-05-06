@@ -1,9 +1,11 @@
 library auth_controller;
 
+import 'package:final_project/Logic/Bloc/Login/View/Welcome%20Pages/initial_page_1.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'Logic/Bloc/Home/View/home_page.dart';
+import 'Logic/Bloc/Login/View/Welcome Pages/initial_page_2.dart';
 import 'Logic/Bloc/Login/View/login_page.dart';
 
 class AuthController extends StatelessWidget {
@@ -17,11 +19,11 @@ class AuthController extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return const HomePage();
+            return const InitialPage1(); //HomePage();
           } else {
-            return LoginPage(
-              themeData: themeData,
-            );
+            return const InitialPage1(); //LoginPage(
+            //themeData: themeData,
+            //);
           }
         },
       ),
