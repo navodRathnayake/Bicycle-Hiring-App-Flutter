@@ -1,10 +1,10 @@
-library initial_page_2;
+library initial_page;
 
 import 'package:final_project/Const/Widget/column_spacer.dart';
 import 'package:flutter/material.dart';
 
-class InitialPage2 extends StatelessWidget {
-  const InitialPage2({super.key});
+class InitialPage extends StatelessWidget {
+  const InitialPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,28 +15,18 @@ class InitialPage2 extends StatelessWidget {
           Container(
             decoration: const BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage('Assets/welcome page 2 background.jpg'))),
+                    image: AssetImage('Assets/welcome page 1 background.jpg'))),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+            padding:
+                const EdgeInsets.only(top: 30, bottom: 1, left: 20, right: 20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    GestureDetector(
-                        onTap: () {},
-                        child: IconButton(
-                          icon: Image.asset('Assets/icons/back.png'),
-                          onPressed: () {},
-                        )),
-                    GestureDetector(
-                        onTap: () {},
-                        child: const Text(
-                          'Skip',
-                          style: TextStyle(color: Colors.white),
-                        )),
+                    GestureDetector(onTap: () {}, child: const Text('Skip')),
                   ],
                 ),
                 Column(
@@ -55,15 +45,23 @@ class InitialPage2 extends StatelessWidget {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text('1/3'),
-                            const ColumnSpacer(height: 5),
-                            CircleAvatar(
-                              radius: 40,
-                              backgroundColor: Colors.amber,
-                              child: IconButton(
-                                  onPressed: () {},
-                                  icon: Image.asset('Assets/icons/swip.png')),
+                            Text(
+                              'swipe',
+                              style: TextStyle(color: Colors.grey.shade500),
                             ),
+                            const ColumnSpacer(height: 5),
+                            IconButton(
+                                onPressed: () {},
+                                icon: Image.asset('Assets/icons/swip.png')),
+                            const ColumnSpacer(height: 10),
+                            Container(
+                              height: 5,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(10)),
+                            ),
+                            const ColumnSpacer(height: 10),
                           ],
                         ),
                       ],
