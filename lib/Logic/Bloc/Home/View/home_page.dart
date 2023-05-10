@@ -17,16 +17,16 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          const Padding(
-            padding: EdgeInsets.only(right: 10),
-            child: Points(),
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Points(themeData: themeData),
           ),
           const Padding(
             padding: EdgeInsets.only(right: 5.0),
             child: Avatar(),
           ),
           Padding(
-              padding: const EdgeInsets.only(right: 10.0),
+              padding: const EdgeInsets.only(right: 0.0),
               child: PopUpSettingsMenu(
                   icon: CustomSettingsIcon(
                 themeData: themeData,

@@ -42,7 +42,6 @@ class AppView extends StatelessWidget {
           theme: ThemeData(
             iconButtonTheme: IconButtonThemeData(
                 style: ButtonStyle(iconSize: iconSize, iconColor: iconColor)),
-            iconTheme: const IconThemeData(size: 64),
             useMaterial3: true,
             highlightColor: Colors.transparent,
             splashColor: Colors.transparent,
