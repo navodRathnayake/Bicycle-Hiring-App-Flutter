@@ -43,6 +43,7 @@ dependencies:
   google_sign_in: ^6.1.0
   connectivity_plus: ^3.0.6
   liquid_swipe: ^3.1.0
+  cached_network_image: ^3.2.3
 
 dev_dependencies:
   flutter_test:
@@ -68,11 +69,13 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - Assets/welcome page 1 background.jpg
-    - Assets/welcome page 2 background.jpg
-    - Assets/icons/swip.png
-    - Assets/icons/back.png
-    - Assets/icons/google.png
+    # - Assets/welcome page 1 background.jpg
+    # - Assets/welcome page 2 background.jpg
+    # - Assets/icons/swip.png
+    # - Assets/icons/back.png
+    # - Assets/icons/google.png
+    - Assets/
+    - Assets/icons/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

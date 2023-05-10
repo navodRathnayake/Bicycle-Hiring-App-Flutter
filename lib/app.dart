@@ -7,6 +7,8 @@ import 'package:final_project/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'Constraints/constraints.dart';
+
 class App extends StatelessWidget {
   const App({super.key});
 
@@ -25,6 +27,7 @@ class App extends StatelessWidget {
 
 class AppView extends StatelessWidget {
   final _navigatorKey = GlobalKey<NavigatorState>();
+
   NavigatorState get _navigator => _navigatorKey.currentState!;
   AppView({super.key});
 
@@ -37,6 +40,9 @@ class AppView extends StatelessWidget {
           navigatorKey: _navigatorKey,
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
+            iconButtonTheme: IconButtonThemeData(
+                style: ButtonStyle(iconSize: iconSize, iconColor: iconColor)),
+            iconTheme: const IconThemeData(size: 64),
             useMaterial3: true,
             highlightColor: Colors.transparent,
             splashColor: Colors.transparent,
