@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'Logic/Bloc/Home/View/home_page.dart';
 import 'Logic/Bloc/Login/View/Slide Pages/login_page.dart';
+import 'bottom_navigation_bar_controller.dart';
 
 class AuthController extends StatelessWidget {
   const AuthController({super.key});
@@ -20,9 +21,7 @@ class AuthController extends StatelessWidget {
           if (snapshot.hasData) {
             return HomePage(themeData: themeData);
           } else {
-            return HomePage(
-              themeData: themeData,
-            ); //PageSlider(themeData: themeData);
+            return const BottomNavigationBarController(); //PageSlider(themeData: themeData);
           }
         },
       ),
