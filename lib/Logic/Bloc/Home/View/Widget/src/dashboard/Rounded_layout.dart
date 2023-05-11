@@ -34,10 +34,10 @@ class RoundedLayout extends StatelessWidget {
               ],
             ),
             RowSpacer(width: spacerWidth),
-            Text('26°C'),
+            const Text('26°C'),
             RowSpacer(width: spacerWidth),
-            Icon(Icons.air),
-            Text('44Km/h')
+            const Icon(Icons.air),
+            const Text('44Km/h')
           ],
         ),
       ),
