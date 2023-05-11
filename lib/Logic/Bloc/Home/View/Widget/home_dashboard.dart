@@ -1,6 +1,7 @@
 library home_dashboard;
 
 import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dashboard/base_layout.dart';
+import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dashboard/view_availability.dart';
 import 'package:flutter/material.dart';
 
 import 'src/dashboard/Rounded_layout.dart';
@@ -54,6 +55,11 @@ class HomeDashboard extends StatelessWidget {
             top: 290,
             left: 40,
             child: InfoLayout(),
+          ),
+          const Positioned(
+            top: 290,
+            left: 180,
+            child: ViewAvailability(),
           ),
         ],
       ),
