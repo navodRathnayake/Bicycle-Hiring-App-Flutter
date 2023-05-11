@@ -2,6 +2,7 @@ library home_page;
 
 import 'package:final_project/Const/Widget/column_spacer.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/avatar.dart';
+import 'package:final_project/Logic/Bloc/Home/View/Widget/breaker.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/points.dart';
 import 'package:flutter/material.dart';
 import 'Widget/custom_settings_icon.dart';
@@ -39,6 +40,7 @@ class HomePage extends StatelessWidget {
               child: Column(
                 children: [
                   HomeDashboard(themeData: themeData),
+                  const Center(child: Breaker())
                 ],
               ))),
     );
