@@ -46,20 +46,26 @@ class RecentActivityList extends StatelessWidget {
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: CircleAvatar(
-                              radius: 25,
-                              backgroundColor: Colors.green,
-                              child: CircleAvatar(
-                                radius: 20,
-                                backgroundColor: Colors.white,
-                                child: CircleAvatar(
-                                  radius: 15,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CircleAvatar(
+                                  radius: 25,
                                   backgroundColor: Colors.green,
-                                  child: Text('A',
-                                      style: GoogleFonts.ubuntu(
-                                          fontWeight: FontWeight.bold)),
+                                  child: CircleAvatar(
+                                    radius: 20,
+                                    backgroundColor: Colors.white,
+                                    child: CircleAvatar(
+                                      radius: 15,
+                                      backgroundColor: Colors.green,
+                                      child: Text('A',
+                                          style: GoogleFonts.ubuntu(
+                                              fontWeight: FontWeight.bold)),
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                const Text('14 Km')
+                              ],
                             ),
                           ),
                           Column(

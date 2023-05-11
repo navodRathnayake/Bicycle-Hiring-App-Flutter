@@ -1,5 +1,6 @@
 library custom_tab_bar;
 
+import 'package:final_project/Logic/Bloc/Home/View/Widget/location_tile.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/recent_activity_list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -130,12 +131,16 @@ class _CustomTabBar extends State<CustomTabBar> {
 
 List<Widget> tabContentList = [
   ListView.builder(
-    physics: ScrollPhysics(),
+    physics: const ScrollPhysics(),
     itemCount: 3,
-    itemBuilder: (context, index) => RecentActivityList(),
+    itemBuilder: (context, index) => const RecentActivityList(),
   ),
   //TabContent1(),
-  TabContent2(),
+  ListView.builder(
+    physics: const ScrollPhysics(),
+    itemCount: 3,
+    itemBuilder: (context, index) => const LocationTile(),
+  ),
   TabContent3()
 ];
 
