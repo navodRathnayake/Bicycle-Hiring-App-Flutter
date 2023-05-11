@@ -30,7 +30,9 @@ class BottomUI extends StatelessWidget {
             ),
             const Divider(),
             const ColumnSpacer(height: 5),
-            CustomTabBar()
+            CustomTabBar(
+              themeData: themeData,
+            )
           ],
         ),
       ),

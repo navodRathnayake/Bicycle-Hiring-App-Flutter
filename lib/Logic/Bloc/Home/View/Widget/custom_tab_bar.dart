@@ -1,12 +1,14 @@
 library custom_tab_bar;
 
 import 'package:final_project/Logic/Bloc/Home/View/Widget/location_tile.dart';
+import 'package:final_project/Logic/Bloc/Home/View/Widget/news_list_tile.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/recent_activity_list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomTabBar extends StatefulWidget {
-  const CustomTabBar({super.key});
+  final ThemeData themeData;
+  const CustomTabBar({super.key, required this.themeData});
 
   @override
   State<CustomTabBar> createState() => _CustomTabBar();
@@ -53,6 +55,25 @@ class _CustomTabBar extends State<CustomTabBar> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    List<Widget> tabContentList = [
+      ListView.builder(
+        physics: const ScrollPhysics(),
+        itemCount: 3,
+        itemBuilder: (context, index) => const RecentActivityList(),
+      ),
+      //TabContent1(),
+      ListView.builder(
+        physics: const ScrollPhysics(),
+        itemCount: 3,
+        itemBuilder: (context, index) => const LocationTile(),
+      ),
+      ListView.builder(
+        physics: const ScrollPhysics(),
+        itemCount: 3,
+        itemBuilder: (context, index) =>
+            NewsTagTile(themeData: widget.themeData),
+      ),
+    ];
     return Expanded(
       child: Column(
         children: [
@@ -128,21 +149,6 @@ class _CustomTabBar extends State<CustomTabBar> {
     );
   }
 }
-
-List<Widget> tabContentList = [
-  ListView.builder(
-    physics: const ScrollPhysics(),
-    itemCount: 3,
-    itemBuilder: (context, index) => const RecentActivityList(),
-  ),
-  //TabContent1(),
-  ListView.builder(
-    physics: const ScrollPhysics(),
-    itemCount: 3,
-    itemBuilder: (context, index) => const LocationTile(),
-  ),
-  TabContent3()
-];
 
 class TabContent1 extends StatelessWidget {
   const TabContent1({super.key});
