@@ -56,10 +56,10 @@ class HomeDashboard extends StatelessWidget {
             left: 40,
             child: InfoLayout(),
           ),
-          const Positioned(
+          Positioned(
             top: 290,
             left: 180,
-            child: ViewAvailability(),
+            child: ViewAvailability(themeData: themeData),
           ),
         ],
       ),

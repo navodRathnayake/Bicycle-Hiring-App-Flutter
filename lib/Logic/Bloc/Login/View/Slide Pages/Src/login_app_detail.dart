@@ -34,8 +34,10 @@ class LoginAppDetail extends StatelessWidget {
                 ],
               ),
               const ColumnSpacer(height: 20),
-              Text('Let\'s Sign You in.',
-                  style: themeData.textTheme.displayMedium),
+              Text(
+                'Let\'s Sign You in.',
+                style: themeData.textTheme.displayMedium,
+              ),
               const ColumnSpacer(height: 20),
               Text('Welcome back.', style: themeData.textTheme.displaySmall),
               Text('You\'ve been missed!',
