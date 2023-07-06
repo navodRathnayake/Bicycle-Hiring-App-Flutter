@@ -16,12 +16,11 @@ class AuthController extends StatelessWidget {
     return Scaffold(
       body: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
-        
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return const BottomNavigationBarController();
           } else {
-            return const BottomNavigationBarController(); //PageSlider(themeData: themeData);
+            return PageSlider(themeData: themeData);
           }
         },
       ),

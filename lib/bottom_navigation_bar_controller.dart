@@ -1,6 +1,7 @@
 library bottom_navigation_bar_controller;
 
 import 'package:final_project/Logic/Bloc/Home/View/home_page.dart';
+import 'package:final_project/Logic/Bloc/Profile/View/user_profile.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavigationBarController extends StatefulWidget {
@@ -20,7 +21,7 @@ class _BottomNavigationBarControllerState
     return Scaffold(
       body: [
         HomePage(themeData: themeData),
-        Text('1'),
+        UserProfile(themeData: themeData),
         Text('2'),
         Text('3')
       ][currentIndex],
