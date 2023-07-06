@@ -46,6 +46,7 @@ dependencies:
   cached_network_image: ^3.2.3
   syncfusion_flutter_charts: ^21.2.4
   google_fonts: ^4.0.4
+  fl_chart: ^0.62.0
 
 dev_dependencies:
   flutter_test:
