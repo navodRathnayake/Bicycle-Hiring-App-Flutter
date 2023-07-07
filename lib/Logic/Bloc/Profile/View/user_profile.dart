@@ -1,7 +1,7 @@
 library user_profile;
 
 import 'package:final_project/Const/Widget/column_spacer.dart';
-import 'package:final_project/Logic/Bloc/Profile/View/widget/line_chart.dart';
+import 'package:final_project/Logic/Bloc/Profile/View/widget/transaction_dialog_box.dart';
 import 'package:flutter/material.dart';
 
 import 'widget/custom_list_tile.dart';
@@ -34,26 +34,37 @@ class UserProfile extends StatelessWidget {
                 child: Column(
                   children: [
                     CustomListTile(
-                        themeData: themeData,
-                        url: 'Assets/icons/transaction.png',
-                        title: 'View Transactions'),
+                      themeData: themeData,
+                      url: 'Assets/icons/transaction.png',
+                      title: 'View Transactions',
+                      onTap: () => transactionDialogBox(
+                          context: context, themeData: themeData),
+                    ),
                     CustomListTile(
-                        themeData: themeData,
-                        url: 'Assets/icons/activities.png',
-                        title: 'View Recent Activities'),
+                      themeData: themeData,
+                      url: 'Assets/icons/activities.png',
+                      title: 'View Recent Activities',
+                      onTap: () {},
+                    ),
                     CustomListTile(
-                        themeData: themeData,
-                        url: 'Assets/icons/billing_details.png',
-                        title: 'Billing Details'),
+                      themeData: themeData,
+                      url: 'Assets/icons/billing_details.png',
+                      title: 'Billing Details',
+                      onTap: () {},
+                    ),
                     const Divider(),
                     CustomListTile(
-                        themeData: themeData,
-                        url: 'Assets/icons/information.png',
-                        title: 'Information'),
+                      themeData: themeData,
+                      url: 'Assets/icons/information.png',
+                      title: 'Information',
+                      onTap: () {},
+                    ),
                     CustomListTile(
-                        themeData: themeData,
-                        url: 'Assets/icons/carbon_foot_print.png',
-                        title: 'Caarbon Foot Print')
+                      themeData: themeData,
+                      url: 'Assets/icons/carbon_foot_print.png',
+                      title: 'Caarbon Foot Print',
+                      onTap: () {},
+                    )
                   ],
                 ),
               ),

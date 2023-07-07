@@ -6,11 +6,13 @@ class CustomListTile extends StatelessWidget {
   final ThemeData themeData;
   final String url;
   final String title;
-  const CustomListTile(
+  void Function()? onTap;
+  CustomListTile(
       {super.key,
       required this.themeData,
       required this.url,
-      required this.title});
+      required this.title,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,7 @@ class CustomListTile extends StatelessWidget {
         'Assets/icons/forward.png',
         scale: 2,
       ),
-      onTap: () {},
+      onTap: onTap,
     );
   }
 }
