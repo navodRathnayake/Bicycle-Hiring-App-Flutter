@@ -1,7 +1,7 @@
 library user_profile;
 
 import 'package:final_project/Const/Widget/column_spacer.dart';
-import 'package:final_project/Logic/Bloc/Profile/View/widget/transaction_dialog_box.dart';
+import 'package:final_project/Logic/Bloc/Profile/View/widget/dialogBox/transaction_dialog_box.dart';
 import 'package:flutter/material.dart';
 
 import 'widget/custom_list_tile.dart';

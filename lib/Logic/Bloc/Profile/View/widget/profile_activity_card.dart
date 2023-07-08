@@ -2,11 +2,9 @@ library profile_activity_card;
 
 import 'package:final_project/Const/Widget/column_spacer.dart';
 import 'package:final_project/Const/Widget/row_spacer.dart';
-import 'package:final_project/Logic/Bloc/Profile/View/widget/profile_line_chart.dart';
-import 'package:final_project/Logic/Bloc/Profile/View/widget/radial_chart.dart';
+import 'package:final_project/Logic/Bloc/Profile/View/widget/charts/profile_line_chart.dart';
+import 'package:final_project/Logic/Bloc/Profile/View/widget/charts/radial_chart.dart';
 import 'package:flutter/material.dart';
-
-import 'line_chart.dart';
 
 class ProfileActivityCard extends StatelessWidget {
   final ThemeData themeData;
