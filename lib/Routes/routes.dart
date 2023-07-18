@@ -1,5 +1,6 @@
 library routes;
 
+import 'package:final_project/Logic/Bloc/Recent%20Activity/view/billing_details_page.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/view/recent_activity_view.dart';
 import 'package:final_project/bottom_navigation_bar_controller.dart';
 import 'package:flutter/material.dart';
@@ -63,6 +64,11 @@ class Routes {
             ['Sat', 18, false, null],
           ]),
         );
+
+      case '/billing':
+        return MaterialPageRoute(
+            builder: (context) =>
+                BillingDetailsPage(themeData: Theme.of(context)));
 
       default:
         return MaterialPageRoute(

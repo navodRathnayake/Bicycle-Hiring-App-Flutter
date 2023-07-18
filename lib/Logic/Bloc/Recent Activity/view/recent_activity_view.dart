@@ -22,7 +22,10 @@ class RecentActivityView extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(
                   left: 10, right: 0, top: 25, bottom: 10),
-              child: RecentActivityAppBar(themeData: themeData),
+              child: RecentActivityAppBar(
+                title: 'Recent Activities',
+                themeData: themeData,
+              ),
             ),
             const ColumnSpacer(
               height: 10,

@@ -52,7 +52,9 @@ class UserProfile extends StatelessWidget {
                       themeData: themeData,
                       url: 'Assets/icons/billing_details.png',
                       title: 'Billing Details',
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).pushNamed('/billing');
+                      },
                     ),
                     const Divider(),
                     CustomListTile(
