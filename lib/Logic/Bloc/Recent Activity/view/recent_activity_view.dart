@@ -77,12 +77,18 @@ class RecentActivityView extends StatelessWidget {
                           itemBuilder: (sddsd, nested) => filter[index][3] ==
                                   null
                               ? Expanded(child: Container())
-                              : RecentActivityTile(
-                                  startTime: filter[index][3][nested][2],
-                                  endTime: filter[index][3][nested][3],
-                                  startLocation: filter[index][3][nested][0],
-                                  endLocation: filter[index][3][nested][1],
-                                  themeData: themeData,
+                              : GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context)
+                                        .pushNamed('/recentActivityRoute');
+                                  },
+                                  child: RecentActivityTile(
+                                    startTime: filter[index][3][nested][2],
+                                    endTime: filter[index][3][nested][3],
+                                    startLocation: filter[index][3][nested][0],
+                                    endLocation: filter[index][3][nested][1],
+                                    themeData: themeData,
+                                  ),
                                 ),
                         ),
                       )
