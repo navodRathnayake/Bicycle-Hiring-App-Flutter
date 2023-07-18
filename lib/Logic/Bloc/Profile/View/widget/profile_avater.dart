@@ -58,12 +58,13 @@ class ProfileAvater extends StatelessWidget {
           ],
         ),
         PopUpSettingsMenu(
-            icon: Container(
-          width: 40,
-          child: CustomSettingsIcon(
-            themeData: themeData,
+          icon: Container(
+            width: 40,
+            child: CustomSettingsIcon(
+              themeData: themeData,
+            ),
           ),
-        ))
+        ),
       ],
     );
   }
