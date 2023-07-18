@@ -44,7 +44,9 @@ class UserProfile extends StatelessWidget {
                       themeData: themeData,
                       url: 'Assets/icons/activities.png',
                       title: 'View Recent Activities',
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).pushNamed('/recentActivity');
+                      },
                     ),
                     CustomListTile(
                       themeData: themeData,
