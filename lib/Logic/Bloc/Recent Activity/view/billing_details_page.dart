@@ -15,6 +15,7 @@ class BillingDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Column(
         children: [
           Padding(
@@ -27,7 +28,7 @@ class BillingDetailsPage extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 0),
-            child: Container(
+            child: SizedBox(
               width: double.maxFinite,
               height: 500,
               child: Swiper(

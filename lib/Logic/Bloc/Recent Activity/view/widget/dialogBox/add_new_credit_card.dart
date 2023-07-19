@@ -1,6 +1,7 @@
 library availability_dialog_box;
 
 import 'package:final_project/Const/Widget/column_spacer.dart';
+import 'package:final_project/Const/Widget/row_spacer.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dialogBox/dialogBox_ok_button.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dialogBox/dialogbox_close_button.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dialogBox/dialogbox_secondary_button.dart';
@@ -17,37 +18,130 @@ Future<void> addNewCreditCardDialogBox(
           child: ListBody(
             children: <Widget>[
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Add New Credit Card',
+                  Text('Add A Credit Card',
                       style: themeData.textTheme.headlineSmall),
                   DialogBoxCloseButton(themeData: themeData),
-                  const ColumnSpacer(height: 10),
                 ],
               ),
               const Divider(),
-              Container(
-                width: 100,
-                child: TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: '1234-5678-9101-2345',
-                    labelText: 'Card Number',
-                  ),
-                ),
-              ),
+              FormView(themeData: themeData)
             ],
           ),
         ),
         actions: <Widget>[
-          DialogBoxSecondaryButton(
-              themeData: themeData,
-              label: 'No,later',
-              onTap: Navigator.of(context).pop),
-          DialogBoxOkButton(
-              label: 'Ok, Got it!', onTap: Navigator.of(context).pop),
+          // DialogBoxSecondaryButton(
+          //     themeData: themeData,
+          //     label: 'No,later',
+          //     onTap: Navigator.of(context).pop),
+          DialogBoxOkButton(label: 'Submit', onTap: Navigator.of(context).pop),
         ],
       );
     },
   );
+}
+
+class FormView extends StatelessWidget {
+  final ThemeData themeData;
+  const FormView({super.key, required this.themeData});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const ColumnSpacer(height: 20),
+        const CustomInputField(
+          labelText: 'Card Number',
+          hintText: '1234-5678-9012-3456',
+          imgUrl: 'Assets/icons/payment_type.png',
+          keyboardType: TextInputType.number,
+          maxLength: 16,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: const [
+            SizedBox(
+              width: 130,
+              child: CustomInputField(
+                labelText: 'Expiry Date',
+                hintText: 'MM / YY',
+                imgUrl: 'Assets/icons/payment_type.png',
+                keyboardType: TextInputType.number,
+                maxLength: 4,
+              ),
+            ),
+            RowSpacer(width: 10),
+            SizedBox(
+              width: 130,
+              child: CustomInputField(
+                labelText: 'CVC/CVV',
+                hintText: '123',
+                imgUrl: 'Assets/icons/payment_type.png',
+                keyboardType: TextInputType.number,
+                maxLength: 3,
+                obsecureText: true,
+              ),
+            ),
+          ],
+        ),
+        const ColumnSpacer(height: 10),
+        const CustomInputField(
+          labelText: 'Card Holder',
+          hintText: 'Enter Card Holder\'s Full Name',
+          imgUrl: 'Assets/icons/card_payment.png',
+          keyboardType: TextInputType.name,
+          maxLength: 50,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Checkbox(value: true, onChanged: (isChecked) {}),
+            const RowSpacer(width: 10),
+            const Text('Save the payment method'),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class CustomInputField extends StatelessWidget {
+  final String labelText;
+  final String hintText;
+  final String imgUrl;
+  final TextInputType keyboardType;
+  final int maxLength;
+  final bool obsecureText;
+  const CustomInputField({
+    super.key,
+    required this.labelText,
+    required this.hintText,
+    required this.imgUrl,
+    required this.keyboardType,
+    required this.maxLength,
+    this.obsecureText = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      decoration: InputDecoration(
+        labelText: labelText,
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        hintText: hintText,
+        suffixIcon: Image.asset(
+          imgUrl,
+          scale: 2,
+        ),
+      ),
+      keyboardType: keyboardType,
+      maxLength: maxLength,
+      cursorWidth: 5,
+      obscureText: obsecureText,
+    );
+  }
 }
