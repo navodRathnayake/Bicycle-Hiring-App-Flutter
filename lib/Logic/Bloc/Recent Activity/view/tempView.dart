@@ -49,6 +49,13 @@ class TempView extends StatelessWidget {
             ],
           ),
           const ColumnSpacer(height: 10),
+          CustomInputField(
+            labelText: 'Card Holder',
+            hintText: 'Enter Card Holder\'s Full Name',
+            imgUrl: 'Assets/icons/card_payment.png',
+            keyboardType: TextInputType.name,
+            maxLength: 50,
+          )
         ],
       ),
     );
