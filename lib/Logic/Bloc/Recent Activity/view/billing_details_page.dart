@@ -3,6 +3,7 @@ library billing_details_page;
 import 'package:final_project/Const/Widget/column_spacer.dart';
 import 'package:final_project/Logic/Bloc/Profile/View/widget/custom_list_tile.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/view/widget/credit_card.dart';
+import 'package:final_project/Logic/Bloc/Recent%20Activity/view/widget/dialogBox/add_new_credit_card.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/view/widget/recent_activity_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
@@ -67,7 +68,10 @@ class BillingDetailsPage extends StatelessWidget {
                     themeData: themeData,
                     title: 'Add New Credit Card',
                     url: 'Assets/icons/card_payment.png',
-                    onTap: () {},
+                    onTap: () {
+                      addNewCreditCardDialogBox(
+                          context: context, themeData: themeData);
+                    },
                   ),
                   const ColumnSpacer(height: 10),
                   CustomListTile(

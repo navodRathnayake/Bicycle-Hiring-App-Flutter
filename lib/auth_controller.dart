@@ -1,6 +1,7 @@
 library auth_controller;
 
 import 'package:final_project/Logic/Bloc/Login/View/page_slider.dart';
+import 'package:final_project/Logic/Bloc/Recent%20Activity/view/tempView.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +17,8 @@ class AuthController extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return const BottomNavigationBarController();
+            return TempView(
+                themeData: themeData); // const BottomNavigationBarController();
           } else {
             return PageSlider(themeData: themeData);
           }
