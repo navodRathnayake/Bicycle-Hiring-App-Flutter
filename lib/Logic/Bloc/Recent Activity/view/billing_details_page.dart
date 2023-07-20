@@ -3,6 +3,7 @@ library billing_details_page;
 import 'package:final_project/Const/Widget/column_spacer.dart';
 import 'package:final_project/Logic/Bloc/Profile/View/widget/custom_list_tile.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/view/widget/credit_card.dart';
+import 'package:final_project/Logic/Bloc/Recent%20Activity/view/widget/dialogBox/add_credits_to_account.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/view/widget/dialogBox/add_new_credit_card.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/view/widget/recent_activity_app_bar.dart';
 import 'package:flutter/material.dart';
@@ -79,7 +80,18 @@ class BillingDetailsPage extends StatelessWidget {
                     themeData: themeData,
                     title: 'Add Creadits to Account',
                     url: 'Assets/icons/deposit.png',
-                    onTap: () {},
+                    onTap: () {
+                      addCreaditToAccount(
+                        context: context,
+                        themeData: themeData,
+                        cardNumbers: [
+                          '2345-5678-XXXX-4327',
+                          '3452-7564-XXXX-0897',
+                          '6543-7564-XXXX-7874',
+                          '4353-7654-XXXX-6475',
+                        ],
+                      );
+                    },
                   ),
                 ],
               ),
