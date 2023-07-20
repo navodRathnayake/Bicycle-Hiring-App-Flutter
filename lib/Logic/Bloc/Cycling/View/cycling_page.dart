@@ -121,7 +121,9 @@ class ScanQRView extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).pushNamed('/bicycleDataView');
+                  },
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.amber,

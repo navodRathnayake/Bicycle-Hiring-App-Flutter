@@ -1,7 +1,5 @@
 library auth_controller;
 
-import 'package:final_project/Logic/Bloc/Cycling/View/steps/bicycle_data_view.dart';
-import 'package:final_project/Logic/Bloc/Login/View/page_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -19,9 +17,7 @@ class AuthController extends StatelessWidget {
           if (snapshot.hasData) {
             return const BottomNavigationBarController();
           } else {
-            return BicycleDataView(
-              themeData: themeData,
-            ); //const BottomNavigationBarController(); //PageSlider(themeData: themeData);
+            return const BottomNavigationBarController(); //PageSlider(themeData: themeData);
           }
         },
       ),
