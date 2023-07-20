@@ -1,5 +1,6 @@
 library bottom_navigation_bar_controller;
 
+import 'package:final_project/Logic/Bloc/Cycling/View/cycling_page.dart';
 import 'package:final_project/Logic/Bloc/Home/View/home_page.dart';
 import 'package:final_project/Logic/Bloc/Profile/View/user_profile.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class _BottomNavigationBarControllerState
       body: [
         HomePage(themeData: themeData),
         UserProfile(themeData: themeData),
-        Text('2'),
+        CyclingPage(themeData: themeData),
         Text('3')
       ][currentIndex],
       bottomNavigationBar: Padding(
