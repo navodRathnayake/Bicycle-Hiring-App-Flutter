@@ -1,11 +1,14 @@
 library routes;
 
 import 'package:final_project/Logic/Bloc/Cycling/View/steps/bicycle_data_view.dart';
+import 'package:final_project/Logic/Bloc/Cycling/View/steps/bicycle_package_view.dart';
+import 'package:final_project/Logic/Bloc/Cycling/bloc/cycling_bloc.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/view/billing_details_page.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/view/recent_activity_route_page.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/view/recent_activity_view.dart';
 import 'package:final_project/bottom_navigation_bar_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Routes {
   static Route onGenerate(RouteSettings routeSettings) {
@@ -81,6 +84,13 @@ class Routes {
         return MaterialPageRoute(
             builder: (context) =>
                 BicycleDataView(themeData: Theme.of(context)));
+
+      case '/bicyclePackageView':
+        return MaterialPageRoute(
+            builder: (context) => BlocProvider(
+                  create: (_) => CyclingBloc(),
+                  child: BicyclePackageView(themeData: Theme.of(context)),
+                ));
 
       default:
         return MaterialPageRoute(

@@ -6,3 +6,8 @@ abstract class CyclingEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class CyclePackagePressEvent extends CyclingEvent {
+  final int index;
+  const CyclePackagePressEvent({required this.index});
+}

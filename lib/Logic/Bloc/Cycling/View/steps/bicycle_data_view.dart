@@ -168,20 +168,25 @@ class BicycleDataView extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const ColumnSpacer(height: 10),
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.green,
-              borderRadius: BorderRadius.circular(25),
-            ),
-            child: Padding(
-              padding:
-                  const EdgeInsets.only(top: 8, right: 15, bottom: 8, left: 16),
-              child: Text('RENT A BICYCLE',
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  )),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed('/bicyclePackageView');
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.green,
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    top: 8, right: 15, bottom: 8, left: 16),
+                child: Text('RENT A BICYCLE',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    )),
+              ),
             ),
           ),
         ],
