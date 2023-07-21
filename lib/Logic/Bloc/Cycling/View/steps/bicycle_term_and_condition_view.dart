@@ -1,15 +1,11 @@
 library bicycle_term_and_condition_view;
 
+import 'package:flutter/material.dart';
 import 'package:final_project/Const/Widget/column_spacer.dart';
 import 'package:final_project/Const/Widget/row_spacer.dart';
 import 'package:final_project/Constraints/constraints.dart';
-import 'package:final_project/Logic/Bloc/Home/View/Widget/avatar.dart';
-import 'package:final_project/Logic/Bloc/Home/View/Widget/custom_settings_icon.dart';
-import 'package:final_project/Logic/Bloc/Home/View/Widget/points.dart';
-import 'package:final_project/Logic/Bloc/Home/View/Widget/popup_settings_menu.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dialogBox/dialogBox_ok_button.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dialogBox/dialogbox_secondary_button.dart';
-import 'package:flutter/material.dart';
 
 class BicycleTermAndConditionView extends StatelessWidget {
   final ThemeData themeData;
@@ -17,44 +13,9 @@ class BicycleTermAndConditionView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        leading: Padding(
-          padding: const EdgeInsets.all(10),
-          child: GestureDetector(
-            onTap: () {
-              Navigator.of(context).pop();
-            },
-            child: Row(
-              children: [
-                Image.asset(
-                  'Assets/icons/back_arrow.png',
-                  scale: 2,
-                  color: themeData.colorScheme.onBackground,
-                ),
-              ],
-            ),
-          ),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: Points(themeData: themeData),
-          ),
-          const Padding(
-            padding: EdgeInsets.only(right: 5.0),
-            child: Avatar(),
-          ),
-          Padding(
-              padding: const EdgeInsets.only(right: 0.0),
-              child: PopUpSettingsMenu(
-                  icon: CustomSettingsIcon(
-                themeData: themeData,
-              ))),
-        ],
-      ),
-      body: Padding(
+    return SizedBox(
+      height: 600,
+      child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,6 +23,7 @@ class BicycleTermAndConditionView extends StatelessWidget {
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const ColumnSpacer(height: 10),
                 Text(

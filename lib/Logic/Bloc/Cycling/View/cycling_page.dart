@@ -1,14 +1,12 @@
 library cycling_page;
 
+import 'package:flutter/material.dart';
 import 'package:final_project/Const/Widget/column_spacer.dart';
 import 'package:final_project/Const/Widget/row_spacer.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/avatar.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/custom_settings_icon.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/points.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/popup_settings_menu.dart';
-import 'package:flutter/material.dart';
-
-// https://dribbble.com/shots/4640269-Bike-Sharing-App-Animation-Renting-and-Data-Dashboard
 
 class CyclingPage extends StatelessWidget {
   final ThemeData themeData;
@@ -122,7 +120,7 @@ class ScanQRView extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pushNamed('/bicycleDataView');
+                    Navigator.of(context).pushNamed('/cyclingStepperPage');
                   },
                   child: Container(
                     decoration: BoxDecoration(

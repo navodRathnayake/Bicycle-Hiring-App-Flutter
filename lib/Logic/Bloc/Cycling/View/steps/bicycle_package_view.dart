@@ -1,13 +1,10 @@
 library bicycle_package_view;
 
+import 'package:final_project/Logic/Bloc/Cycling/bloc/stepper_bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:final_project/Const/Widget/column_spacer.dart';
 import 'package:final_project/Constraints/constraints.dart';
 import 'package:final_project/Logic/Bloc/Cycling/bloc/cycling_bloc.dart';
-import 'package:final_project/Logic/Bloc/Home/View/Widget/avatar.dart';
-import 'package:final_project/Logic/Bloc/Home/View/Widget/custom_settings_icon.dart';
-import 'package:final_project/Logic/Bloc/Home/View/Widget/points.dart';
-import 'package:final_project/Logic/Bloc/Home/View/Widget/popup_settings_menu.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BicyclePackageView extends StatelessWidget {
@@ -16,44 +13,9 @@ class BicyclePackageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        leading: Padding(
-          padding: const EdgeInsets.all(10),
-          child: GestureDetector(
-            onTap: () {
-              Navigator.of(context).pop();
-            },
-            child: Row(
-              children: [
-                Image.asset(
-                  'Assets/icons/back_arrow.png',
-                  scale: 2,
-                  color: themeData.colorScheme.onBackground,
-                ),
-              ],
-            ),
-          ),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: Points(themeData: themeData),
-          ),
-          const Padding(
-            padding: EdgeInsets.only(right: 5.0),
-            child: Avatar(),
-          ),
-          Padding(
-              padding: const EdgeInsets.only(right: 0.0),
-              child: PopUpSettingsMenu(
-                  icon: CustomSettingsIcon(
-                themeData: themeData,
-              ))),
-        ],
-      ),
-      body: Stack(
+    return BlocProvider(
+      create: (context) => CyclingBloc(),
+      child: Stack(
         children: [
           const Column(
             children: [
@@ -84,7 +46,6 @@ class PackageBody extends StatelessWidget {
         children: [
           Column(
             children: [
-              const ColumnSpacer(height: 10),
               Text('Sellect Your Package',
                   style: TextStyle(
                     color: themeData.colorScheme.onBackground,
@@ -121,7 +82,8 @@ class PackageBody extends StatelessWidget {
               Center(
                   child: GestureDetector(
                 onTap: () {
-                  Navigator.of(context).pushNamed('/bicycleTermAndCondition');
+                  BlocProvider.of<StepperBloc>(context)
+                      .add(const CycleStepperChanged(currentStep: 2));
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -168,7 +130,7 @@ class PackageSelection extends StatelessWidget {
     return BlocBuilder<CyclingBloc, CyclingState>(
       builder: (context, state) {
         return Padding(
-          padding: const EdgeInsets.all(15.0),
+          padding: const EdgeInsets.all(5.0),
           child: GestureDetector(
             onTap: () {
               BlocProvider.of<CyclingBloc>(context)
@@ -176,6 +138,9 @@ class PackageSelection extends StatelessWidget {
             },
             child: Container(
               decoration: BoxDecoration(
+                border: state.currentPackage == packages[index][3]
+                    ? Border.all(color: Colors.blue.shade200, width: 5)
+                    : null,
                 color: themeData.colorScheme.secondaryContainer,
                 borderRadius: BorderRadius.circular(5),
               ),

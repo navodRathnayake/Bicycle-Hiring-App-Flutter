@@ -3,9 +3,11 @@ part of 'cycling_bloc.dart';
 enum Packages { minutes30, minutes60, minutes120, day1 }
 
 class CyclingState extends Equatable {
+  final int currentStep;
   final Packages currentPackage;
 
-  const CyclingState._({this.currentPackage = Packages.minutes120});
+  const CyclingState._(
+      {this.currentPackage = Packages.minutes120, this.currentStep = 0});
   const CyclingState.initial() : this._();
   const CyclingState.minutes30() : this._(currentPackage: Packages.minutes30);
   const CyclingState.minutes60() : this._(currentPackage: Packages.minutes60);
