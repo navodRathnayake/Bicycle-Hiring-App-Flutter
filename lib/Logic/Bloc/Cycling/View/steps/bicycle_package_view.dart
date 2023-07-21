@@ -119,18 +119,23 @@ class PackageBody extends StatelessWidget {
               ),
               const ColumnSpacer(height: 10),
               Center(
-                  child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.amber,
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.all(15.0),
-                  child: Text(
-                    'Tap to Confirm Selection',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
+                  child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pushNamed('/bicycleTermAndCondition');
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.amber,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.all(15.0),
+                    child: Text(
+                      'Tap to Confirm Selection',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),

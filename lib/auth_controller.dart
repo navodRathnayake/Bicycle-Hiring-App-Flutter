@@ -19,9 +19,7 @@ class AuthController extends StatelessWidget {
           if (snapshot.hasData) {
             return const BottomNavigationBarController();
           } else {
-            return BicycleTermAndConditionView(
-                themeData:
-                    themeData); // const BottomNavigationBarController(); //PageSlider(themeData: themeData);
+            return const BottomNavigationBarController(); //PageSlider(themeData: themeData);
           }
         },
       ),
