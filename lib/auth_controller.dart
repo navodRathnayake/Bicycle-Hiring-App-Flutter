@@ -3,6 +3,7 @@ library auth_controller;
 import 'package:final_project/Logic/Bloc/Cycling/View/cicling_stepper_page.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/steps/bicycle_package_view.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/steps/bicycle_term_and_condition_view.dart';
+import 'package:final_project/Logic/Bloc/Profile/View/user_profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
