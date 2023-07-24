@@ -2,6 +2,7 @@ library profile_completion_page;
 
 import 'package:final_project/Const/Widget/column_spacer.dart';
 import 'package:final_project/Const/Widget/row_spacer.dart';
+import 'package:final_project/Logic/Bloc/Profile/View/widget/dialogBox/pin_code_intergration.dart';
 import 'package:final_project/Logic/Bloc/Profile/bloc/account_completion_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -102,6 +103,8 @@ class ProfileCompletion extends StatelessWidget {
                                   padding: const EdgeInsets.all(8),
                                 ),
                                 onPressed: () {
+                                  pinCodeIntergration(
+                                      context: context, themeData: themeData);
                                   BlocProvider.of<AccountCompletionBloc>(
                                           context)
                                       .add(AccountCompletionStepEvent(
