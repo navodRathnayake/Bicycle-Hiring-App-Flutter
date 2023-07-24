@@ -1,10 +1,12 @@
 library login_app_detail;
 
+import 'package:final_project/Logic/Bloc/Login/View/Slide%20Pages/Src/login_form_body.dart';
+import 'package:final_project/Logic/Bloc/Login/View/Slide%20Pages/Src/signin_form_body.dart';
+import 'package:final_project/Logic/Bloc/Login/View/Slide%20Pages/dialogBox/signin_general_dialogbox.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../../Const/Widget/column_spacer.dart';
 import '../../../../../../Const/Widget/row_spacer.dart';
-import '../../../../../../Services/Auth/firebase_auth_service.dart';
 
 class LoginAppDetail extends StatelessWidget {
   final ThemeData themeData;
@@ -53,7 +55,10 @@ class LoginAppDetail extends StatelessWidget {
                   'This is the demo text. Add a relevant text field here.'),
               const ColumnSpacer(height: 10),
               ElevatedButton(
-                  onPressed: FirebaseAuthService().signInWithGoogle,
+                  onPressed: () {
+                    signInGeneralDialogBox(
+                        context: context, themeData: themeData);
+                  }, //FirebaseAuthService().signInWithGoogle,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
@@ -62,6 +67,7 @@ class LoginAppDetail extends StatelessWidget {
                         Image.asset('Assets/icons/google.png'),
                         const RowSpacer(width: 5),
                         const Text('Sign Up With Google'),
+                        const ColumnSpacer(height: 30),
                       ],
                     ),
                   )),
