@@ -1,11 +1,13 @@
 library cycling_ride_page;
 
+import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:final_project/Const/Widget/column_spacer.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/avatar.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/custom_settings_icon.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/points.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/popup_settings_menu.dart';
 import 'package:flutter/material.dart';
+import 'package:rolling_switch/rolling_switch.dart';
 
 class CyclingRidePage extends StatelessWidget {
   final ThemeData themeData;
@@ -176,64 +178,33 @@ class CyclingRidePage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                            height: 150,
+                            height: 160,
                             decoration: BoxDecoration(
-                              color: Colors.red.shade900,
+                              color: Colors.red.shade600,
                               borderRadius: BorderRadius.circular(30),
                             ),
-                            child: Row(
+                            child: Column(
                               children: [
-                                Flexible(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      width: 90,
-                                      height: 150,
-                                      decoration: BoxDecoration(
-                                        color: themeData
-                                            .colorScheme.secondaryContainer,
-                                        borderRadius: BorderRadius.circular(30),
-                                      ),
-                                      child: Image.asset(
-                                        'Assets/icons/emergency.png',
-                                        scale: 2,
-                                        color:
-                                            themeData.colorScheme.onBackground,
-                                      ),
-                                    ),
+                                const ColumnSpacer(height: 20),
+                                const CustomToggleWidget(),
+                                const ColumnSpacer(height: 10),
+                                Text(
+                                  'EMERGENCY',
+                                  style: TextStyle(
+                                    color: themeData.colorScheme.background,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.normal,
                                   ),
                                 ),
-                                Flexible(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Emergency',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.normal,
-                                            color: themeData
-                                                .colorScheme.background,
-                                          ),
-                                        ),
-                                        Text(
-                                          'TAP to report',
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                            color: themeData
-                                                .colorScheme.background,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                Text(
+                                  'MODE',
+                                  style: TextStyle(
+                                    color: themeData.colorScheme.background,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.normal,
                                   ),
                                 ),
+                                Row(),
                               ],
                             ),
                           ),
@@ -278,19 +249,23 @@ class CyclingRidePage extends StatelessWidget {
                                   ),
                                 ),
                                 Flexible(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      width: 90,
-                                      height: 150,
-                                      decoration: BoxDecoration(
-                                        color: Colors.green,
-                                        borderRadius: BorderRadius.circular(30),
-                                      ),
-                                      child: Image.asset(
-                                        'Assets/icons/lock.png',
-                                        scale: 2,
-                                        color: Colors.black,
+                                  child: Container(
+                                    height: 160,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                        color: Colors.amber,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            RotationTransition(
+                                              turns: AlwaysStoppedAnimation(
+                                                  -90 / 360),
+                                              child: LockBikeToggle(),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -384,6 +359,66 @@ class InfoCard extends StatelessWidget {
                 )),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class CustomToggleWidget extends StatefulWidget {
+  const CustomToggleWidget({super.key});
+
+  @override
+  State<CustomToggleWidget> createState() => _CustomToggleWidgetState();
+}
+
+class _CustomToggleWidgetState extends State<CustomToggleWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return RollingSwitch.icon(
+      circularColor: Colors.amber,
+      height: 60,
+      onChanged: (bool state) {},
+      rollingInfoRight: const RollingIconInfo(
+        icon: Icons.emergency,
+        text: Text('ON'),
+        backgroundColor: Colors.amber,
+        iconColor: Colors.red,
+      ),
+      rollingInfoLeft: const RollingIconInfo(
+        icon: Icons.check,
+        backgroundColor: Colors.white,
+        iconColor: Colors.amber,
+        text: Text('OFF'),
+      ),
+    );
+  }
+}
+
+class LockBikeToggle extends StatefulWidget {
+  const LockBikeToggle({super.key});
+
+  @override
+  State<LockBikeToggle> createState() => _LockBikeToggleState();
+}
+
+class _LockBikeToggleState extends State<LockBikeToggle> {
+  @override
+  Widget build(BuildContext context) {
+    return RollingSwitch.icon(
+      circularColor: Colors.amber,
+      height: 60,
+      onChanged: (bool state) {},
+      rollingInfoRight: const RollingIconInfo(
+        icon: Icons.emergency,
+        text: Text('ON'),
+        backgroundColor: Colors.amber,
+        iconColor: Colors.red,
+      ),
+      rollingInfoLeft: const RollingIconInfo(
+        icon: Icons.check,
+        backgroundColor: Colors.white,
+        iconColor: Colors.amber,
+        text: Text('OFF'),
       ),
     );
   }
