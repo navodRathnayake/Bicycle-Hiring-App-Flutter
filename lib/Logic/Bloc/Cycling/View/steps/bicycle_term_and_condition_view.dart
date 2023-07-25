@@ -77,12 +77,17 @@ class BicycleTermAndConditionView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 DialogBoxSecondaryButton(
-                    themeData: themeData,
-                    label: 'D E C L I N E',
-                    onTap: Navigator.of(context).pop),
+                  themeData: themeData,
+                  label: 'D E C L I N E',
+                  onTap: Navigator.of(context).pop,
+                ),
                 const RowSpacer(width: 10),
                 DialogBoxOkButton(
-                    label: 'A C C E P T', onTap: Navigator.of(context).pop),
+                  label: 'A C C E P T',
+                  onTap: () {
+                    Navigator.of(context).pushNamed('/cyclingRidePage');
+                  },
+                ),
               ],
             ),
           ],

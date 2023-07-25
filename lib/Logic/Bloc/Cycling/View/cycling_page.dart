@@ -35,6 +35,7 @@ class CyclingPage extends StatelessWidget {
         ],
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ScanQRView(themeData: themeData),
         ],

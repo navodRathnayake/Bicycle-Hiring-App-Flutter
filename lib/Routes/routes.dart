@@ -2,6 +2,7 @@ library routes;
 
 import 'package:final_project/Logic/Bloc/Cycling/View/cicling_stepper_page.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/cycling_page.dart';
+import 'package:final_project/Logic/Bloc/Cycling/View/cycling_ride_page.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/steps/bicycle_data_view.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/steps/bicycle_package_view.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/steps/bicycle_term_and_condition_view.dart';
@@ -109,6 +110,11 @@ class Routes {
         return MaterialPageRoute(
           builder: (context) =>
               CyclingStepperPage(themeData: Theme.of(context)),
+        );
+
+      case '/cyclingRidePage':
+        return MaterialPageRoute(
+          builder: (context) => CyclingRidePage(themeData: Theme.of(context)),
         );
 
       default:
