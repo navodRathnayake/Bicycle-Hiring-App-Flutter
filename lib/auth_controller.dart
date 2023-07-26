@@ -25,9 +25,7 @@ class AuthController extends StatelessWidget {
           if (snapshot.hasData) {
             return const BottomNavigationBarController();
           } else {
-            return CyclingRidePage(
-                themeData:
-                    themeData); //const BottomNavigationBarController(); //PageSlider(themeData: themeData);
+            return const BottomNavigationBarController(); //PageSlider(themeData: themeData);
           }
         },
       ),

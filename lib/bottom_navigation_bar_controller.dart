@@ -3,6 +3,8 @@ library bottom_navigation_bar_controller;
 import 'package:final_project/Logic/Bloc/Cycling/View/cycling_page.dart';
 import 'package:final_project/Logic/Bloc/Home/View/home_page.dart';
 import 'package:final_project/Logic/Bloc/Profile/View/user_profile.dart';
+import 'package:final_project/Services/notification.dart';
+import 'package:final_project/Services/push_notification_healper_class.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavigationBarController extends StatefulWidget {
@@ -24,7 +26,6 @@ class _BottomNavigationBarControllerState
         HomePage(themeData: themeData),
         UserProfile(themeData: themeData),
         CyclingPage(themeData: themeData),
-        Text('3')
       ][currentIndex],
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
