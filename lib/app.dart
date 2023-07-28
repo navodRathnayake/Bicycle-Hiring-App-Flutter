@@ -17,7 +17,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FirebaseMessaging.instance.getToken().then((value) {
-      print('Firebase Device Code : $value');
+      debugPrint('Firebase Device Code : $value');
     });
 
     return MultiBlocProvider(
