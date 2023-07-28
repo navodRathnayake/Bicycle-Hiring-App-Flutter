@@ -93,8 +93,11 @@ class RegisterFormBloc extends Bloc<RegisterFormEvent, RegisterFormState> {
     ));
 
     if (state.isValid) {
+      print('register form in initial');
       emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
+      print('register form in progress');
       await Future.delayed(const Duration(seconds: 1));
+      print('register form in success');
       emit(state.copyWith(status: FormzSubmissionStatus.success));
     }
   }

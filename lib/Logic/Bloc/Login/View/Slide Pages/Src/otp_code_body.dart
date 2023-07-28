@@ -2,7 +2,11 @@ library otp_code_body;
 
 import 'package:final_project/Const/Widget/column_spacer.dart';
 import 'package:final_project/Const/Widget/row_spacer.dart';
+import 'package:final_project/Logic/Bloc/Login/View/Slide%20Pages/dialogBox/signin_general_dialogbox.dart';
+import 'package:final_project/Logic/Bloc/Login/auth/forget%20password/confirm%20otp/confirm_otp_bloc.dart';
+import 'package:final_project/Logic/Bloc/Login/auth/register/register_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 // ignore: must_be_immutable
 class OTPCodeBody extends StatefulWidget {
@@ -33,7 +37,13 @@ class _OTPCodeBodyState extends State<OTPCodeBody> {
           top: 15,
           left: 10,
           child: GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Future.delayed(const Duration(microseconds: 400), () async {
+                Navigator.of(context).pop();
+                await signInGeneralDialogBox(
+                    context: context, themeData: widget.themeData);
+              });
+            },
             child: Image.asset(
               'Assets/icons/back_ios.png',
               scale: 1.5,
@@ -69,23 +79,27 @@ class _OTPCodeBodyState extends State<OTPCodeBody> {
               child: Form(
                 child: Column(
                   children: [
-                    TextFormField(
-                      enabled: false,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        hintText: 'Sample@email.com',
-                        labelText: 'User Name',
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                        suffixIcon: Image.asset(
-                          'Assets/icons/email.png',
-                          scale: 2,
-                          color:
-                              widget.themeData.colorScheme.onSecondaryContainer,
-                        ),
-                      ),
-                      keyboardType: TextInputType.emailAddress,
+                    BlocBuilder<RegisterFormBloc, RegisterFormState>(
+                      builder: (context, state) {
+                        return TextFormField(
+                          enabled: false,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            hintText: state.email.value,
+                            labelText: 'User Name',
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                            suffixIcon: Image.asset(
+                              'Assets/icons/email.png',
+                              scale: 2,
+                              color: widget
+                                  .themeData.colorScheme.onSecondaryContainer,
+                            ),
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                        );
+                      },
                     ),
                     const ColumnSpacer(height: 20),
                     Row(
@@ -93,90 +107,130 @@ class _OTPCodeBodyState extends State<OTPCodeBody> {
                       children: [
                         SizedBox(
                           width: 50,
-                          child: TextFormField(
-                            focusNode: otp1,
-                            onChanged: (value) {
-                              if (value.isNotEmpty) {
-                                FocusScope.of(context).requestFocus(otp2);
-                              }
+                          child: BlocBuilder<ConfirmOTPBloc, ConfirmOTPState>(
+                            builder: (context, state) {
+                              return TextFormField(
+                                initialValue: state.otp1.value,
+                                focusNode: otp1,
+                                onChanged: (value) {
+                                  BlocProvider.of<ConfirmOTPBloc>(context)
+                                      .add(ConfirmOTP1Changed(otp1: value));
+                                  if (value.isNotEmpty) {
+                                    FocusScope.of(context).requestFocus(otp2);
+                                  }
+                                },
+                                textAlign: TextAlign.center,
+                                decoration: InputDecoration(
+                                  errorText: state.otp1.displayError != null
+                                      ? ''
+                                      : null,
+                                  counterText: '',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  // hintText: '9',
+                                ),
+                                keyboardType: TextInputType.number,
+                                maxLength: 1,
+                              );
                             },
-                            textAlign: TextAlign.center,
-                            decoration: InputDecoration(
-                              counterText: '',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              // hintText: '9',
-                            ),
-                            keyboardType: TextInputType.number,
-                            maxLength: 1,
                           ),
                         ),
                         const Text('-'),
                         SizedBox(
                           width: 50,
-                          child: TextFormField(
-                            focusNode: otp2,
-                            onChanged: (value) {
-                              if (value.isNotEmpty) {
-                                FocusScope.of(context).requestFocus(otp3);
-                              }
+                          child: BlocBuilder<ConfirmOTPBloc, ConfirmOTPState>(
+                            builder: (context, state) {
+                              return TextFormField(
+                                initialValue: state.otp2.value,
+                                focusNode: otp2,
+                                onChanged: (value) {
+                                  BlocProvider.of<ConfirmOTPBloc>(context)
+                                      .add(ConfirmOTP2Changed(otp2: value));
+                                  if (value.isNotEmpty) {
+                                    FocusScope.of(context).requestFocus(otp3);
+                                  }
+                                },
+                                textAlign: TextAlign.center,
+                                decoration: InputDecoration(
+                                  errorText: state.otp2.displayError != null
+                                      ? ''
+                                      : null,
+                                  counterText: '',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  // hintText: '9',
+                                ),
+                                keyboardType: TextInputType.number,
+                                maxLength: 1,
+                              );
                             },
-                            textAlign: TextAlign.center,
-                            decoration: InputDecoration(
-                              counterText: '',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              // hintText: '9',
-                            ),
-                            keyboardType: TextInputType.number,
-                            maxLength: 1,
                           ),
                         ),
                         const Text('-'),
                         SizedBox(
                           width: 50,
-                          child: TextFormField(
-                            focusNode: otp3,
-                            onChanged: (value) {
-                              if (value.isNotEmpty) {
-                                FocusScope.of(context).requestFocus(otp4);
-                              }
+                          child: BlocBuilder<ConfirmOTPBloc, ConfirmOTPState>(
+                            builder: (context, state) {
+                              return TextFormField(
+                                initialValue: state.otp3.value,
+                                focusNode: otp3,
+                                onChanged: (value) {
+                                  BlocProvider.of<ConfirmOTPBloc>(context)
+                                      .add(ConfirmOTP3Changed(otp3: value));
+                                  if (value.isNotEmpty) {
+                                    FocusScope.of(context).requestFocus(otp4);
+                                  }
+                                },
+                                textAlign: TextAlign.center,
+                                decoration: InputDecoration(
+                                  errorText: state.otp3.displayError != null
+                                      ? ''
+                                      : null,
+                                  counterText: '',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  // hintText: '9',
+                                ),
+                                keyboardType: TextInputType.number,
+                                maxLength: 1,
+                              );
                             },
-                            textAlign: TextAlign.center,
-                            decoration: InputDecoration(
-                              counterText: '',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              // hintText: '9',
-                            ),
-                            keyboardType: TextInputType.number,
-                            maxLength: 1,
                           ),
                         ),
                         const Text('-'),
                         SizedBox(
                           width: 50,
-                          child: TextFormField(
-                            focusNode: otp4,
-                            onChanged: (value) {
-                              if (value.isNotEmpty) {
-                                FocusScope.of(context)
-                                    .requestFocus(FocusNode());
-                              }
+                          child: BlocBuilder<ConfirmOTPBloc, ConfirmOTPState>(
+                            builder: (context, state) {
+                              return TextFormField(
+                                initialValue: state.otp4.value,
+                                focusNode: otp4,
+                                onChanged: (value) {
+                                  BlocProvider.of<ConfirmOTPBloc>(context)
+                                      .add(ConfirmOTP4Changed(otp4: value));
+                                  if (value.isNotEmpty) {
+                                    FocusScope.of(context)
+                                        .requestFocus(FocusNode());
+                                  }
+                                },
+                                textAlign: TextAlign.center,
+                                decoration: InputDecoration(
+                                  errorText: state.otp4.displayError != null
+                                      ? ''
+                                      : null,
+                                  counterText: '',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  // hintText: '9',
+                                ),
+                                keyboardType: TextInputType.number,
+                                maxLength: 1,
+                              );
                             },
-                            textAlign: TextAlign.center,
-                            decoration: InputDecoration(
-                              counterText: '',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              // hintText: '9',
-                            ),
-                            keyboardType: TextInputType.number,
-                            maxLength: 1,
                           ),
                         ),
                       ],
@@ -188,7 +242,10 @@ class _OTPCodeBodyState extends State<OTPCodeBody> {
             Column(
               children: [
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    BlocProvider.of<ConfirmOTPBloc>(context)
+                        .add(ConfirmOTPFormSubmitted());
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: widget.themeData.colorScheme.onBackground,
                     minimumSize: const Size(double.maxFinite, 56),

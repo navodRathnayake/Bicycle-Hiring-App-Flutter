@@ -1,7 +1,12 @@
 library signin_general_dialogbox;
 
+import 'package:final_project/Logic/Bloc/Login/View/Slide%20Pages/Src/otp_code_body.dart';
 import 'package:final_project/Logic/Bloc/Login/View/Slide%20Pages/Src/signin_form_body.dart';
+import 'package:final_project/Logic/Bloc/Login/auth/forget%20password/confirm%20otp/confirm_otp_bloc.dart';
+import 'package:final_project/Logic/Bloc/Login/auth/register/register_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:formz/formz.dart';
 
 Future<Object?> signInGeneralDialogBox(
     {required BuildContext context, required ThemeData themeData}) {
@@ -29,46 +34,66 @@ Future<Object?> signInGeneralDialogBox(
             color: Theme.of(context).colorScheme.background,
             borderRadius: BorderRadius.circular(40),
           ),
-          child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            backgroundColor: Colors.transparent,
-            body: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Positioned(
-                        left: 0,
-                        right: 0,
-                        top: -30,
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: CircleAvatar(
-                            backgroundColor: Theme.of(context)
-                                .colorScheme
-                                .secondaryContainer,
-                            child: Image.asset(
-                              'Assets/icons/close.png',
-                              scale: 2,
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<RegisterFormBloc>(create: (_) => RegisterFormBloc()),
+              BlocProvider<ConfirmOTPBloc>(create: (_) => ConfirmOTPBloc()),
+            ],
+            child: Scaffold(
+              resizeToAvoidBottomInset: false,
+              backgroundColor: Colors.transparent,
+              body: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Positioned(
+                          left: 0,
+                          right: 0,
+                          top: -30,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: CircleAvatar(
+                              backgroundColor: Theme.of(context)
+                                  .colorScheme
+                                  .secondaryContainer,
+                              child: Image.asset(
+                                'Assets/icons/close.png',
+                                scale: 2,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 580,
-                        child: SigningFormBody(themeData: themeData),
-                      ),
-                      // SigningFormBody(themeData: themeData),
-                      // LoginFormBody(themeData: themeData),
-                      // OTPCodeBody(themeData: themeData),
-                    ],
+                        BlocBuilder<RegisterFormBloc, RegisterFormState>(
+                          builder: (context, state) {
+                            if (state.status == FormzSubmissionStatus.initial) {
+                              return SizedBox(
+                                height: 580,
+                                child: SigningFormBody(themeData: themeData),
+                              );
+                            }
+                            if (state.status == FormzSubmissionStatus.success) {
+                              return SizedBox(
+                                height: 580,
+                                child: OTPCodeBody(themeData: themeData),
+                              );
+                            } else {
+                              return Container();
+                            }
+                          },
+                        ),
+                        // SigningFormBody(themeData: themeData),
+                        // LoginFormBody(themeData: themeData),
+                        // OTPCodeBody(themeData: themeData),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
