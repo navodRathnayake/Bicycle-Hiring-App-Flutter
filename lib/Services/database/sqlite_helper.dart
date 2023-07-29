@@ -60,7 +60,7 @@ class SqfliteHelper {
         'Users',
         columns: ['token', 'userName', 'password', 'status', 'key', 'image'],
         where: 'key=?',
-        whereArgs: ['picker'],
+        whereArgs: ['1'],
       );
       return result[0];
     } catch (e) {
@@ -80,7 +80,7 @@ class SqfliteHelper {
       final db = await instance.database;
       await db.rawUpdate(
           'UPDATE Users SET token = ?, userName = ?, password = ?, status = ?, image = ?  WHERE key = ?',
-          [token, userName, password, status, image, 'picker']);
+          [token, userName, password, status, image, '1']);
       return 1;
     } catch (e) {
       debugPrint(e.toString());
