@@ -1,7 +1,7 @@
 library main;
 
-import 'package:final_project/Services/notification.dart';
-import 'package:final_project/Services/push_notification_healper_class.dart';
+import 'package:final_project/Services/push%20notification/notification.dart';
+import 'package:final_project/Services/push%20notification/push_notification_healper_class.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:final_project/app.dart';
