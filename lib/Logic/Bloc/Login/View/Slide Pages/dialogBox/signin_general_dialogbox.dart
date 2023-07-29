@@ -3,7 +3,7 @@ library signin_general_dialogbox;
 import 'package:final_project/Logic/Bloc/Login/View/Slide%20Pages/Src/otp_code_body.dart';
 import 'package:final_project/Logic/Bloc/Login/View/Slide%20Pages/Src/signin_form_body.dart';
 import 'package:final_project/Logic/Bloc/Login/auth/forget%20password/confirm%20otp/confirm_otp_bloc.dart';
-import 'package:final_project/Logic/Bloc/Login/auth/register/register_bloc.dart';
+import 'package:final_project/Logic/Bloc/Login/auth/register/bloc/register_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';

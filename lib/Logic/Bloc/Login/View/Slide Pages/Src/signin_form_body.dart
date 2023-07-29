@@ -3,7 +3,7 @@ library signing_form_body;
 import 'package:final_project/Const/Widget/column_spacer.dart';
 import 'package:final_project/Const/Widget/row_spacer.dart';
 import 'package:final_project/Logic/Bloc/Login/View/Slide%20Pages/dialogBox/login_general_dialogbox.dart';
-import 'package:final_project/Logic/Bloc/Login/auth/register/register_bloc.dart';
+import 'package:final_project/Logic/Bloc/Login/auth/register/bloc/register_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

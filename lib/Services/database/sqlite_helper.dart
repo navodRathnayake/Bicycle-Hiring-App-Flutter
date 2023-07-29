@@ -5,7 +5,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class SqfliteHelper {
-  static const databaseName = 'picker.db';
+  static const databaseName = 'bicycle_app.db';
   static Database? _database;
   static final SqfliteHelper instance = SqfliteHelper._init();
   SqfliteHelper._init();
@@ -46,6 +46,7 @@ class SqfliteHelper {
     try {
       final db = await instance.database;
       await db.close();
+      debugPrint('DB has closed');
       return 1;
     } catch (e) {
       debugPrint(e.toString());
@@ -81,6 +82,32 @@ class SqfliteHelper {
       await db.rawUpdate(
           'UPDATE Users SET token = ?, userName = ?, password = ?, status = ?, image = ?  WHERE key = ?',
           [token, userName, password, status, image, '1']);
+      return 1;
+    } catch (e) {
+      debugPrint(e.toString());
+      return 0;
+    }
+  }
+
+  Future<int> updateLogout({
+    required String token,
+    required String userName,
+    required String password,
+    required String status,
+    required String image,
+  }) async {
+    try {
+      final db = await instance.database;
+      await db.rawUpdate(
+          'UPDATE Users SET token = ?, userName = ?, password = ?, status = ?, image = ?  WHERE key = ?',
+          [
+            'initial-token',
+            'initial-userName',
+            'initial-password',
+            'logout',
+            'initial-image',
+            '1'
+          ]);
       return 1;
     } catch (e) {
       debugPrint(e.toString());
