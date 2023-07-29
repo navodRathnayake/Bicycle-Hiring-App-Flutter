@@ -97,13 +97,6 @@ class RegisterFormBloc extends Bloc<RegisterFormEvent, RegisterFormState> {
     ));
 
     if (state.isValid) {
-      // print('register form in initial');
-      // emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
-      // print('register form in progress');
-      // await Future.delayed(const Duration(seconds: 1));
-      // print('register form in success');
-      // emit(state.copyWith(status: FormzSubmissionStatus.success));
-
       try {
         emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
 
@@ -122,33 +115,36 @@ class RegisterFormBloc extends Bloc<RegisterFormEvent, RegisterFormState> {
             password: state.password.value.toString(),
             token: result['body']['token'].toString(),
             image: 'null',
-            status: 'login',
+            status: 'initial',
           );
 
           emit(state.copyWith(
             status: FormzSubmissionStatus.success,
           ));
 
-          SqfliteHelper.instance.readUserData();
+          var localDB = await SqfliteHelper.instance.readUserData();
+          debugPrint(localDB.toString());
+
           debugPrint('Successfuly login');
 
           Future.delayed(const Duration(seconds: 5));
           emit(state.copyWith(
             status: FormzSubmissionStatus.canceled,
           ));
-        } //else {
-        //   debugPrint('Login Failure');
-        //   emit(state.copyWith(
-        //     status: FormzStatus.submissionFailure,
-        //     msg: 'The email has already been taken.',
-        //   ));
 
-        //   await Future.delayed(const Duration(minutes: 5));
+          // trigger login stream
+        } else {
+          debugPrint('Login Failure');
+          emit(state.copyWith(
+            status: FormzSubmissionStatus.failure,
+          ));
 
-        //   emit(state.copyWith(
-        //     status: FormzStatus.submissionCanceled,
-        //   ));
-        // }
+          await Future.delayed(const Duration(minutes: 5));
+
+          emit(state.copyWith(
+            status: FormzSubmissionStatus.canceled,
+          ));
+        }
 
         emit(state.copyWith(status: FormzSubmissionStatus.success));
       } catch (e) {

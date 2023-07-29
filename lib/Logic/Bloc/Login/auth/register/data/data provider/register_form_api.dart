@@ -19,27 +19,27 @@ class RegisterFormApi {
   };
 
   Future<Map<String, dynamic>> getRegisterRawData() async {
-    // try {
-    var url = Uri.http(domain, endPoint);
+    try {
+      var url = Uri.http(domain, endPoint);
 
-    debugPrint(reqBody.toString());
-    debugPrint(url.toString());
-    var response = await http.post(url,
-        body: jsonEncode({
-          'email': reqBody['email'].toString(),
-          'password': reqBody['password'].toString(),
-          'password_confirmation': reqBody['comfirmPassword'].toString()
-        }),
-        headers: requestHeaders!);
-    debugPrint('API {register} - Completed');
-    debugPrint(response.body);
-    return {
-      'status': response.statusCode,
-      'body': response.body,
-      'headers': response.headers,
-    };
-    // } catch (e) {
-    // return {'error': e.toString()};
+      debugPrint(reqBody.toString());
+      debugPrint(url.toString());
+      var response = await http.post(url,
+          body: jsonEncode({
+            'email': reqBody['email'].toString(),
+            'password': reqBody['password'].toString(),
+            'password_confirmation': reqBody['comfirmPassword'].toString()
+          }),
+          headers: requestHeaders!);
+      debugPrint('API {register} - Completed');
+      debugPrint(response.body);
+      return {
+        'status': response.statusCode,
+        'body': response.body,
+        'headers': response.headers,
+      };
+    } catch (e) {
+      return {'error': e.toString()};
+    }
   }
 }
-// }
