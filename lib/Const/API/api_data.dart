@@ -1,8 +1,10 @@
 library api_data;
 
-const String domain = 'localhost:8080';
+String domain = '192.168.1.161:8000';
 
-Map<String, String> nodes = const {
-  '/login': '/api/login',
+Map<String, String> register = const {
   '/register': '/api/register',
+  '/update-device-token': '/update-device-token',
+  '/send-notification': '/send-notification',
+  '/verify-otp': '/verify-otp',
 };

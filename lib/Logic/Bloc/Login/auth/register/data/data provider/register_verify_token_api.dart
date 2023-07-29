@@ -1,26 +1,24 @@
-library register_api;
+library register_verify_token_api;
 
 import 'package:final_project/Const/API/api_data.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class RegisterApi {
-  String baseUrl = domain;
-  String endPoint = nodes['/register']!;
+class RegisterVerifyTokenApi {
+  String baseUrl = '192.168.1.161:8000';
+  String endPoint = register['/verify-otp']!;
   final Map<String, String> reqBody;
-  RegisterApi({required this.reqBody});
+  RegisterVerifyTokenApi({required this.reqBody});
 
   Future<Map<String, dynamic>> getRegisterRawData() async {
     try {
       var url = Uri.https(baseUrl, endPoint);
       debugPrint(url.toString());
       var response = await http.post(url, body: {
-        "name": reqBody['name'],
         "email": reqBody['email'],
-        "password": reqBody['password'],
-        "password_confirmation": reqBody['comfirmPassword'],
+        "otp": reqBody['otp'],
       });
-      debugPrint('API - Completed');
+      debugPrint('API {Verify Token} - Completed');
       debugPrint(response.body);
       return {
         'status': response.statusCode,

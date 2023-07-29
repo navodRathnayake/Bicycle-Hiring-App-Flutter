@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:final_project/Logic/Bloc/Login/auth/register/data/data%20provider/register_api.dart';
-import 'package:final_project/Logic/Bloc/Login/auth/register/data/repository/register_repository.dart';
+import 'package:final_project/Logic/Bloc/Login/auth/register/data/data%20provider/register_form_api.dart';
+import 'package:final_project/Logic/Bloc/Login/auth/register/data/repository/register_form_repository.dart';
 import 'package:final_project/Services/database/sqlite_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:formz/formz.dart';
@@ -106,36 +106,37 @@ class RegisterFormBloc extends Bloc<RegisterFormEvent, RegisterFormState> {
 
       try {
         emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
-        final result = await RegisterRepository(
-            api: RegisterApi(reqBody: {
-          // 'name': state.fullName.value.toString(),
+
+        final result = await RegisterFormRepository(
+            api: RegisterFormApi(reqBody: {
           'email': state.email.value.toString(),
           'password': state.password.value.toString(),
           'comfirmPassword': state.confirmPassword.value.toString(),
         })).getRegisterResponse();
 
-        // if (result['result'] == 1) {
-        //   SqfliteHelper.instance.updateMode(
-        //     userName: result['body']['email'].toString(),
-        //     password: state.password.value,
-        //     token: result['body']['token'].toString(),
-        //     image: 'null',
-        //     status: 'login',
-        //   );
+        debugPrint(result.toString());
 
-        //   emit(state.copyWith(
-        //     msg: result['body']['message'],
-        //     status: FormzStatus.submissionSuccess,
-        //   ));
+        if (result['result'] == 1) {
+          SqfliteHelper.instance.updateMode(
+            userName: state.email.value.toString(),
+            password: state.password.value.toString(),
+            token: result['body']['token'].toString(),
+            image: 'null',
+            status: 'login',
+          );
 
-        //   SqfliteHelper.instance.readUserData();
-        //   debugPrint('Successfuly login');
+          emit(state.copyWith(
+            status: FormzSubmissionStatus.success,
+          ));
 
-        //   Future.delayed(const Duration(seconds: 5));
-        //   emit(state.copyWith(
-        //     status: FormzStatus.submissionCanceled,
-        //   ));
-        // } else {
+          SqfliteHelper.instance.readUserData();
+          debugPrint('Successfuly login');
+
+          Future.delayed(const Duration(seconds: 5));
+          emit(state.copyWith(
+            status: FormzSubmissionStatus.canceled,
+          ));
+        } //else {
         //   debugPrint('Login Failure');
         //   emit(state.copyWith(
         //     status: FormzStatus.submissionFailure,
