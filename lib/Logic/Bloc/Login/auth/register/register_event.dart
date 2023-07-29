@@ -1,6 +1,6 @@
 part of 'register_bloc.dart';
 
-sealed class RegisterFormEvent extends Equatable {
+class RegisterFormEvent extends Equatable {
   const RegisterFormEvent();
 
   @override
@@ -8,7 +8,7 @@ sealed class RegisterFormEvent extends Equatable {
 }
 
 // text changed events
-final class EmailChanged extends RegisterFormEvent {
+class EmailChanged extends RegisterFormEvent {
   final String email;
   const EmailChanged({required this.email});
 
@@ -16,7 +16,7 @@ final class EmailChanged extends RegisterFormEvent {
   List<Object> get props => [email];
 }
 
-final class PasswordChanged extends RegisterFormEvent {
+class PasswordChanged extends RegisterFormEvent {
   final String password;
   const PasswordChanged({required this.password});
 
@@ -24,7 +24,7 @@ final class PasswordChanged extends RegisterFormEvent {
   List<Object> get props => [password];
 }
 
-final class ConfirmPasswordChanged extends RegisterFormEvent {
+class ConfirmPasswordChanged extends RegisterFormEvent {
   final String confirmPassword;
   const ConfirmPasswordChanged({required this.confirmPassword});
 
@@ -33,11 +33,11 @@ final class ConfirmPasswordChanged extends RegisterFormEvent {
 }
 
 // unfocused events
-final class EmailUnfocused extends RegisterFormEvent {}
+class EmailUnfocused extends RegisterFormEvent {}
 
-final class PasswordUnfocused extends RegisterFormEvent {}
+class PasswordUnfocused extends RegisterFormEvent {}
 
-final class ConfirmPasswordUnfocused extends RegisterFormEvent {}
+class ConfirmPasswordUnfocused extends RegisterFormEvent {}
 
 // form submitted event
-final class RegisterFormSubmitted extends RegisterFormEvent {}
+class RegisterFormSubmitted extends RegisterFormEvent {}

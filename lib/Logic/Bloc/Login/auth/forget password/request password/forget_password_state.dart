@@ -1,6 +1,6 @@
 part of 'forget_password_bloc.dart';
 
-final class ForgetPasswordState extends Equatable {
+class ForgetPasswordState extends Equatable {
   final Email email;
   final Email confirmEmail;
   final bool isValid;

@@ -2,7 +2,7 @@ import 'package:formz/formz.dart';
 
 enum NumberValidatorError { invalid }
 
-final class Number extends FormzInput<String, NumberValidatorError> {
+class Number extends FormzInput<String, NumberValidatorError> {
   const Number.pure([super.value = '']) : super.pure();
   const Number.dirty([super.value = '']) : super.dirty();
 

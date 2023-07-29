@@ -1,6 +1,6 @@
 part of 'register_bloc.dart';
 
-final class RegisterFormState extends Equatable {
+class RegisterFormState extends Equatable {
   final Email email;
   final Password password;
   final Password confirmPassword;

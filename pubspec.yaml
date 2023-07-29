@@ -55,6 +55,8 @@ dependencies:
   rolling_switch: ^0.0.2
   flutter_local_notifications: ^13.0.0
   formz: ^0.6.0
+  path_provider: ^2.0.12
+  sqflite: ^2.2.4+1
   
 
 dev_dependencies:

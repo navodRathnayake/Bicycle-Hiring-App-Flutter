@@ -8,7 +8,7 @@ abstract class ForgetPasswordEvent extends Equatable {
 }
 
 // text changed events
-final class ForgetPasswordEmailChanged extends ForgetPasswordEvent {
+class ForgetPasswordEmailChanged extends ForgetPasswordEvent {
   final String email;
   const ForgetPasswordEmailChanged({required this.email});
 
@@ -16,7 +16,7 @@ final class ForgetPasswordEmailChanged extends ForgetPasswordEvent {
   List<Object> get props => [email];
 }
 
-final class ForgetPasswordConfirmEmailChanged extends ForgetPasswordEvent {
+class ForgetPasswordConfirmEmailChanged extends ForgetPasswordEvent {
   final String confirmEmail;
   const ForgetPasswordConfirmEmailChanged({required this.confirmEmail});
 
@@ -25,9 +25,9 @@ final class ForgetPasswordConfirmEmailChanged extends ForgetPasswordEvent {
 }
 
 // unfocused events
-final class ForgetPasswordEmailUnfocused extends ForgetPasswordEvent {}
+class ForgetPasswordEmailUnfocused extends ForgetPasswordEvent {}
 
-final class ForgetPasswordConfirmEmailUnfocused extends ForgetPasswordEvent {}
+class ForgetPasswordConfirmEmailUnfocused extends ForgetPasswordEvent {}
 
 // form submitted event
-final class ForgetPasswordFormSubmitted extends ForgetPasswordEvent {}
+class ForgetPasswordFormSubmitted extends ForgetPasswordEvent {}

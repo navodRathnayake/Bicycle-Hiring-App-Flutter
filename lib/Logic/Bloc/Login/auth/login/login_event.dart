@@ -1,6 +1,6 @@
 part of 'login_bloc.dart';
 
-sealed class LoginFormEvent extends Equatable {
+class LoginFormEvent extends Equatable {
   const LoginFormEvent();
 
   @override
@@ -8,7 +8,7 @@ sealed class LoginFormEvent extends Equatable {
 }
 
 // text changed events
-final class EmailChanged extends LoginFormEvent {
+class EmailChanged extends LoginFormEvent {
   const EmailChanged({required this.email});
 
   final String email;
@@ -17,7 +17,7 @@ final class EmailChanged extends LoginFormEvent {
   List<Object> get props => [email];
 }
 
-final class PasswordChanged extends LoginFormEvent {
+class PasswordChanged extends LoginFormEvent {
   const PasswordChanged({required this.password});
 
   final String password;
@@ -27,9 +27,9 @@ final class PasswordChanged extends LoginFormEvent {
 }
 
 // unfocused events
-final class EmailUnfocused extends LoginFormEvent {}
+class EmailUnfocused extends LoginFormEvent {}
 
-final class PasswordUnfocused extends LoginFormEvent {}
+class PasswordUnfocused extends LoginFormEvent {}
 
 // form submitted event
-final class LoginFormSubmitted extends LoginFormEvent {}
+class LoginFormSubmitted extends LoginFormEvent {}

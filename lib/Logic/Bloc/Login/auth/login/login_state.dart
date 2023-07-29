@@ -1,6 +1,6 @@
 part of 'login_bloc.dart';
 
-final class LoginFormState extends Equatable {
+class LoginFormState extends Equatable {
   final Email email;
   final Password password;
   final bool isValid;

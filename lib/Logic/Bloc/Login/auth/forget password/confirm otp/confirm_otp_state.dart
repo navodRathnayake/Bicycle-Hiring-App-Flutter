@@ -1,6 +1,6 @@
 part of 'confirm_otp_bloc.dart';
 
-final class ConfirmOTPState extends Equatable {
+class ConfirmOTPState extends Equatable {
   final Number otp1;
   final Number otp2;
   final Number otp3;
