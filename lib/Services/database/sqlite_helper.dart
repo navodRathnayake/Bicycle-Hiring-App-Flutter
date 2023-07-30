@@ -70,6 +70,22 @@ class SqfliteHelper {
     return {};
   }
 
+  Future<String> readBearerToken() async {
+    try {
+      final db = await instance.database;
+      final result = await db.query(
+        'Users',
+        columns: ['token'],
+        where: 'key=?',
+        whereArgs: ['1'],
+      );
+      return result[0]['token'].toString();
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return 'null';
+  }
+
   Future<int> updateMode({
     required String token,
     required String userName,

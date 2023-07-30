@@ -1,8 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:final_project/Logic/Bloc/Login/auth/register/data/data%20provider/register_form_api.dart';
+import 'package:final_project/Logic/Bloc/Login/auth/register/data/data%20provider/register_send_notification_api.dart';
 import 'package:final_project/Logic/Bloc/Login/auth/register/data/repository/register_form_repository.dart';
+import 'package:final_project/Logic/Bloc/Login/auth/register/data/repository/register_send_notification_repository.dart';
 import 'package:final_project/Services/database/sqlite_helper.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:formz/formz.dart';
 
@@ -118,14 +121,36 @@ class RegisterFormBloc extends Bloc<RegisterFormEvent, RegisterFormState> {
             status: 'initial',
           );
 
+          debugPrint('\n---------------------------------------------------\n');
+          var localDB = await SqfliteHelper.instance.readUserData();
+          debugPrint(localDB.toString());
+          debugPrint('\n---------------------------------------------------\n');
+
           emit(state.copyWith(
             status: FormzSubmissionStatus.success,
           ));
 
-          var localDB = await SqfliteHelper.instance.readUserData();
-          debugPrint(localDB.toString());
+          final messaging = FirebaseMessaging.instance;
+          String? deviceToken = await messaging.getToken();
+          final bearerToken = await SqfliteHelper.instance.readBearerToken();
+          debugPrint('Registration Token=$deviceToken');
+          debugPrint('Bearer Token = $bearerToken');
 
-          debugPrint('Successfuly login');
+          final notification = await RegisterSendNotificationRepository(
+            api: RegisterSendNotificationApi(
+              reqBody: {
+                'device token': deviceToken.toString(),
+              },
+              bearerToken: bearerToken,
+            ),
+          ).getRegisterResponse();
+
+          if (notification['result'] == 1) {
+            debugPrint('OTP has sent to the relevent device');
+          }
+
+          var dbstatus = await SqfliteHelper.instance.readUserData();
+          debugPrint('DB Latest : $dbstatus');
 
           emit(state.copyWith(
             status: FormzSubmissionStatus.canceled,
@@ -133,7 +158,7 @@ class RegisterFormBloc extends Bloc<RegisterFormEvent, RegisterFormState> {
 
           // trigger login stream
         } else {
-          debugPrint('Login Failure');
+          debugPrint('register Failure');
           emit(state.copyWith(
             status: FormzSubmissionStatus.failure,
           ));

@@ -1,5 +1,9 @@
 library main;
 
+import 'dart:io';
+
+import 'package:final_project/Logic/Bloc/Login/auth/register/data/data%20provider/register_send_notification_api.dart';
+import 'package:final_project/Logic/Bloc/Login/auth/register/data/repository/register_send_notification_repository.dart';
 import 'package:final_project/Services/push%20notification/notification.dart';
 import 'package:final_project/Services/push%20notification/push_notification_healper_class.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -15,7 +19,7 @@ void main(List<String> args) async {
   );
 
   NotificationService().initNotification();
-
+  HttpOverrides.global = MyHttpOverrides();
   final messaging = FirebaseMessaging.instance;
   // final _messageStreamController = BehaviorSubject<RemoteMessage>();
   final settings = await messaging.requestPermission(
@@ -56,4 +60,13 @@ void main(List<String> args) async {
   });
 
   runApp(const App());
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
 }

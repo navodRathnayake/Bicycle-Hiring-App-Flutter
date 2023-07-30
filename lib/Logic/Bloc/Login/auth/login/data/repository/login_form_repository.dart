@@ -1,4 +1,4 @@
-library picker_login_repository;
+library login_form_repository;
 
 import '../data provider/login_form_api.dart';
 import 'dart:convert' as convert;

@@ -4,9 +4,9 @@ String domain = '192.168.1.161:8000';
 
 Map<String, String> register = const {
   '/register': '/api/register',
-  '/update-device-token': '/update-device-token',
-  '/send-notification': '/send-notification',
-  '/verify-otp': '/verify-otp',
+  '/update-device-token': 'api/update-device-token',
+  '/send-notification': 'api/send-notification',
+  '/verify-otp': '/api/verify-otp',
 };
 
 Map<String, String> auth = const {
