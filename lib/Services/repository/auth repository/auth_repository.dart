@@ -42,7 +42,7 @@ class AuthenticationRepository {
   }) async {
     await Future.delayed(
       const Duration(milliseconds: 300),
-      () => _controller.add(AuthenticationStatus.authenticated),
+      () => _controller.add(AuthenticationStatus.authenticatedNonVerified),
     );
   }
 

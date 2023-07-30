@@ -77,45 +77,47 @@ class LoginFormBloc extends Bloc<LoginFormEvent, LoginFormState> {
       ),
     );
 
-    try {
-      emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
-      final result = await LoginFormRepository(
-          api: LoginFormApi(reqBody: {
-        'email': state.email.value,
-        'password': state.password.value
-      })).getLoginResponse();
-      if (result['result'] == 1) {
-        // change login response body
+    if (state.isValid) {
+      try {
+        emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
+        final result = await LoginFormRepository(
+            api: LoginFormApi(reqBody: {
+          'email': state.email.value,
+          'password': state.password.value
+        })).getLoginResponse();
+        if (result['result'] == 1) {
+          // change login response body
 
-        SqfliteHelper.instance.updateMode(
-          userName: state.email.value.toString(),
-          password: state.password.value.toString(),
-          token: result['body']['token'].toString(),
-          image: 'null',
-          status: result['body']['status id'] == 2
-              ? 'login-verified'
-              : 'login-nonVerified', // upgrade status form api response
-        );
+          SqfliteHelper.instance.updateMode(
+            userName: state.email.value.toString(),
+            password: state.password.value.toString(),
+            token: result['body']['token'].toString(),
+            image: 'null',
+            status: result['body']['status id'] == 2
+                ? 'login-verified'
+                : 'login-nonVerified', // upgrade status form api response
+          );
 
-        emit(state.copyWith(
-          status: FormzSubmissionStatus.success,
-        ));
+          emit(state.copyWith(
+            status: FormzSubmissionStatus.success,
+          ));
 
-        var localDB = await SqfliteHelper.instance.readUserData();
-        debugPrint(localDB.toString());
+          var localDB = await SqfliteHelper.instance.readUserData();
+          debugPrint(localDB.toString());
 
-        debugPrint('Successfuly login');
+          debugPrint('Successfuly login');
 
-        // add routes here - navigator.pop()
-      } else {
-        debugPrint('login failure');
-        await Future.delayed(const Duration(seconds: 1));
-        emit(state.copyWith(
-          status: FormzSubmissionStatus.failure,
-        ));
+          // add routes here - navigator.pop()
+        } else {
+          debugPrint('login failure');
+          await Future.delayed(const Duration(seconds: 1));
+          emit(state.copyWith(
+            status: FormzSubmissionStatus.failure,
+          ));
+        }
+      } catch (e) {
+        debugPrint(e.toString());
       }
-    } catch (e) {
-      debugPrint(e.toString());
     }
   }
 }

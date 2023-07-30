@@ -22,11 +22,14 @@ class LoginFormApi {
       var url = Uri.http(domain, endPoint);
 
       debugPrint(url.toString());
-      var response = await http.post(url,
-          body: jsonEncode({
-            'email': reqBody['email'].toString(),
-            'password': reqBody['password'].toString()
-          }));
+      var response = await http.post(
+        url,
+        body: jsonEncode({
+          'email': reqBody['email'].toString(),
+          'password': reqBody['password'].toString()
+        }),
+        headers: requestHeaders!,
+      );
 
       debugPrint(reqBody['email'].toString());
       debugPrint(reqBody['password']);

@@ -24,13 +24,15 @@ class RegisterFormApi {
 
       debugPrint(reqBody.toString());
       debugPrint(url.toString());
-      var response = await http.post(url,
-          body: jsonEncode({
-            'email': reqBody['email'].toString(),
-            'password': reqBody['password'].toString(),
-            'password_confirmation': reqBody['comfirmPassword'].toString()
-          }),
-          headers: requestHeaders!);
+      var response = await http.post(
+        url,
+        body: jsonEncode({
+          'email': reqBody['email'].toString(),
+          'password': reqBody['password'].toString(),
+          'password_confirmation': reqBody['comfirmPassword'].toString()
+        }),
+        headers: requestHeaders!,
+      );
       debugPrint('API {register} - Completed');
       debugPrint(response.body);
       return {

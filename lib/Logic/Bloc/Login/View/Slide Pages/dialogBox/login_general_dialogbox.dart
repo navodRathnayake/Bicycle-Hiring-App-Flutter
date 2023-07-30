@@ -1,7 +1,9 @@
 library login_general_dialogbox;
 
 import 'package:final_project/Logic/Bloc/Login/View/Slide%20Pages/Src/login_form_body.dart';
+import 'package:final_project/Logic/Bloc/Login/auth/login/bloc/login_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 Future<Object?> logInGeneralDialogBox(
     {required BuildContext context, required ThemeData themeData}) {
@@ -29,46 +31,53 @@ Future<Object?> logInGeneralDialogBox(
             color: Theme.of(context).colorScheme.background,
             borderRadius: BorderRadius.circular(40),
           ),
-          child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            backgroundColor: Colors.transparent,
-            body: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Positioned(
-                        left: 0,
-                        right: 0,
-                        top: -30,
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: CircleAvatar(
-                            backgroundColor: Theme.of(context)
-                                .colorScheme
-                                .secondaryContainer,
-                            child: Image.asset(
-                              'Assets/icons/close.png',
-                              scale: 2,
+          child: BlocProvider(
+            create: (context) => LoginFormBloc(),
+            child: Scaffold(
+              resizeToAvoidBottomInset: false,
+              backgroundColor: Colors.transparent,
+              body: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Positioned(
+                          left: 0,
+                          right: 0,
+                          top: -30,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: CircleAvatar(
+                              backgroundColor: Theme.of(context)
+                                  .colorScheme
+                                  .secondaryContainer,
+                              child: Image.asset(
+                                'Assets/icons/close.png',
+                                scale: 2,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 580,
-                        child: LoginFormBody(themeData: themeData),
-                      ),
-                      // SigningFormBody(themeData: themeData),
-                      // LoginFormBody(themeData: themeData),
-                      // OTPCodeBody(themeData: themeData),
-                    ],
+                        BlocBuilder<LoginFormBloc, LoginFormState>(
+                          builder: (context, state) {
+                            return SizedBox(
+                              height: 580,
+                              child: LoginFormBody(themeData: themeData),
+                            );
+                          },
+                        ),
+                        // SigningFormBody(themeData: themeData),
+                        // LoginFormBody(themeData: themeData),
+                        // OTPCodeBody(themeData: themeData),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
