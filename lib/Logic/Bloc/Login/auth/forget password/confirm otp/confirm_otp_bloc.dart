@@ -1,6 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:final_project/Logic/Bloc/Login/auth/register/data/data%20provider/register_verify_token_api.dart';
+import 'package:final_project/Logic/Bloc/Login/auth/register/data/repository/register_verify_token_repository.dart';
 import 'package:final_project/Logic/Bloc/Login/models/number.dart';
+import 'package:final_project/Services/database/sqlite_helper.dart';
+import 'package:flutter/foundation.dart';
 import 'package:formz/formz.dart';
 
 part 'confirm_otp_event.dart';
@@ -109,9 +113,72 @@ class ConfirmOTPBloc extends Bloc<ConfirmOTPEvent, ConfirmOTPState> {
     ));
 
     if (state.isValid) {
-      emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
-      await Future.delayed(const Duration(seconds: 1));
-      emit(state.copyWith(status: FormzSubmissionStatus.success));
+      try {
+        final String otp = state.otp1.value +
+            state.otp2.value +
+            state.otp3.value +
+            state.otp4.value;
+        emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
+
+        var userData = await SqfliteHelper.instance.readUserData();
+        debugPrint(userData.toString());
+        debugPrint('OTP : $otp');
+
+        final result = await RegisterVerifyTokenRepository(
+            api: RegisterVerifyTokenApi(
+          reqBody: {
+            'email': userData['userName'].toString(),
+            'otp': otp.toString()
+          },
+        )).getRegisterResponse();
+
+        debugPrint(result.toString());
+
+        if (result['result'] == 1) {
+          SqfliteHelper.instance.updateMode(
+            userName: userData['userName'].toString(),
+            password: userData['password'].toString(),
+            token: userData['token'].toString(),
+            image: 'null',
+            status: 'login-nonVerified',
+          );
+
+          debugPrint('\n---------------------------------------------------\n');
+          var localDB = await SqfliteHelper.instance.readUserData();
+          debugPrint(localDB.toString());
+          debugPrint('\n---------------------------------------------------\n');
+
+          emit(state.copyWith(
+            status: FormzSubmissionStatus.success,
+          ));
+
+          var dbstatus = await SqfliteHelper.instance.readUserData();
+          debugPrint('DB Latest : $dbstatus');
+
+          emit(state.copyWith(
+            status: FormzSubmissionStatus.canceled,
+          ));
+
+          // trigger login stream
+          debugPrint('registered Successfully');
+        } else {
+          debugPrint('register Failure');
+          emit(state.copyWith(
+            status: FormzSubmissionStatus.failure,
+          ));
+
+          await Future.delayed(const Duration(minutes: 5));
+
+          emit(state.copyWith(
+            status: FormzSubmissionStatus.canceled,
+          ));
+        }
+
+        emit(state.copyWith(status: FormzSubmissionStatus.success));
+      } catch (e) {
+        debugPrint(e.toString());
+        emit(state.copyWith(status: FormzSubmissionStatus.failure));
+      }
     }
   }
 }

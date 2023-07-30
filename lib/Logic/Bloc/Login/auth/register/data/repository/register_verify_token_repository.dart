@@ -2,6 +2,7 @@ library register_verify_token_repository;
 
 import 'dart:convert' as convert;
 import 'package:final_project/Logic/Bloc/Login/auth/register/data/data%20provider/register_verify_token_api.dart';
+import 'package:final_project/Services/database/sqlite_helper.dart';
 import 'package:flutter/material.dart';
 
 class RegisterVerifyTokenRepository {
@@ -10,27 +11,18 @@ class RegisterVerifyTokenRepository {
 
   Future<Map<String, dynamic>> getRegisterResponse() async {
     try {
-      final rawResponse = await api.getRegisterRawData();
+      var userBearerToken = await SqfliteHelper.instance.readBearerToken();
+      final rawResponse =
+          await api.getRegisterRawData(bearerToken: userBearerToken);
       final response =
           await convert.jsonDecode(rawResponse['body']) as Map<String, dynamic>;
       if (rawResponse['status'] == 200) {
-        // var token = response['data']['token'].toString();
-        // var email = response['data']['user']['email'].toString();
-        // var name = response['data']['user']['name'].toString();
-        // var id = response['data']['user']['id'].toString();
-        // var msg = response['message'].toString();
         debugPrint(response.toString());
-        // return {
-        //   'result': 1,
-        //   'body': {
-        //     'token': token,
-        //     'email': email,
-        //     'name': name,
-        //     'id': id,
-        //     'message': msg,
-        //   },
-        // };
-        return {};
+        // login state
+        return {
+          'result': 1,
+          'error': rawResponse['status code'],
+        };
       } else {
         return {
           'result': 0,

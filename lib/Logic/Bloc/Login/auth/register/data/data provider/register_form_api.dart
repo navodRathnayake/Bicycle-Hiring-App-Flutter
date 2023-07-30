@@ -15,7 +15,6 @@ class RegisterFormApi {
   Map<String, String>? requestHeaders = {
     'Content-type': 'application/vnd.api+json',
     'Accept': 'application/vnd.api+json',
-    'Authorization': ''
   };
 
   Future<Map<String, dynamic>> getRegisterRawData() async {
