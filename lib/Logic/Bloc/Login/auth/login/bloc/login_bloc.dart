@@ -2,9 +2,13 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:final_project/Logic/Bloc/Login/auth/login/data/data%20provider/login_form_api.dart';
+import 'package:final_project/Logic/Bloc/Login/auth/login/data/repository/picker_login_repository.dart';
+import 'package:final_project/Services/database/sqlite_helper.dart';
+import 'package:flutter/foundation.dart';
 import 'package:formz/formz.dart';
 
-import '../../models/models.dart';
+import '../../../models/models.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -72,10 +76,46 @@ class LoginFormBloc extends Bloc<LoginFormEvent, LoginFormState> {
         isValid: Formz.validate([email, password]),
       ),
     );
-    if (state.isValid) {
+
+    try {
       emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
-      await Future<void>.delayed(const Duration(seconds: 1));
-      emit(state.copyWith(status: FormzSubmissionStatus.success));
+      final result = await LoginFormRepository(
+          api: LoginFormApi(reqBody: {
+        'email': state.email.value,
+        'password': state.password.value
+      })).getLoginResponse();
+      if (result['result'] == 1) {
+        // change login response body
+
+        SqfliteHelper.instance.updateMode(
+          userName: state.email.value.toString(),
+          password: state.password.value.toString(),
+          token: result['body']['token'].toString(),
+          image: 'null',
+          status: result['body']['status id'] == 2
+              ? 'login-verified'
+              : 'login-nonVerified', // upgrade status form api response
+        );
+
+        emit(state.copyWith(
+          status: FormzSubmissionStatus.success,
+        ));
+
+        var localDB = await SqfliteHelper.instance.readUserData();
+        debugPrint(localDB.toString());
+
+        debugPrint('Successfuly login');
+
+        // add routes here - navigator.pop()
+      } else {
+        debugPrint('login failure');
+        await Future.delayed(const Duration(seconds: 1));
+        emit(state.copyWith(
+          status: FormzSubmissionStatus.failure,
+        ));
+      }
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 }

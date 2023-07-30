@@ -127,7 +127,6 @@ class RegisterFormBloc extends Bloc<RegisterFormEvent, RegisterFormState> {
 
           debugPrint('Successfuly login');
 
-          Future.delayed(const Duration(seconds: 5));
           emit(state.copyWith(
             status: FormzSubmissionStatus.canceled,
           ));

@@ -8,3 +8,8 @@ Map<String, String> register = const {
   '/send-notification': '/send-notification',
   '/verify-otp': '/verify-otp',
 };
+
+Map<String, String> auth = const {
+  '/login': '/api/login',
+  '/logout': '/api/logout',
+};
