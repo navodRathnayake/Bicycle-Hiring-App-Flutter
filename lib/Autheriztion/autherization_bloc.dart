@@ -39,19 +39,16 @@ class AutherizationBloc extends Bloc<AutherizationEvent, AutherizationState> {
     AutherizationStatusChanged event,
     Emitter<AutherizationState> emit,
   ) async {
-    // switch (event.status) {
-    //   case AuthenticationStatus.:
-    //     return emit(const AuthenticationState.unauthenticated());
-    //   case AuthenticationStatus.authenticated:
-    //     final user = await _tryGetUser();
-    //     return emit(
-    //       user != null
-    //           ? AuthenticationState.authenticated(user)
-    //           : const AuthenticationState.unauthenticated(),
-    //     );
-    //   case AuthenticationStatus.unknown:
-    //     return emit(const AuthenticationState.unknown());
-    // }
+    switch (event.status) {
+      case AuthenticationStatus.initial:
+        return emit(const AutherizationState.initial());
+      case AuthenticationStatus.loginNonVerified:
+        return emit(const AutherizationState.loginNonVerified());
+      case AuthenticationStatus.logingVerified:
+        return emit(const AutherizationState.loginVerified());
+      case AuthenticationStatus.logout:
+        return emit(const AutherizationState.logout());
+    }
   }
 
   void _onAuthenticationLogoutRequested(
