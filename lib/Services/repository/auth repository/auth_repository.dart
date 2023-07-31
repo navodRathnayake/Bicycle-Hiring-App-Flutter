@@ -4,12 +4,7 @@ import 'dart:async';
 import 'package:final_project/Services/database/sqlite_helper.dart';
 import 'package:flutter/material.dart';
 
-enum AuthenticationStatus {
-  unknown,
-  authenticatedVerified,
-  authenticatedNonVerified,
-  unauthenticated
-}
+enum AuthenticationStatus { initial, loginNonVerified, logingVerified, logout }
 
 class AuthenticationRepository {
   final _controller = StreamController<AuthenticationStatus>();
@@ -21,17 +16,17 @@ class AuthenticationRepository {
 
     switch (user['status']) {
       case 'initial':
-        yield AuthenticationStatus.unauthenticated;
+        yield AuthenticationStatus.initial;
         break;
       case 'login-nonVerified':
-        yield AuthenticationStatus.authenticatedNonVerified;
+        yield AuthenticationStatus.loginNonVerified;
       case 'login-verified':
-        yield AuthenticationStatus.authenticatedVerified;
+        yield AuthenticationStatus.logingVerified;
       case 'logout':
-        yield AuthenticationStatus.unauthenticated;
+        yield AuthenticationStatus.logout;
         break;
       default:
-        yield AuthenticationStatus.unknown;
+        yield AuthenticationStatus.initial;
     }
     yield* _controller.stream;
   }
@@ -42,12 +37,12 @@ class AuthenticationRepository {
   }) async {
     await Future.delayed(
       const Duration(milliseconds: 300),
-      () => _controller.add(AuthenticationStatus.authenticatedNonVerified),
+      () => _controller.add(AuthenticationStatus.loginNonVerified),
     );
   }
 
   void logOut() {
-    _controller.add(AuthenticationStatus.unauthenticated);
+    _controller.add(AuthenticationStatus.loginNonVerified);
   }
 
   void dispose() => _controller.close();

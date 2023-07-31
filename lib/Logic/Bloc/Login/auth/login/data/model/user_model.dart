@@ -1,15 +1,18 @@
 library user_model;
 
-import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
+import 'package:equatable/equatable.dart';
+import 'package:final_project/Services/repository/user%20repository/user_repository.dart';
 
-class User {
+class User extends Equatable {
   final String userName;
   final String password;
   final String token;
   final String image;
   final AuthenticationStatus status;
 
-  const User({
+  static var empty = User;
+
+  User({
     required this.userName,
     required this.password,
     required this.token,
@@ -23,4 +26,7 @@ class User {
         token = json['token'],
         image = json['image'],
         status = json['status'];
+
+  @override
+  List<Object?> get props => [userName, password, token, image, status];
 }
