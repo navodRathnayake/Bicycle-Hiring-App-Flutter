@@ -23,12 +23,9 @@ class AuthController extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return PageSlider(
-                themeData: themeData); //const BottomNavigationBarController();
+            return PageSlider(); //const BottomNavigationBarController();
           } else {
-            return PageSlider(
-                themeData:
-                    themeData); // const BottomNavigationBarController(); //
+            return BottomNavigationBarController(); //
           }
         },
       ),

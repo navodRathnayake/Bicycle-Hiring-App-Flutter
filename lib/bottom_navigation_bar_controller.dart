@@ -11,6 +11,11 @@ class BottomNavigationBarController extends StatefulWidget {
   @override
   State<BottomNavigationBarController> createState() =>
       _BottomNavigationBarControllerState();
+
+  static Route<void> route() {
+    return MaterialPageRoute<void>(
+        builder: (_) => const BottomNavigationBarController());
+  }
 }
 
 class _BottomNavigationBarControllerState

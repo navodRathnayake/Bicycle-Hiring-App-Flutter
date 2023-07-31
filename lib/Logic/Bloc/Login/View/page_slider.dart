@@ -7,8 +7,11 @@ import 'Slide Pages/initial_page.dart';
 import 'Slide Pages/login_page.dart';
 
 class PageSlider extends StatelessWidget {
-  final ThemeData themeData;
-  const PageSlider({super.key, required this.themeData});
+  static Route<void> route() {
+    return MaterialPageRoute<void>(builder: (_) => const PageSlider());
+  }
+
+  const PageSlider({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +20,7 @@ class PageSlider extends StatelessWidget {
         pages: [
           Container(color: Colors.amber, child: const InitialPage()),
           LoginPage(
-            themeData: themeData,
+            themeData: Theme.of(context),
           )
         ],
       ),

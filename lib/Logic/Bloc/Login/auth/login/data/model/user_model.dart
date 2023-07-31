@@ -12,7 +12,7 @@ class User extends Equatable {
 
   static var empty = User;
 
-  User({
+  const User({
     required this.userName,
     required this.password,
     required this.token,
