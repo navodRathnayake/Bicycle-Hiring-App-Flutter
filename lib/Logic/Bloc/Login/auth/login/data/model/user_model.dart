@@ -1,7 +1,7 @@
 library user_model;
 
 import 'package:equatable/equatable.dart';
-import 'package:final_project/Services/repository/user%20repository/user_repository.dart';
+import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 
 class User extends Equatable {
   final String userName;
