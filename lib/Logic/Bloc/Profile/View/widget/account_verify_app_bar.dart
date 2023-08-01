@@ -1,10 +1,11 @@
 library account_verify_app_bar;
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:final_project/Const/Widget/row_spacer.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/custom_settings_icon.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/popup_settings_menu.dart';
+import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AccountVerifyAppBar extends StatelessWidget {
   final ThemeData themeData;
@@ -52,7 +53,9 @@ class AccountVerifyAppBar extends StatelessWidget {
           ],
         ),
         PopUpSettingsMenu(
-          icon: Container(
+          authenticationRepository:
+              RepositoryProvider.of<AuthenticationRepository>(context),
+          icon: SizedBox(
             width: 40,
             child: CustomSettingsIcon(
               themeData: themeData,

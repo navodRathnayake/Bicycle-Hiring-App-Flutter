@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:final_project/Logic/Bloc/Login/auth/login/data/data%20provider/login_form_api.dart';
 import 'package:final_project/Logic/Bloc/Login/auth/login/data/repository/login_form_repository.dart';
 import 'package:final_project/Services/database/sqlite_helper.dart';
+import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:formz/formz.dart';
 
@@ -14,7 +15,9 @@ part 'login_event.dart';
 part 'login_state.dart';
 
 class LoginFormBloc extends Bloc<LoginFormEvent, LoginFormState> {
-  LoginFormBloc() : super(const LoginFormState()) {
+  final AuthenticationRepository authenticationRepository;
+  LoginFormBloc({required this.authenticationRepository})
+      : super(const LoginFormState()) {
     on<EmailChanged>(_onEmailChanged);
     on<PasswordChanged>(_onPasswordChanged);
 
@@ -106,6 +109,9 @@ class LoginFormBloc extends Bloc<LoginFormEvent, LoginFormState> {
           debugPrint(localDB.toString());
 
           debugPrint('Successfuly login');
+
+          authenticationRepository.logIn(
+              email: state.email.value, password: state.password.value);
 
           // add routes here - navigator.pop()
         } else {

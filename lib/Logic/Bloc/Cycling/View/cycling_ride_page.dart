@@ -1,12 +1,13 @@
 library cycling_ride_page;
 
-import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:final_project/Const/Widget/column_spacer.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/avatar.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/custom_settings_icon.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/points.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/popup_settings_menu.dart';
+import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rolling_switch/rolling_switch.dart';
 
 class CyclingRidePage extends StatelessWidget {
@@ -30,9 +31,11 @@ class CyclingRidePage extends StatelessWidget {
           Padding(
               padding: const EdgeInsets.only(right: 0.0),
               child: PopUpSettingsMenu(
+                  authenticationRepository:
+                      RepositoryProvider.of<AuthenticationRepository>(context),
                   icon: CustomSettingsIcon(
-                themeData: themeData,
-              ))),
+                    themeData: themeData,
+                  ))),
         ],
       ),
       body: SingleChildScrollView(
@@ -204,7 +207,7 @@ class CyclingRidePage extends StatelessWidget {
                                     fontWeight: FontWeight.normal,
                                   ),
                                 ),
-                                Row(),
+                                const Row(),
                               ],
                             ),
                           ),
@@ -249,13 +252,13 @@ class CyclingRidePage extends StatelessWidget {
                                   ),
                                 ),
                                 Flexible(
-                                  child: Container(
+                                  child: SizedBox(
                                     height: 160,
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Container(
                                         color: Colors.amber,
-                                        child: Column(
+                                        child: const Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
                                           children: [

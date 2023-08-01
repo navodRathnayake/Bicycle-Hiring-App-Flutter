@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:final_project/Services/push%20notification/notification.dart';
 import 'package:final_project/Services/push%20notification/push_notification_healper_class.dart';
+import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:final_project/app.dart';
@@ -57,7 +58,9 @@ void main(List<String> args) async {
     }
   });
 
-  runApp(const App());
+  runApp(App(
+    authenticationRepository: AuthenticationRepository(),
+  ));
 }
 
 class MyHttpOverrides extends HttpOverrides {

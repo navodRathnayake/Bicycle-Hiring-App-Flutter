@@ -3,6 +3,8 @@ library auth_repository;
 import 'dart:async';
 import 'package:final_project/Logic/Bloc/Login/auth/login/data/data%20provider/login_form_api.dart';
 import 'package:final_project/Logic/Bloc/Login/auth/login/data/repository/login_form_repository.dart';
+import 'package:final_project/Logic/Bloc/Login/auth/logout/data/data%20provider/logout_request_api.dart';
+import 'package:final_project/Logic/Bloc/Login/auth/logout/data/repository/logout_request_repository.dart';
 import 'package:final_project/Services/database/sqlite_helper.dart';
 import 'package:flutter/material.dart';
 
@@ -62,13 +64,19 @@ class AuthenticationRepository {
         debugPrint(localDB.toString());
 
         debugPrint('Successfuly login');
+        debugPrint(result['body'].toString());
+        // ignore: prefer_interpolation_to_compose_strings
+        debugPrint('STATUD ID : ' + result['body']['status id']);
 
         if (result['body']['status id'] == 1) {
           _controller.add(AuthenticationStatus.loginNonVerified);
+          debugPrint('AUTH STREAMER : loginNonVerified');
         } else if (result['body']['status id'] == 2) {
           _controller.add(AuthenticationStatus.logingVerified);
+          debugPrint('AUTH STREAMER : loginVerified');
         } else {
           _controller.add(AuthenticationStatus.logout);
+          debugPrint('AUTH STREAMER : logout');
         }
 
         // add routes here - navigator.pop()
@@ -81,8 +89,28 @@ class AuthenticationRepository {
     }
   }
 
-  void logOut() {
-    _controller.add(AuthenticationStatus.loginNonVerified);
+  void logOut() async {
+    try {
+      final result = await LogoutRequestedRepository(api: LogoutRequestedApi())
+          .getRegisterResponse();
+
+      debugPrint(result.toString());
+
+      if (result['result'] == 1) {
+        SqfliteHelper.instance.updateLogout();
+
+        debugPrint('\n---------------------------------------------------\n');
+        var localDB = await SqfliteHelper.instance.readUserData();
+        debugPrint(localDB.toString());
+        debugPrint('\n---------------------------------------------------\n');
+
+        _controller.add(AuthenticationStatus.logout);
+      } else {
+        debugPrint('logout Failure');
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   void dispose() => _controller.close();

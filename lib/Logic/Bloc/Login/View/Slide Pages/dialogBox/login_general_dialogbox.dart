@@ -2,6 +2,7 @@ library login_general_dialogbox;
 
 import 'package:final_project/Logic/Bloc/Login/View/Slide%20Pages/Src/login_form_body.dart';
 import 'package:final_project/Logic/Bloc/Login/auth/login/bloc/login_bloc.dart';
+import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -32,7 +33,10 @@ Future<Object?> logInGeneralDialogBox(
             borderRadius: BorderRadius.circular(40),
           ),
           child: BlocProvider(
-            create: (context) => LoginFormBloc(),
+            create: (context) => LoginFormBloc(
+              authenticationRepository:
+                  RepositoryProvider.of<AuthenticationRepository>(context),
+            ),
             child: Scaffold(
               resizeToAvoidBottomInset: false,
               backgroundColor: Colors.transparent,

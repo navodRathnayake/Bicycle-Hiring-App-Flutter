@@ -1,16 +1,17 @@
 library popup_settings_menu;
 
+import 'package:final_project/Const/Widget/row_spacer.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/src/setting/slider_label_generator.dart';
+import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../Settings/settings_bloc.dart';
 
 class PopUpSettingsMenu extends StatelessWidget {
   final Widget icon;
-  const PopUpSettingsMenu({
-    super.key,
-    required this.icon,
-  });
+  final AuthenticationRepository authenticationRepository;
+  const PopUpSettingsMenu(
+      {super.key, required this.icon, required this.authenticationRepository});
 
   @override
   Widget build(BuildContext context) {
@@ -84,70 +85,93 @@ class PopUpSettingsMenu extends StatelessWidget {
                     ),
                   ],
                 )),
-            //PopupMenuDivider(),
+            const PopupMenuDivider(),
             PopupMenuItem(
                 padding: const EdgeInsets.all(10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Internationalization'),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Center(
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                    BlocBuilder<SettingsBloc, SettingsState>(
+                      builder: (context, state) {
+                        return Row(
                           children: [
-                            BlocBuilder<SettingsBloc, SettingsState>(
-                              builder: (context, state) {
-                                return SegmentedButton(
-                                  multiSelectionEnabled: false,
-                                  onSelectionChanged: (internationalization) {
-                                    BlocProvider.of<SettingsBloc>(context).add(
-                                        InternationalizationChanged(
-                                            internationalization:
-                                                internationalization));
-                                  },
-                                  //selectedIcon: const Icon(Icons.done),
-                                  segments: const [
-                                    ButtonSegment(
-                                      value: AppInternatinalization.english,
-                                      icon:
-                                          null, //Icon(Icons.language_outlined),
-                                      label: Text('En'),
-                                      enabled: true,
-                                    ),
-                                    ButtonSegment(
-                                      value: AppInternatinalization.sinhala,
-                                      icon:
-                                          null, //Icon(Icons.language_outlined),
-                                      label: Text('සිංහල'),
-                                      enabled: true,
-                                    ),
-                                    ButtonSegment(
-                                      value: AppInternatinalization.tamil,
-                                      icon:
-                                          null, //Icon(Icons.language_outlined),
-                                      label: Text('தமிழ்'),
-                                      enabled: true,
-                                    ),
-                                  ],
-                                  selected: context
-                                      .read<SettingsBloc>()
-                                      .state
-                                      .internationalization,
-                                  emptySelectionAllowed: true,
-                                );
-                              },
-                            )
+                            Image.asset(
+                              'Assets/icons/logout.png',
+                              scale: 2,
+                            ),
+                            const RowSpacer(width: 10),
+                            const Text('Log Out'),
                           ],
-                        ),
-                      ),
+                        );
+                      },
                     ),
                   ],
-                )),
+                ),
+                onTap: () {
+                  authenticationRepository.logOut();
+                }),
+            const PopupMenuDivider(),
+            PopupMenuItem(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Internationalization'),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Center(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          BlocBuilder<SettingsBloc, SettingsState>(
+                            builder: (context, state) {
+                              return SegmentedButton(
+                                multiSelectionEnabled: false,
+                                onSelectionChanged: (internationalization) {
+                                  BlocProvider.of<SettingsBloc>(context).add(
+                                      InternationalizationChanged(
+                                          internationalization:
+                                              internationalization));
+                                },
+                                //selectedIcon: const Icon(Icons.done),
+                                segments: const [
+                                  ButtonSegment(
+                                    value: AppInternatinalization.english,
+                                    icon: null, //Icon(Icons.language_outlined),
+                                    label: Text('En'),
+                                    enabled: true,
+                                  ),
+                                  ButtonSegment(
+                                    value: AppInternatinalization.sinhala,
+                                    icon: null, //Icon(Icons.language_outlined),
+                                    label: Text('සිංහල'),
+                                    enabled: true,
+                                  ),
+                                  ButtonSegment(
+                                    value: AppInternatinalization.tamil,
+                                    icon: null, //Icon(Icons.language_outlined),
+                                    label: Text('தமிழ்'),
+                                    enabled: true,
+                                  ),
+                                ],
+                                selected: context
+                                    .read<SettingsBloc>()
+                                    .state
+                                    .internationalization,
+                                emptySelectionAllowed: true,
+                              );
+                            },
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         );
       },

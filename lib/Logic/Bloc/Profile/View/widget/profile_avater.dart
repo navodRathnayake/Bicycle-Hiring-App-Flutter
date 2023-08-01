@@ -2,7 +2,9 @@ library profile_avater;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:final_project/Const/Widget/row_spacer.dart';
+import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../Home/View/Widget/custom_settings_icon.dart';
 import '../../../Home/View/Widget/popup_settings_menu.dart';
@@ -50,7 +52,7 @@ class ProfileAvater extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Markus D.', style: themeData.textTheme.headlineLarge),
-                Text(
+                const Text(
                   'sample@gmail.com',
                 ),
               ],
@@ -58,7 +60,9 @@ class ProfileAvater extends StatelessWidget {
           ],
         ),
         PopUpSettingsMenu(
-          icon: Container(
+          authenticationRepository:
+              RepositoryProvider.of<AuthenticationRepository>(context),
+          icon: SizedBox(
             width: 40,
             child: CustomSettingsIcon(
               themeData: themeData,

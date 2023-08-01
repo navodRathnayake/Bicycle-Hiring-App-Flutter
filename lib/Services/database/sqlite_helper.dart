@@ -105,13 +105,7 @@ class SqfliteHelper {
     }
   }
 
-  Future<int> updateLogout({
-    required String token,
-    required String userName,
-    required String password,
-    required String status,
-    required String image,
-  }) async {
+  Future<int> updateLogout() async {
     try {
       final db = await instance.database;
       await db.rawUpdate(

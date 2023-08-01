@@ -1,11 +1,12 @@
 library home_page;
 
-import 'package:final_project/Const/Widget/column_spacer.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/avatar.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/bottom_ui.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/breaker.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/points.dart';
+import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'Widget/custom_settings_icon.dart';
 import 'Widget/home_dashboard.dart';
 import 'Widget/popup_settings_menu.dart';
@@ -31,9 +32,11 @@ class HomePage extends StatelessWidget {
           Padding(
               padding: const EdgeInsets.only(right: 0.0),
               child: PopUpSettingsMenu(
+                  authenticationRepository:
+                      RepositoryProvider.of<AuthenticationRepository>(context),
                   icon: CustomSettingsIcon(
-                themeData: themeData,
-              ))),
+                    themeData: themeData,
+                  ))),
         ],
       ),
       body: SafeArea(

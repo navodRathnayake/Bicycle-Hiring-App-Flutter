@@ -8,6 +8,7 @@ import 'package:final_project/Logic/Bloc/Home/View/Widget/avatar.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/custom_settings_icon.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/points.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/popup_settings_menu.dart';
+import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -51,9 +52,12 @@ class CyclingStepperPage extends StatelessWidget {
             Padding(
                 padding: const EdgeInsets.only(right: 0.0),
                 child: PopUpSettingsMenu(
+                    authenticationRepository:
+                        RepositoryProvider.of<AuthenticationRepository>(
+                            context),
                     icon: CustomSettingsIcon(
-                  themeData: themeData,
-                ))),
+                      themeData: themeData,
+                    ))),
           ],
         ),
         body: BlocBuilder<StepperBloc, StepperState>(

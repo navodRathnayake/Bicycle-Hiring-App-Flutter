@@ -2,7 +2,9 @@ library route_page_app_bar;
 
 import 'package:final_project/Logic/Bloc/Home/View/Widget/custom_settings_icon.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/popup_settings_menu.dart';
+import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RoutePageAppBar extends StatelessWidget {
   final String startLocation;
@@ -58,7 +60,9 @@ class RoutePageAppBar extends StatelessWidget {
           ],
         ),
         PopUpSettingsMenu(
-          icon: Container(
+          authenticationRepository:
+              RepositoryProvider.of<AuthenticationRepository>(context),
+          icon: SizedBox(
             width: 40,
             child: CustomSettingsIcon(
               themeData: themeData,

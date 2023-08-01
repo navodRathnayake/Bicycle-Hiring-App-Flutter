@@ -18,7 +18,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'Constraints/constraints.dart';
 
 class App extends StatelessWidget {
-  const App({super.key});
+  final AuthenticationRepository authenticationRepository;
+  const App({super.key, required this.authenticationRepository});
 
   @override
   Widget build(BuildContext context) {
@@ -26,19 +27,23 @@ class App extends StatelessWidget {
       debugPrint('Firebase Device Code : $value');
     });
 
-    return MultiBlocProvider(
+    return MultiRepositoryProvider(
       providers: [
+        RepositoryProvider<AuthenticationRepository>(
+            create: (context) => authenticationRepository),
+      ],
+      child: MultiBlocProvider(providers: [
         BlocProvider<SettingsBloc>(create: (_) => SettingsBloc()),
         BlocProvider<NetworkCubit>(
             create: (_) => NetworkCubit(connectivity: Connectivity())),
-      ],
-      child: BlocProvider(
-        create: (context) => AutherizationBloc(
-          authenticationRepository: AuthenticationRepository(),
-          userRepository: UserRepository(),
+        BlocProvider(
+          create: (_) => AutherizationBloc(
+            authenticationRepository: authenticationRepository,
+            userRepository: UserRepository(),
+          ),
+          child: AppView(),
         ),
-        child: AppView(),
-      ),
+      ], child: const AppView()),
     );
   }
 }
