@@ -87,16 +87,18 @@ class ProfileCompletion extends StatelessWidget {
                                       padding: const EdgeInsets.all(8),
                                     ),
                                     onPressed: () {
-                                      BlocProvider.of<AccountCompletionBloc>(
-                                              context)
-                                          .add(AccountCompletionStepEvent(
-                                        currentTappedStep:
-                                            state.currentTappedStep,
-                                        currentCompletionStep:
-                                            state.currentCompletionStep + 1,
-                                        progressIndicatorValue:
-                                            state.progressIndicatorValue + 25,
-                                      ));
+                                      // BlocProvider.of<AccountCompletionBloc>(
+                                      //         context)
+                                      //     .add(AccountCompletionStepEvent(
+                                      //   currentTappedStep:
+                                      //       state.currentTappedStep,
+                                      //   currentCompletionStep:
+                                      //       state.currentCompletionStep + 1,
+                                      //   progressIndicatorValue:
+                                      //       state.progressIndicatorValue + 25,
+                                      // ));
+                                      Navigator.of(context).pushNamed(
+                                          '/verifyDrivingLicenseSelection');
                                     },
                                     child: const FittedBox(
                                       child: Text('Enroll Now'),
