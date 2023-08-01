@@ -113,7 +113,6 @@ class _AppViewState extends State<AppView> {
           themeMode: (state.themeModeStatus == AppThemeMode.lightMode)
               ? ThemeMode.light
               : ThemeMode.dark,
-          home: const AuthController(),
           onGenerateRoute: Routes.onGenerate,
         );
       },

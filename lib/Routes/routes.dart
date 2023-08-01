@@ -7,10 +7,11 @@ import 'package:final_project/Logic/Bloc/Cycling/View/steps/bicycle_data_view.da
 import 'package:final_project/Logic/Bloc/Cycling/View/steps/bicycle_package_view.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/steps/bicycle_term_and_condition_view.dart';
 import 'package:final_project/Logic/Bloc/Cycling/bloc/cycling_bloc.dart';
-import 'package:final_project/Logic/Bloc/Profile/View/verify_driving_license_selection.dart';
+import 'package:final_project/Logic/Bloc/OCR/view/verify_driving_license_selection.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/view/billing_details_page.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/view/recent_activity_route_page.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/view/recent_activity_view.dart';
+import 'package:final_project/Splash/View/splash_activity.dart';
 import 'package:final_project/bottom_navigation_bar_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,7 +21,7 @@ class Routes {
     switch (routeSettings.name) {
       case '/':
         return MaterialPageRoute(
-          builder: (context) => const BottomNavigationBarController(),
+          builder: (context) => const SplashActivity(),
         );
 
       case '/recentActivity':
