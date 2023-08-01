@@ -16,11 +16,13 @@ class LoginFormRepository {
       if (rawResponseData['status code'] == 200) {
         var token = response['token'].toString();
         var message = response['message'].toString();
+        var statusID = response['status id'].toString();
 
         return {
           'result': 1,
           'status code': rawResponseData['status code'].toString(),
           'body': {
+            'status id': statusID,
             'token': token,
             'message': message,
           },
@@ -28,7 +30,7 @@ class LoginFormRepository {
       } else {
         return {
           'result': 0,
-          'error': response['status code'],
+          'error': response['status'],
         };
       }
     } catch (e) {

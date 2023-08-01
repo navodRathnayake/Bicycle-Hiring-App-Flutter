@@ -65,13 +65,11 @@ class AuthenticationRepository {
 
         debugPrint('Successfuly login');
         debugPrint(result['body'].toString());
-        // ignore: prefer_interpolation_to_compose_strings
-        debugPrint('STATUD ID : ' + result['body']['status id']);
 
-        if (result['body']['status id'] == 1) {
+        if (result['body']['status id'] == '1') {
           _controller.add(AuthenticationStatus.loginNonVerified);
           debugPrint('AUTH STREAMER : loginNonVerified');
-        } else if (result['body']['status id'] == 2) {
+        } else if (result['body']['status id'] == '2') {
           _controller.add(AuthenticationStatus.logingVerified);
           debugPrint('AUTH STREAMER : loginVerified');
         } else {
