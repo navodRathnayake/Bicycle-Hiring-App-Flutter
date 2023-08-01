@@ -19,16 +19,16 @@ class RoundedLayout extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Row(
           children: [
-            Column(
-              children: const [
+            const Column(
+              children: [
                 Text('WED'),
                 Text('6 June'),
               ],
             ),
             RowSpacer(width: spacerWidth),
-            Column(
+            const Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
+              children: [
                 Icon(Icons.sunny),
                 Text('Sunny'),
               ],

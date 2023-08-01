@@ -2,7 +2,7 @@ library recent_activity_route_page;
 
 import 'package:final_project/Const/Widget/column_spacer.dart';
 import 'package:final_project/Const/Widget/row_spacer.dart';
-import 'package:final_project/Logic/Bloc/Recent%20Activity/view/widget/routePageAppBar.dart';
+import 'package:final_project/Logic/Bloc/Recent%20Activity/view/widget/route_page_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class RecentActivityRoutePage extends StatelessWidget {
@@ -128,7 +128,7 @@ class RouteCard extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 30,
-              backgroundColor: Color.fromARGB(255, 226, 224, 224),
+              backgroundColor: const Color.fromARGB(255, 226, 224, 224),
               child: Image.asset(
                 imgUrl,
                 scale: 2,

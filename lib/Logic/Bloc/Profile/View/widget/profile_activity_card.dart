@@ -3,7 +3,6 @@ library profile_activity_card;
 import 'package:final_project/Const/Widget/column_spacer.dart';
 import 'package:final_project/Const/Widget/row_spacer.dart';
 import 'package:final_project/Logic/Bloc/Profile/View/widget/charts/profile_line_chart.dart';
-import 'package:final_project/Logic/Bloc/Profile/View/widget/charts/radial_chart.dart';
 import 'package:flutter/material.dart';
 
 class ProfileActivityCard extends StatelessWidget {
@@ -29,23 +28,21 @@ class ProfileActivityCard extends StatelessWidget {
               children: [
                 Text('Portfolio activities',
                     style: themeData.textTheme.headlineSmall),
-                Container(
-                  child: Row(children: [
-                    Image.asset(
-                      'Assets/icons/card.png',
-                      scale: 1,
-                      color: themeData.colorScheme.onSecondaryContainer,
-                    ),
-                    const RowSpacer(width: 5),
-                    // Container(
-                    //   decoration: BoxDecoration(
-                    //     color: themeData.colorScheme.onSecondaryContainer,
-                    //     borderRadius: BorderRadius.circular(5),
-                    //   ),
-                    //   child: Image.asset('Assets/icons/add.png', scale: 2),
-                    // ),
-                  ]),
-                ),
+                Row(children: [
+                  Image.asset(
+                    'Assets/icons/card.png',
+                    scale: 1,
+                    color: themeData.colorScheme.onSecondaryContainer,
+                  ),
+                  const RowSpacer(width: 5),
+                  // Container(
+                  //   decoration: BoxDecoration(
+                  //     color: themeData.colorScheme.onSecondaryContainer,
+                  //     borderRadius: BorderRadius.circular(5),
+                  //   ),
+                  //   child: Image.asset('Assets/icons/add.png', scale: 2),
+                  // ),
+                ]),
               ],
             ),
             Row(
@@ -86,7 +83,7 @@ class ProfileActivityCard extends StatelessWidget {
                 // )
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 100,
               child: ProfileLineChart(),
             )

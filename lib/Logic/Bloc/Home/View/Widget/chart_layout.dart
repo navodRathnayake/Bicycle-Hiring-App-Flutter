@@ -41,7 +41,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     dataSource: _chartData,
                     xValueMapper: (SalesData sales, _) => sales.year,
                     yValueMapper: (SalesData sales, _) => sales.sales,
-                    dataLabelSettings: DataLabelSettings(isVisible: false),
+                    dataLabelSettings:
+                        const DataLabelSettings(isVisible: false),
                     enableTooltip: true)
               ],
               primaryXAxis: NumericAxis(

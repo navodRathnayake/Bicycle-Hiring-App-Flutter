@@ -17,30 +17,28 @@ class RecentActivityAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          IconButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              icon: Image.asset(
-                'Assets/icons/back_arrow.png',
-                scale: 2,
-              )),
-          Text(title, style: themeData.textTheme.headlineSmall),
-          PopUpSettingsMenu(
-              authenticationRepository:
-                  RepositoryProvider.of<AuthenticationRepository>(context),
-              icon: SizedBox(
-                width: 40,
-                child: CustomSettingsIcon(
-                  themeData: themeData,
-                ),
-              ))
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: Image.asset(
+              'Assets/icons/back_arrow.png',
+              scale: 2,
+            )),
+        Text(title, style: themeData.textTheme.headlineSmall),
+        PopUpSettingsMenu(
+            authenticationRepository:
+                RepositoryProvider.of<AuthenticationRepository>(context),
+            icon: SizedBox(
+              width: 40,
+              child: CustomSettingsIcon(
+                themeData: themeData,
+              ),
+            ))
+      ],
     );
   }
 }

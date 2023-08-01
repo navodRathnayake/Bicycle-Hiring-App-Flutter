@@ -26,8 +26,8 @@ class BlocLayout extends StatelessWidget {
                 const RowSpacer(width: 5),
                 Text('0.81/=', style: themeData.textTheme.headlineMedium),
               ]),
-              Column(
-                children: const [
+              const Column(
+                children: [
                   Text('Hourly Rate'),
                   Text('more packages'),
                 ],

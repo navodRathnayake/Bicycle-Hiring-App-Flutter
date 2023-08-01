@@ -41,7 +41,7 @@ class App extends StatelessWidget {
             authenticationRepository: authenticationRepository,
             userRepository: UserRepository(),
           ),
-          child: AppView(),
+          child: const AppView(),
         ),
       ], child: const AppView()),
     );

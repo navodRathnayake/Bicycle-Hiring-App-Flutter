@@ -30,7 +30,7 @@ class RecentActivityView extends StatelessWidget {
             const ColumnSpacer(
               height: 10,
             ),
-            Container(
+            SizedBox(
               height: 100,
               width: double.maxFinite,
               child: Center(

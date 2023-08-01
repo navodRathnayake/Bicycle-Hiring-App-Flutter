@@ -1,12 +1,5 @@
 library auth_controller;
 
-import 'package:final_project/Logic/Bloc/Cycling/View/cicling_stepper_page.dart';
-import 'package:final_project/Logic/Bloc/Cycling/View/cycling_ride_page.dart';
-import 'package:final_project/Logic/Bloc/Cycling/View/steps/bicycle_package_view.dart';
-import 'package:final_project/Logic/Bloc/Cycling/View/steps/bicycle_term_and_condition_view.dart';
-import 'package:final_project/Logic/Bloc/Login/View/Slide%20Pages/login_page.dart';
-import 'package:final_project/Logic/Bloc/Profile/View/profile_completion_page.dart';
-import 'package:final_project/Logic/Bloc/Profile/View/user_profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -17,15 +10,14 @@ class AuthController extends StatelessWidget {
   const AuthController({super.key});
   @override
   Widget build(BuildContext context) {
-    ThemeData themeData = Theme.of(context);
     return Scaffold(
       body: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return PageSlider(); //const BottomNavigationBarController();
+            return const PageSlider(); //const BottomNavigationBarController();
           } else {
-            return BottomNavigationBarController(); //
+            return const BottomNavigationBarController(); //
           }
         },
       ),

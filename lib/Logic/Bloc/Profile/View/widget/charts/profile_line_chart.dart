@@ -10,19 +10,20 @@ class ProfileLineChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return SfSparkLineChart(
         //Enable the trackball
-        trackball:
-            SparkChartTrackball(activationMode: SparkChartActivationMode.tap),
+        trackball: const SparkChartTrackball(
+            activationMode: SparkChartActivationMode.tap),
         //Enable marker
-        marker: SparkChartMarker(displayMode: SparkChartMarkerDisplayMode.all),
+        marker: const SparkChartMarker(
+            displayMode: SparkChartMarkerDisplayMode.all),
         axisCrossesAt: 1,
-        axisLineDashArray: [2, 2],
-        dashArray: [2, 2],
-        plotBand: SparkChartPlotBand(),
+        axisLineDashArray: const [2, 2],
+        dashArray: const [2, 2],
+        plotBand: const SparkChartPlotBand(),
 
         //Enable data label
         labelDisplayMode: SparkChartLabelDisplayMode.none,
         axisLineColor: Colors.red,
-        data: <double>[
+        data: const <double>[
           1,
           5,
           -6,

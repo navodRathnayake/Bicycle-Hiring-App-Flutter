@@ -48,7 +48,7 @@ class _PrimaryLoadingPageState extends State<PrimaryLoadingPage> {
                   )),
             ],
           ),
-          Positioned(
+          const Positioned(
             bottom: 10,
             left: 0,
             right: 0,

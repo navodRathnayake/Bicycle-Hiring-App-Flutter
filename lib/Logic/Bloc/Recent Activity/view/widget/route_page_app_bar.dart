@@ -45,8 +45,8 @@ class RoutePageAppBar extends StatelessWidget {
             ),
             Row(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 5),
+                const Padding(
+                  padding: EdgeInsets.only(right: 5),
                   child: Icon(Icons.lock_clock),
                 ),
                 Text(

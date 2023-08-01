@@ -1,10 +1,7 @@
 library login_app_detail;
 
-import 'package:final_project/Logic/Bloc/Login/View/Slide%20Pages/Src/login_form_body.dart';
-import 'package:final_project/Logic/Bloc/Login/View/Slide%20Pages/Src/signin_form_body.dart';
 import 'package:final_project/Logic/Bloc/Login/View/Slide%20Pages/dialogBox/signin_general_dialogbox.dart';
 import 'package:flutter/material.dart';
-
 import '../../../../../../Const/Widget/column_spacer.dart';
 import '../../../../../../Const/Widget/row_spacer.dart';
 

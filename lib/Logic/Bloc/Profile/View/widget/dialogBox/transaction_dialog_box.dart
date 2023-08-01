@@ -161,7 +161,7 @@ class TransactionChartView extends StatelessWidget {
           ],
         ),
         const Divider(),
-        Container(
+        SizedBox(
           height: 300,
           width: 300,
           child: Padding(

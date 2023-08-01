@@ -95,11 +95,11 @@ class ShimmerCustomContainer extends StatelessWidget {
       child: Container(
         width: width,
         height: height,
-        child: Text('xss'),
         decoration: BoxDecoration(
           color: Colors.amber,
           borderRadius: BorderRadius.circular(radius),
         ),
+        child: const Text('xss'),
       ),
     );
   }

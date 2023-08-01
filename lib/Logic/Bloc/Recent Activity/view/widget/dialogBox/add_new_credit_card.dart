@@ -4,7 +4,6 @@ import 'package:final_project/Const/Widget/column_spacer.dart';
 import 'package:final_project/Const/Widget/row_spacer.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dialogBox/dialogBox_ok_button.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dialogBox/dialogbox_close_button.dart';
-import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dialogBox/dialogbox_secondary_button.dart';
 import 'package:flutter/material.dart';
 
 Future<void> addNewCreditCardDialogBox(
@@ -58,9 +57,9 @@ class FormView extends StatelessWidget {
           keyboardType: TextInputType.number,
           maxLength: 16,
         ),
-        Row(
+        const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             SizedBox(
               width: 130,
               child: CustomInputField(

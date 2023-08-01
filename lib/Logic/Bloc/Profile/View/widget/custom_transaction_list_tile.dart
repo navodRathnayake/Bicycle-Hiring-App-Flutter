@@ -37,7 +37,7 @@ class CustomTransactionListTile extends StatelessWidget {
       title:
           type == 1 ? const Text('Card Payment') : const Text('Transport Cost'),
       subtitle: Text(date),
-      trailing: Text('Rs 2375'),
+      trailing: const Text('Rs 2375'),
       tileColor: type == 1
           ? themeData.colorScheme.surfaceVariant
           : themeData.colorScheme.onInverseSurface,

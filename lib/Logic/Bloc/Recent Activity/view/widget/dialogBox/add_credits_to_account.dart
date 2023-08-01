@@ -6,7 +6,6 @@ import 'package:final_project/Const/Widget/row_spacer.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dialogBox/dialogBox_ok_button.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dialogBox/dialogbox_close_button.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dialogBox/dialogbox_secondary_button.dart';
-import 'package:final_project/Logic/Bloc/Recent%20Activity/view/widget/dialogBox/add_new_credit_card.dart';
 import 'package:flutter/material.dart';
 
 Future<void> addCreaditToAccount(

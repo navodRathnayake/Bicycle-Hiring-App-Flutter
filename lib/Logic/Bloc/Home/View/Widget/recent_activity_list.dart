@@ -76,12 +76,12 @@ class RecentActivityList extends StatelessWidget {
                                   color: Colors.redAccent,
                                   borderRadius: BorderRadius.circular(5),
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(5),
-                                  child: const Text('8.40 am'),
+                                child: const Padding(
+                                  padding: EdgeInsets.all(5),
+                                  child: Text('8.40 am'),
                                 ),
                               ),
-                              Text('Kandy - Peradeniya'),
+                              const Text('Kandy - Peradeniya'),
                               Row(
                                 children: [
                                   Container(

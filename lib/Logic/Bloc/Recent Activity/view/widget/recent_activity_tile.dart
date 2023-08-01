@@ -1,7 +1,6 @@
 library recent_activity_tile;
 
 import 'package:final_project/Const/Widget/column_spacer.dart';
-import 'package:final_project/Logic/Bloc/Recent%20Activity/view/widget/day_widget.dart';
 import 'package:flutter/material.dart';
 
 class RecentActivityTile extends StatelessWidget {
@@ -25,7 +24,7 @@ class RecentActivityTile extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: themeData.colorScheme.background,
-          border: Border(
+          border: const Border(
               left:
                   BorderSide(color: Color.fromARGB(255, 54, 55, 56), width: 3)),
         ),

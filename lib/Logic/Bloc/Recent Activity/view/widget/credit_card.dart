@@ -64,7 +64,7 @@ class CardInfo extends StatelessWidget {
             Text('CREDIT CARD', style: themeData.textTheme.headlineMedium),
           ],
         ),
-        ColumnSpacer(height: 10),
+        const ColumnSpacer(height: 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [

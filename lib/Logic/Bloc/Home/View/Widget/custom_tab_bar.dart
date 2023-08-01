@@ -140,7 +140,7 @@ class _CustomTabBar extends State<CustomTabBar> {
           ),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(top: 0),
+              padding: const EdgeInsets.only(top: 0),
               child: tabContentList[current],
             ),
           )
@@ -155,7 +155,7 @@ class TabContent1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RecentActivityList();
+    return const RecentActivityList();
   }
 }
 

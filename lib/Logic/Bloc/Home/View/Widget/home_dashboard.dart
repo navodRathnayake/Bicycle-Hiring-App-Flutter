@@ -4,7 +4,7 @@ import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dashboard/base_lay
 import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dashboard/view_availability.dart';
 import 'package:flutter/material.dart';
 
-import 'src/dashboard/Rounded_layout.dart';
+import 'src/dashboard/rounded_layout.dart';
 import 'src/dashboard/bloc_layout.dart';
 import 'chart_layout.dart';
 import 'src/dashboard/info_layout.dart';
