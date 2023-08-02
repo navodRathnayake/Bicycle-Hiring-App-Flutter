@@ -1,9 +1,13 @@
 library verify_driving_license_selection;
 
-import 'package:final_project/Const/Widget/column_spacer.dart';
-import 'package:final_project/Constraints/constraints.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/custom_settings_icon.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/popup_settings_menu.dart';
+import 'package:final_project/Logic/Bloc/OCR/bloc/ocr_bloc.dart';
+import 'package:final_project/Logic/Bloc/OCR/view/widgets/verify_initial_body.dart';
+import 'package:final_project/Logic/Bloc/OCR/view/widgets/verify_ocr_failure.dart';
+import 'package:final_project/Logic/Bloc/OCR/view/widgets/verify_ocr_success.dart';
+import 'package:final_project/Logic/Bloc/OCR/view/widgets/verify_update_failure.dart';
+import 'package:final_project/Logic/Bloc/OCR/view/widgets/verify_update_success.dart';
 import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,114 +18,59 @@ class VerifyDrivingLicenseSelection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        leading: Padding(
-          padding: const EdgeInsets.all(10),
-          child: GestureDetector(
-            onTap: () {
-              Navigator.of(context).pop();
-            },
-            child: Row(
-              children: [
-                Image.asset(
-                  'Assets/icons/back_arrow.png',
-                  scale: 2,
-                  color: themeData.colorScheme.onBackground,
-                ),
-              ],
+    return BlocProvider(
+      create: (context) => OCRBloc(),
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          leading: Padding(
+            padding: const EdgeInsets.all(10),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Row(
+                children: [
+                  Image.asset(
+                    'Assets/icons/back_arrow.png',
+                    scale: 2,
+                    color: themeData.colorScheme.onBackground,
+                  ),
+                ],
+              ),
             ),
           ),
+          actions: [
+            Padding(
+                padding: const EdgeInsets.only(right: 0.0),
+                child: PopUpSettingsMenu(
+                    authenticationRepository:
+                        RepositoryProvider.of<AuthenticationRepository>(
+                            context),
+                    icon: CustomSettingsIcon(
+                      themeData: themeData,
+                    ))),
+          ],
         ),
-        actions: [
-          Padding(
-              padding: const EdgeInsets.only(right: 0.0),
-              child: PopUpSettingsMenu(
-                  authenticationRepository:
-                      RepositoryProvider.of<AuthenticationRepository>(context),
-                  icon: CustomSettingsIcon(
-                    themeData: themeData,
-                  ))),
-        ],
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Column(
-            children: [
-              GestureDetector(
-                onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return Container(
-                        height: 150,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Column(
-                          children: [
-                            const ColumnSpacer(height: 20),
-                            ListTile(
-                              title: const Text('Gallery'),
-                              leading: Image.asset(
-                                'Assets/icons/gallery.png',
-                                scale: 2,
-                                color: themeData.colorScheme.onBackground,
-                              ),
-                              onTap: () {},
-                            ),
-                            ListTile(
-                              title: const Text('Camera'),
-                              leading: Image.asset(
-                                'Assets/icons/camera.png',
-                                scale: 2,
-                                color: themeData.colorScheme.onBackground,
-                              ),
-                              onTap: () {},
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                },
-                child: Image.asset(
-                  'Assets/icons/finger.png',
-                  color: themeData.colorScheme.onBackground,
-                  scale: 6,
-                ),
-              ),
-              const ColumnSpacer(height: 30),
-              const Text(
-                'VERIFY',
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 10,
-                ),
-              ),
-              const ColumnSpacer(height: 10),
-              const Text(
-                'YOUR ACCOUNT',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w300,
-                  letterSpacing: 10,
-                ),
-              ),
-              const ColumnSpacer(height: 30),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: Text(
-                  useLicense,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ],
-          ),
-        ],
+        body: BlocBuilder<OCRBloc, OCRState>(
+          builder: (context, state) {
+            if (state.status == OCRStatus.initial) {
+              return VerifyInitialBody(themeData: themeData);
+            } else if (state.status == OCRStatus.ocrProcess) {
+              return VerifyInitialBody(themeData: themeData);
+            } else if (state.status == OCRStatus.ocrSuccess) {
+              return const VerifyOCRSuccess();
+            } else if (state.status == OCRStatus.ocrFailure) {
+              return const VerifyOCRFailure();
+            } else if (state.status == OCRStatus.updateSucsses) {
+              return const VerifyUpdateSuccess();
+            } else if (state.status == OCRStatus.updateFailure) {
+              return const VerifyUpdateFailure();
+            } else {
+              return VerifyInitialBody(themeData: themeData);
+            }
+          },
+        ),
       ),
     );
   }
