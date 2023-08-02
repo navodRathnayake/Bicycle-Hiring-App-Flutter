@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -39,48 +41,66 @@ class OCRBloc extends Bloc<OCREvent, OCRState> {
       ));
 
       final inputImage = InputImage.fromFilePath(state.xfile!.path);
-      // final textDetector = GoogleMlKit.vision.textRecognizer();
-      // RecognizedText recognizedText =
-      //     await textDetector.processImage(inputImage);
-      // await textDetector.close();
-
-      // for (TextBlock block in recognizedText.blocks) {
-      //   for (TextLine line in block.lines) {
-      //     final String tempTextLine = line.text.toString();
-      //     if (tempTextLine.isNotEmpty) {
-      //       state.textLines!.add(tempTextLine);
-      //     }
-      //   }
-      // }
 
       final textRecognizer =
           TextRecognizer(script: TextRecognitionScript.latin);
       final RecognizedText recognizedText =
           await textRecognizer.processImage(inputImage);
 
-      String text = recognizedText.text;
-      debugPrint(text);
-      // for (TextBlock block in recognizedText.blocks) {
-      //   final Rect rect = block.boundingBox;
-      //   final List<Point<int>> cornerPoints = block.cornerPoints;
-      //   final String text = block.text;
-      //   final List<String> languages = block.recognizedLanguages;
+      String text1 = recognizedText.text;
+      debugPrint(text1);
+      late List<String> idData = [];
 
-      //   for (TextLine line in block.lines) {
-      //     // Same getters as TextBlock
-      //     for (TextElement element in line.elements) {
-      //       // Same getters as TextBlock
-      //     }
-      //   }
-      // }
-      textRecognizer.close();
+      if (recognizedText.blocks.length == 13) {
+        for (TextBlock block in recognizedText.blocks) {
+          String text = block.text.toString();
+          if (text.contains('4b.')) {
+            text = text.replaceAll('4b.', '');
+          } else if (text.contains('4a.')) {
+            text = text.replaceAll('4a.', '');
+          } else if (text.contains('3.')) {
+            text = text.replaceAll('3.', '');
+          } else if (text.contains('8.')) {
+            text = text.replaceAll('8.', '');
+          } else if (text.contains('1,2.')) {
+            text = text.replaceAll('1,2.', '');
+          } else if (text.contains('5.')) {
+            text = text.replaceAll('5.', '');
+          } else if (text.contains('4d.')) {
+            text = text.replaceAll('4d.', '');
+          }
 
-      emit(state.copyWith(
-        msg: 'Successfully Extracted Data',
-        status: OCRStatus.ocrSuccess,
-      ));
+          idData.add(text);
+        }
+        debugPrint(idData.toString());
+        textRecognizer.close();
+        debugPrint('\n----------------------------');
+        debugPrint(idData.toString());
+        debugPrint('\n----------------------------');
+        debugPrint('List Length : ${idData.length}');
 
-      debugPrint(state.textLines.toString());
+        Map<String, String> reqBody = {
+          'name': idData[8].toString(),
+          'blood group': idData[2].toString(),
+          'license issued date': idData[4].toString(),
+          'license expiry date': idData[3].toString(),
+          'dob': idData[5].toString(),
+          'license id': idData[9].toString(),
+          'nic': idData[10].toString(),
+        };
+
+        // network Process
+
+        debugPrint('Request : ${reqBody.toString()}');
+        emit(state.copyWith(
+          status: OCRStatus.ocrSuccess,
+        ));
+      } else {
+        emit(state.copyWith(
+          msg: 'Blocks cannot be catched!',
+          status: OCRStatus.ocrFailure,
+        ));
+      }
     } catch (e) {
       debugPrint(e.toString());
       emit(state.copyWith(

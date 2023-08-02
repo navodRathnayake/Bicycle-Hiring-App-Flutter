@@ -38,6 +38,7 @@ class VerifyInitialBody extends StatelessWidget {
                               color: themeData.colorScheme.onBackground,
                             ),
                             onTap: () {
+                              Navigator.of(context).pop();
                               BlocProvider.of<OCRBloc>(context)
                                   .add(OCRExtractingTextFromGallery());
                             },
@@ -57,22 +58,24 @@ class VerifyInitialBody extends StatelessWidget {
                   },
                 );
               },
-              child: BlocBuilder<OCRBloc, OCRState>(
-                builder: (context, state) {
-                  if (state.status == OCRStatus.initial) {
-                    return Image.asset(
-                      'Assets/icons/finger.png',
-                      color: themeData.colorScheme.onBackground,
-                      scale: 6,
-                    );
-                  }
-                  if (state.status == OCRStatus.ocrProcess) {
-                    return const CircularProgressIndicator();
-                  } else {
-                    return Container();
-                  }
-                },
-              ),
+              child: Builder(builder: (context) {
+                return BlocBuilder<OCRBloc, OCRState>(
+                  builder: (context, state) {
+                    if (state.status == OCRStatus.initial) {
+                      return Image.asset(
+                        'Assets/icons/finger.png',
+                        color: themeData.colorScheme.onBackground,
+                        scale: 6,
+                      );
+                    }
+                    if (state.status == OCRStatus.ocrProcess) {
+                      return const CircularProgressIndicator();
+                    } else {
+                      return Container();
+                    }
+                  },
+                );
+              }),
             ),
             const ColumnSpacer(height: 30),
             const Text(
