@@ -12,7 +12,7 @@ class SplashActivity extends StatefulWidget {
 
 class _SplashActivityState extends State<SplashActivity> {
   late SMITrigger ear;
-  late SMITrigger eye;
+  late SMIBool eye;
   late SMITrigger bite;
 
   StateMachineController getRiveController(Artboard artboard) {
@@ -42,7 +42,7 @@ class _SplashActivityState extends State<SplashActivity> {
                           StateMachineController controller =
                               getRiveController(artboard);
                           ear = controller.findSMI('ear') as SMITrigger;
-                          eye = controller.findSMI('eye') as SMITrigger;
+                          eye = controller.findSMI('eye') as SMIBool;
                           bite = controller.findSMI('bite') as SMITrigger;
                         },
                       ),
