@@ -37,7 +37,10 @@ class VerifyInitialBody extends StatelessWidget {
                               scale: 2,
                               color: themeData.colorScheme.onBackground,
                             ),
-                            onTap: () {},
+                            onTap: () {
+                              BlocProvider.of<OCRBloc>(context)
+                                  .add(OCRExtractingTextFromGallery());
+                            },
                           ),
                           ListTile(
                             title: const Text('Camera'),

@@ -18,59 +18,55 @@ class VerifyDrivingLicenseSelection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => OCRBloc(),
-      child: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          leading: Padding(
-            padding: const EdgeInsets.all(10),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-              child: Row(
-                children: [
-                  Image.asset(
-                    'Assets/icons/back_arrow.png',
-                    scale: 2,
-                    color: themeData.colorScheme.onBackground,
-                  ),
-                ],
-              ),
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        leading: Padding(
+          padding: const EdgeInsets.all(10),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: Row(
+              children: [
+                Image.asset(
+                  'Assets/icons/back_arrow.png',
+                  scale: 2,
+                  color: themeData.colorScheme.onBackground,
+                ),
+              ],
             ),
           ),
-          actions: [
-            Padding(
-                padding: const EdgeInsets.only(right: 0.0),
-                child: PopUpSettingsMenu(
-                    authenticationRepository:
-                        RepositoryProvider.of<AuthenticationRepository>(
-                            context),
-                    icon: CustomSettingsIcon(
-                      themeData: themeData,
-                    ))),
-          ],
         ),
-        body: BlocBuilder<OCRBloc, OCRState>(
-          builder: (context, state) {
-            if (state.status == OCRStatus.initial) {
-              return VerifyInitialBody(themeData: themeData);
-            } else if (state.status == OCRStatus.ocrProcess) {
-              return VerifyInitialBody(themeData: themeData);
-            } else if (state.status == OCRStatus.ocrSuccess) {
-              return const VerifyOCRSuccess();
-            } else if (state.status == OCRStatus.ocrFailure) {
-              return const VerifyOCRFailure();
-            } else if (state.status == OCRStatus.updateSucsses) {
-              return const VerifyUpdateSuccess();
-            } else if (state.status == OCRStatus.updateFailure) {
-              return const VerifyUpdateFailure();
-            } else {
-              return VerifyInitialBody(themeData: themeData);
-            }
-          },
-        ),
+        actions: [
+          Padding(
+              padding: const EdgeInsets.only(right: 0.0),
+              child: PopUpSettingsMenu(
+                  authenticationRepository:
+                      RepositoryProvider.of<AuthenticationRepository>(context),
+                  icon: CustomSettingsIcon(
+                    themeData: themeData,
+                  ))),
+        ],
+      ),
+      body: BlocBuilder<OCRBloc, OCRState>(
+        builder: (context, state) {
+          if (state.status == OCRStatus.initial) {
+            return VerifyInitialBody(themeData: themeData);
+          } else if (state.status == OCRStatus.ocrProcess) {
+            return VerifyInitialBody(themeData: themeData);
+          } else if (state.status == OCRStatus.ocrSuccess) {
+            return const VerifyOCRSuccess();
+          } else if (state.status == OCRStatus.ocrFailure) {
+            return const VerifyOCRFailure();
+          } else if (state.status == OCRStatus.updateSucsses) {
+            return const VerifyUpdateSuccess();
+          } else if (state.status == OCRStatus.updateFailure) {
+            return const VerifyUpdateFailure();
+          } else {
+            return VerifyInitialBody(themeData: themeData);
+          }
+        },
       ),
     );
   }
