@@ -6,6 +6,10 @@ import 'package:rive/rive.dart';
 class SplashActivity extends StatefulWidget {
   const SplashActivity({super.key});
 
+  static Route<void> route() {
+    return MaterialPageRoute<void>(builder: (_) => const SplashActivity());
+  }
+
   @override
   State<SplashActivity> createState() => _SplashActivityState();
 }

@@ -48,6 +48,8 @@ class AutherizationBloc extends Bloc<AutherizationEvent, AutherizationState> {
         return emit(const AutherizationState.loginVerified());
       case AuthenticationStatus.logout:
         return emit(const AutherizationState.logout());
+      case AuthenticationStatus.loading:
+        return emit(const AutherizationState.loading());
     }
   }
 

@@ -5,11 +5,13 @@ import 'package:final_project/Autheriztion/autherization_bloc.dart';
 import 'package:final_project/Logic/Bloc/Login/View/page_slider.dart';
 import 'package:final_project/Logic/Bloc/OCR/bloc/ocr_bloc.dart';
 import 'package:final_project/Logic/Bloc/Profile/View/profile_completion_page.dart';
+import 'package:final_project/Logic/Bloc/Profile/bloc/account_completion_bloc.dart';
 import 'package:final_project/Logic/Bloc/Settings/settings_bloc.dart';
 import 'package:final_project/Logic/Cubit/Network/network_cubit.dart';
 import 'package:final_project/Routes/routes.dart';
 import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:final_project/Services/repository/user%20repository/user_repository.dart';
+import 'package:final_project/Splash/View/splash_activity.dart';
 import 'package:final_project/bottom_navigation_bar_controller.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +46,11 @@ class App extends StatelessWidget {
             ),
             child: const AppView(),
           ),
-          BlocProvider<OCRBloc>(create: (_) => OCRBloc()),
+          BlocProvider(create: (_) => AccountCompletionBloc()),
+          BlocProvider<OCRBloc>(
+              create: (_) => OCRBloc(
+                  accountCompletionBloc: AccountCompletionBloc(),
+                  authenticationRepository: authenticationRepository)),
         ],
         child: const AppView(),
       ),
@@ -99,6 +105,11 @@ class _AppViewState extends State<AppView> {
                       (route) => false,
                     );
                     break;
+                  case AuthenticationStatus.loading:
+                    _navigator.pushAndRemoveUntil<void>(
+                      SplashActivity.route(),
+                      (route) => false,
+                    );
                 }
               },
               child: child,

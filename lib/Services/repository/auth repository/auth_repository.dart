@@ -8,7 +8,13 @@ import 'package:final_project/Logic/Bloc/Login/auth/logout/data/repository/logou
 import 'package:final_project/Services/database/sqlite_helper.dart';
 import 'package:flutter/material.dart';
 
-enum AuthenticationStatus { initial, loginNonVerified, logingVerified, logout }
+enum AuthenticationStatus {
+  initial,
+  loginNonVerified,
+  logingVerified,
+  logout,
+  loading
+}
 
 class AuthenticationRepository {
   final _controller = StreamController<AuthenticationStatus>();
@@ -36,6 +42,13 @@ class AuthenticationRepository {
   }
 
   // _controller.add(AuthenticationStatus.loginNonVerified),
+  Future<void> rollBack() async {
+    _controller.add(AuthenticationStatus.loginNonVerified);
+  }
+
+  Future<void> loading() async {
+    _controller.add(AuthenticationStatus.loading);
+  }
 
   Future<void> logIn({
     required String email,

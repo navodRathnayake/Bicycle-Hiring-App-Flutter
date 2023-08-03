@@ -8,6 +8,7 @@ import 'package:final_project/Logic/Bloc/Cycling/View/steps/bicycle_package_view
 import 'package:final_project/Logic/Bloc/Cycling/View/steps/bicycle_term_and_condition_view.dart';
 import 'package:final_project/Logic/Bloc/Cycling/bloc/cycling_bloc.dart';
 import 'package:final_project/Logic/Bloc/OCR/view/verify_driving_license_selection.dart';
+import 'package:final_project/Logic/Bloc/Profile/View/profile_completion_page.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/view/billing_details_page.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/view/recent_activity_route_page.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/view/recent_activity_view.dart';
@@ -124,6 +125,10 @@ class Routes {
           builder: (context) =>
               VerifyDrivingLicenseSelection(themeData: Theme.of(context)),
         );
+
+      case '/profileCompletion':
+        return MaterialPageRoute(
+            builder: (context) => const ProfileCompletion());
 
       default:
         return MaterialPageRoute(
