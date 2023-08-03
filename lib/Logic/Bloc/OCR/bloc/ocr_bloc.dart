@@ -145,7 +145,7 @@ class OCRBloc extends Bloc<OCREvent, OCRState> {
 
     accountCompletionBloc.add(const AccountCompletionStepEvent(
         currentTappedStep: 3,
-        currentCompletionStep: 3,
+        currentCompletionStep: 2,
         progressIndicatorValue: 50));
 
     debugPrint('dsadsdasdadsadf f  fs dsd fs g fd g df  dfda d ');

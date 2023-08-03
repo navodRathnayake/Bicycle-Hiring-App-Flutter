@@ -20,8 +20,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'Constraints/constraints.dart';
 
 class App extends StatelessWidget {
+  final AccountCompletionBloc accountCompletionBloc = AccountCompletionBloc();
   final AuthenticationRepository authenticationRepository;
-  const App({super.key, required this.authenticationRepository});
+  App({super.key, required this.authenticationRepository});
 
   @override
   Widget build(BuildContext context) {
@@ -46,10 +47,10 @@ class App extends StatelessWidget {
             ),
             child: const AppView(),
           ),
-          BlocProvider(create: (_) => AccountCompletionBloc()),
+          BlocProvider(create: (_) => accountCompletionBloc),
           BlocProvider<OCRBloc>(
               create: (_) => OCRBloc(
-                  accountCompletionBloc: AccountCompletionBloc(),
+                  accountCompletionBloc: accountCompletionBloc,
                   authenticationRepository: authenticationRepository)),
         ],
         child: const AppView(),
