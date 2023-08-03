@@ -24,7 +24,9 @@ class VerifyOCRSuccess extends StatelessWidget {
                 if (state.status == OCRStatus.ocrSuccess) {
                   return UserDataBodyView(themeData: themeData);
                 } else if (state.status == OCRStatus.updateInprocess) {
-                  return const CircularProgressIndicator();
+                  return Builder(builder: (context) {
+                    return const CircularProgressIndicator();
+                  });
                 } else if (state.status == OCRStatus.updateSucsses) {
                   return const AccountHasVerified();
                 }
@@ -192,7 +194,6 @@ class AccountHasVerified extends StatelessWidget {
           const Text('VERIFIED!',
               style: TextStyle(fontSize: 25, letterSpacing: 0)),
           const ColumnSpacer(height: 30),
-          const CircularProgressIndicator(),
         ],
       ),
     );
@@ -227,8 +228,10 @@ class UpdateFailureView extends StatelessWidget {
               ],
             ),
             ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   BlocProvider.of<OCRBloc>(context).add(OCRResetProcessEvent());
+                  await Future.delayed(const Duration(microseconds: 10000));
+                  // Navigator.of(context).pushNamed('/profileCompletion');
                 },
                 child: const Text('Try Again'))
           ],

@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:final_project/Logic/Bloc/Profile/bloc/account_completion_bloc.dart';
+import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,7 +13,12 @@ part 'ocr_event.dart';
 part 'ocr_state.dart';
 
 class OCRBloc extends Bloc<OCREvent, OCRState> {
-  OCRBloc() : super(const OCRState.initial()) {
+  final AccountCompletionBloc accountCompletionBloc;
+  final AuthenticationRepository authenticationRepository;
+  OCRBloc(
+      {required this.accountCompletionBloc,
+      required this.authenticationRepository})
+      : super(const OCRState.initial()) {
     on<OCRExtractingTextFromGallery>(_onOCRExtractingTextFromGallery);
     on<OCRExtractingTextFromCamera>(_onOCRExtractingTextFromCamera);
     on<OCRUserVerificationEvent>(_onOCRUserVerificationEvent);
@@ -124,17 +131,27 @@ class OCRBloc extends Bloc<OCREvent, OCRState> {
     Emitter<OCRState> emit,
   ) async {
     debugPrint('User Verified!!!!');
-    emit(state.copyWith(
-      status: OCRStatus.updateFailure,
-    ));
-    await Future.delayed(const Duration(milliseconds: 500));
-    emit(state.copyWith(
-      status: OCRStatus.updateInprocess,
-    ));
+    // emit(state.copyWith(
+    //   status: OCRStatus.updateFailure,
+    // ));
+    // await Future.delayed(const Duration(milliseconds: 500));
+    // emit(state.copyWith(
+    //   status: OCRStatus.updateInprocess,
+    // ));
     await Future.delayed(const Duration(milliseconds: 500));
     emit(state.copyWith(
       status: OCRStatus.updateSucsses,
     ));
+
+    accountCompletionBloc.add(const AccountCompletionStepEvent(
+        currentTappedStep: 3,
+        currentCompletionStep: 2,
+        progressIndicatorValue: 50));
+
+    debugPrint('dsadsdasdadsadf f  fs dsd fs g fd g df  dfda d ');
+    authenticationRepository.loading();
+    await Future.delayed(const Duration(milliseconds: 800));
+    authenticationRepository.rollBack();
   }
 
   Future<void> _onOCRResetProcessEvent(

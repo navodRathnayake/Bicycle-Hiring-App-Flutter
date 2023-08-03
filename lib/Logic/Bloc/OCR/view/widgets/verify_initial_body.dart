@@ -69,7 +69,9 @@ class VerifyInitialBody extends StatelessWidget {
                       );
                     }
                     if (state.status == OCRStatus.ocrProcess) {
-                      return const CircularProgressIndicator();
+                      return Builder(builder: (context) {
+                        return const CircularProgressIndicator();
+                      });
                     } else {
                       return Container();
                     }

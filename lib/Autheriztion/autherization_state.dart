@@ -11,6 +11,8 @@ class AutherizationState extends Equatable {
       : this._(status: AuthenticationStatus.logingVerified);
   const AutherizationState.logout()
       : this._(status: AuthenticationStatus.logout);
+  const AutherizationState.loading()
+      : this._(status: AuthenticationStatus.loading);
 
   @override
   List<Object?> get props => [status];
