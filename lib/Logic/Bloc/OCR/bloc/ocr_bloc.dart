@@ -14,7 +14,8 @@ class OCRBloc extends Bloc<OCREvent, OCRState> {
   OCRBloc() : super(const OCRState.initial()) {
     on<OCRExtractingTextFromGallery>(_onOCRExtractingTextFromGallery);
     on<OCRExtractingTextFromCamera>(_onOCRExtractingTextFromCamera);
-    on<OcrUserVerificationEvent>(_onOCRUserVerificationEvent);
+    on<OCRUserVerificationEvent>(_onOCRUserVerificationEvent);
+    on<OCRResetProcessEvent>(_onOCRResetProcessEvent);
   }
 
   Future<void> _onOCRExtractingTextFromGallery(
@@ -89,11 +90,14 @@ class OCRBloc extends Bloc<OCREvent, OCRState> {
           'nic': idData[10].toString(),
         };
 
+        debugPrint('License ID Number : ${reqBody['license id']}');
+        debugPrint('License Expiry Date : ${reqBody['license expiry date']}');
         // network Process
 
         debugPrint('Request : ${reqBody.toString()}');
         emit(state.copyWith(
           status: OCRStatus.ocrSuccess,
+          userData: reqBody,
         ));
       } else {
         emit(state.copyWith(
@@ -116,7 +120,27 @@ class OCRBloc extends Bloc<OCREvent, OCRState> {
   ) async {}
 
   Future<void> _onOCRUserVerificationEvent(
-    OcrUserVerificationEvent event,
+    OCRUserVerificationEvent event,
     Emitter<OCRState> emit,
-  ) async {}
+  ) async {
+    debugPrint('User Verified!!!!');
+    emit(state.copyWith(
+      status: OCRStatus.updateFailure,
+    ));
+    await Future.delayed(const Duration(milliseconds: 500));
+    emit(state.copyWith(
+      status: OCRStatus.updateInprocess,
+    ));
+    await Future.delayed(const Duration(milliseconds: 500));
+    emit(state.copyWith(
+      status: OCRStatus.updateSucsses,
+    ));
+  }
+
+  Future<void> _onOCRResetProcessEvent(
+    OCRResetProcessEvent event,
+    Emitter<OCRState> emit,
+  ) async {
+    emit(state.copyWith(status: OCRStatus.initial));
+  }
 }

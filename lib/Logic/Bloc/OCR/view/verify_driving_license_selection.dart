@@ -6,8 +6,6 @@ import 'package:final_project/Logic/Bloc/OCR/bloc/ocr_bloc.dart';
 import 'package:final_project/Logic/Bloc/OCR/view/widgets/verify_initial_body.dart';
 import 'package:final_project/Logic/Bloc/OCR/view/widgets/verify_ocr_failure.dart';
 import 'package:final_project/Logic/Bloc/OCR/view/widgets/verify_ocr_success.dart';
-import 'package:final_project/Logic/Bloc/OCR/view/widgets/verify_update_failure.dart';
-import 'package:final_project/Logic/Bloc/OCR/view/widgets/verify_update_success.dart';
 import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,7 +23,7 @@ class VerifyDrivingLicenseSelection extends StatelessWidget {
           padding: const EdgeInsets.all(10),
           child: GestureDetector(
             onTap: () {
-              Navigator.of(context).pop();
+              BlocProvider.of<OCRBloc>(context).add(OCRResetProcessEvent());
             },
             child: Row(
               children: [
@@ -56,13 +54,16 @@ class VerifyDrivingLicenseSelection extends StatelessWidget {
           } else if (state.status == OCRStatus.ocrProcess) {
             return VerifyInitialBody(themeData: themeData);
           } else if (state.status == OCRStatus.ocrSuccess) {
-            return const VerifyOCRSuccess();
+            return VerifyOCRSuccess(themeData: themeData);
           } else if (state.status == OCRStatus.ocrFailure) {
             return const VerifyOCRFailure();
           } else if (state.status == OCRStatus.updateSucsses) {
-            return const VerifyUpdateSuccess();
+            return VerifyOCRSuccess(themeData: themeData);
           } else if (state.status == OCRStatus.updateFailure) {
-            return const VerifyUpdateFailure();
+            return VerifyOCRSuccess(themeData: themeData);
+          }
+          if (state.status == OCRStatus.updateInprocess) {
+            return VerifyOCRSuccess(themeData: themeData);
           } else {
             return VerifyInitialBody(themeData: themeData);
           }

@@ -11,4 +11,6 @@ class OCRExtractingTextFromGallery extends OCREvent {}
 
 class OCRExtractingTextFromCamera extends OCREvent {}
 
-class OcrUserVerificationEvent extends OCREvent {}
+class OCRUserVerificationEvent extends OCREvent {}
+
+class OCRResetProcessEvent extends OCREvent {}
