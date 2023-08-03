@@ -3,13 +3,13 @@ library app;
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:final_project/Autheriztion/autherization_bloc.dart';
 import 'package:final_project/Logic/Bloc/Login/View/page_slider.dart';
+import 'package:final_project/Logic/Bloc/OCR/bloc/ocr_bloc.dart';
 import 'package:final_project/Logic/Bloc/Profile/View/profile_completion_page.dart';
 import 'package:final_project/Logic/Bloc/Settings/settings_bloc.dart';
 import 'package:final_project/Logic/Cubit/Network/network_cubit.dart';
 import 'package:final_project/Routes/routes.dart';
 import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:final_project/Services/repository/user%20repository/user_repository.dart';
-import 'package:final_project/auth_controller.dart';
 import 'package:final_project/bottom_navigation_bar_controller.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -32,18 +32,22 @@ class App extends StatelessWidget {
         RepositoryProvider<AuthenticationRepository>(
             create: (context) => authenticationRepository),
       ],
-      child: MultiBlocProvider(providers: [
-        BlocProvider<SettingsBloc>(create: (_) => SettingsBloc()),
-        BlocProvider<NetworkCubit>(
-            create: (_) => NetworkCubit(connectivity: Connectivity())),
-        BlocProvider(
-          create: (_) => AutherizationBloc(
-            authenticationRepository: authenticationRepository,
-            userRepository: UserRepository(),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<SettingsBloc>(create: (_) => SettingsBloc()),
+          BlocProvider<NetworkCubit>(
+              create: (_) => NetworkCubit(connectivity: Connectivity())),
+          BlocProvider(
+            create: (_) => AutherizationBloc(
+              authenticationRepository: authenticationRepository,
+              userRepository: UserRepository(),
+            ),
+            child: const AppView(),
           ),
-          child: const AppView(),
-        ),
-      ], child: const AppView()),
+          BlocProvider<OCRBloc>(create: (_) => OCRBloc()),
+        ],
+        child: const AppView(),
+      ),
     );
   }
 }
