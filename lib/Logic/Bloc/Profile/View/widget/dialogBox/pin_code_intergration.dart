@@ -32,43 +32,49 @@ Future<Object?> pinCodeIntergration(
           child: Scaffold(
             resizeToAvoidBottomInset: false,
             backgroundColor: Colors.transparent,
-            body: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Positioned(
-                        left: 0,
-                        right: 0,
-                        top: -30,
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: CircleAvatar(
-                            backgroundColor: Theme.of(context)
-                                .colorScheme
-                                .secondaryContainer,
-                            child: Image.asset(
-                              'Assets/icons/close.png',
-                              scale: 2,
+            body: SingleChildScrollView(
+              child: SizedBox(
+                height: 600,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Positioned(
+                            left: 0,
+                            right: 0,
+                            top: -30,
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: CircleAvatar(
+                                backgroundColor: Theme.of(context)
+                                    .colorScheme
+                                    .secondaryContainer,
+                                child: Image.asset(
+                                  'Assets/icons/close.png',
+                                  scale: 2,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                          SizedBox(
+                            height: 580,
+                            child:
+                                PinCodeIntergrationBody(themeData: themeData),
+                          ),
+                          // SigningFormBody(themeData: themeData),
+                          // LoginFormBody(themeData: themeData),
+                          // OTPCodeBody(themeData: themeData),
+                        ],
                       ),
-                      SizedBox(
-                        height: 580,
-                        child: PinCodeIntergrationBody(themeData: themeData),
-                      ),
-                      // SigningFormBody(themeData: themeData),
-                      // LoginFormBody(themeData: themeData),
-                      // OTPCodeBody(themeData: themeData),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),

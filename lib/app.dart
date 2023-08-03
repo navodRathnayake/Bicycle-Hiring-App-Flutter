@@ -6,6 +6,7 @@ import 'package:final_project/Logic/Bloc/Login/View/page_slider.dart';
 import 'package:final_project/Logic/Bloc/OCR/bloc/ocr_bloc.dart';
 import 'package:final_project/Logic/Bloc/Profile/View/profile_completion_page.dart';
 import 'package:final_project/Logic/Bloc/Profile/bloc/account_completion_bloc.dart';
+import 'package:final_project/Logic/Bloc/Profile/bloc/pin_code_form_bloc.dart';
 import 'package:final_project/Logic/Bloc/Settings/settings_bloc.dart';
 import 'package:final_project/Logic/Cubit/Network/network_cubit.dart';
 import 'package:final_project/Routes/routes.dart';
@@ -52,6 +53,7 @@ class App extends StatelessWidget {
               create: (_) => OCRBloc(
                   accountCompletionBloc: accountCompletionBloc,
                   authenticationRepository: authenticationRepository)),
+          BlocProvider<PinCodeFormBloc>(create: (_) => PinCodeFormBloc())
         ],
         child: const AppView(),
       ),
