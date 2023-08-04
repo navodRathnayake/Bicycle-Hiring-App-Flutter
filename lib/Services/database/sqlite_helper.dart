@@ -36,6 +36,8 @@ class SqfliteHelper {
         'password': 'initial-password',
         'status': 'initial'
       });
+      await db.execute('create table OTPS (id TEXT NOT NULL, otp TEXT )');
+      await db.insert('OTPS', {'id': '1', 'otp': 'null'});
       debugPrint('db has created');
     } catch (e) {
       debugPrint(e.toString());
@@ -68,6 +70,35 @@ class SqfliteHelper {
       debugPrint(e.toString());
     }
     return {};
+  }
+
+  Future<Map<String, Object?>> readOTPData() async {
+    try {
+      final db = await instance.database;
+      final result = await db.query(
+        'OTPS',
+        columns: ['otp'],
+        where: 'id=?',
+        whereArgs: ['1'],
+      );
+      return result[0];
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return {};
+  }
+
+  Future<int> updateOTP({
+    required String otp,
+  }) async {
+    try {
+      final db = await instance.database;
+      await db.rawUpdate('UPDATE OTPS SET otp = ?  WHERE id = ?', [otp, '1']);
+      return 1;
+    } catch (e) {
+      debugPrint(e.toString());
+      return 0;
+    }
   }
 
   Future<String> readBearerToken() async {

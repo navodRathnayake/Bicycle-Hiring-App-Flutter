@@ -6,16 +6,32 @@ import 'package:final_project/Logic/Bloc/Profile/bloc/pin_code_form_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class PinCodeIntergrationBody extends StatelessWidget {
+class PinCodeIntergrationBody extends StatefulWidget {
   final ThemeData themeData;
   const PinCodeIntergrationBody({super.key, required this.themeData});
 
   @override
+  State<PinCodeIntergrationBody> createState() =>
+      _PinCodeIntergrationBodyState();
+}
+
+class _PinCodeIntergrationBodyState extends State<PinCodeIntergrationBody> {
+  FocusNode password = FocusNode();
+  FocusNode otp1 = FocusNode();
+  FocusNode otp2 = FocusNode();
+  FocusNode otp3 = FocusNode();
+  FocusNode otp4 = FocusNode();
+  @override
+  void dispose() {
+    otp1.dispose();
+    otp2.dispose();
+    otp3.dispose();
+    otp4.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    FocusNode otp1 = FocusNode();
-    FocusNode otp2 = FocusNode();
-    FocusNode otp3 = FocusNode();
-    FocusNode otp4 = FocusNode();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -45,6 +61,7 @@ class PinCodeIntergrationBody extends StatelessWidget {
                         const ColumnSpacer(height: 20),
                         TextFormField(
                           initialValue: state.password.value,
+                          focusNode: password,
                           decoration: InputDecoration(
                             errorText: state.password.displayError != null ||
                                     (state.password.isNotValid) &&
@@ -61,7 +78,8 @@ class PinCodeIntergrationBody extends StatelessWidget {
                             suffixIcon: Image.asset(
                               'Assets/icons/password.png',
                               scale: 2,
-                              color: themeData.colorScheme.onSecondaryContainer,
+                              color: widget
+                                  .themeData.colorScheme.onSecondaryContainer,
                             ),
                           ),
                           keyboardType: TextInputType.visiblePassword,
@@ -69,6 +87,12 @@ class PinCodeIntergrationBody extends StatelessWidget {
                           onChanged: (password) {
                             BlocProvider.of<PinCodeFormBloc>(context).add(
                                 PinCodePasswordChanged(password: password));
+                          },
+                          onEditingComplete: () {
+                            FocusScope.of(context).requestFocus(otp1);
+                            if (password.hasFocus) {
+                              password.unfocus();
+                            }
                           },
                         ),
                         const ColumnSpacer(height: 10),
@@ -85,6 +109,7 @@ class PinCodeIntergrationBody extends StatelessWidget {
                                       .add(PinCodeOTP1Changed(otp1: value));
                                   if (value.isNotEmpty) {
                                     FocusScope.of(context).requestFocus(otp2);
+                                    // otp1.unfocus();
                                   }
                                 },
                                 textAlign: TextAlign.center,
@@ -113,6 +138,7 @@ class PinCodeIntergrationBody extends StatelessWidget {
                                       .add(PinCodeOTP2Changed(otp2: value));
                                   if (value.isNotEmpty) {
                                     FocusScope.of(context).requestFocus(otp3);
+                                    // otp2.unfocus();
                                   }
                                 },
                                 textAlign: TextAlign.center,
@@ -142,6 +168,7 @@ class PinCodeIntergrationBody extends StatelessWidget {
                                       .add(PinCodeOTP3Changed(otp3: value));
                                   if (value.isNotEmpty) {
                                     FocusScope.of(context).requestFocus(otp4);
+                                    // otp3.unfocus();
                                   }
                                 },
                                 textAlign: TextAlign.center,
@@ -197,7 +224,8 @@ class PinCodeIntergrationBody extends StatelessWidget {
                                 .add(PinCodeFormSubmitted());
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: themeData.colorScheme.onBackground,
+                            backgroundColor:
+                                widget.themeData.colorScheme.onBackground,
                             minimumSize: const Size(double.maxFinite, 56),
                             shape: const ContinuousRectangleBorder(),
                           ),
@@ -205,7 +233,7 @@ class PinCodeIntergrationBody extends StatelessWidget {
                             'CHANGE',
                             style: TextStyle(
                               fontSize: 20,
-                              color: themeData.colorScheme.background,
+                              color: widget.themeData.colorScheme.background,
                               letterSpacing: 10,
                             ),
                           ),
@@ -228,8 +256,8 @@ class PinCodeIntergrationBody extends StatelessWidget {
                               },
                               child: Text('See why',
                                   style: TextStyle(
-                                    color: themeData
-                                        .colorScheme.onPrimaryContainer,
+                                    color: widget.themeData.colorScheme
+                                        .onPrimaryContainer,
                                     fontWeight: FontWeight.bold,
                                   )),
                             ),
@@ -252,7 +280,7 @@ class PinCodeIntergrationBody extends StatelessWidget {
               child: Text(
                 'Terms of Services & Privacy Policy.',
                 style: TextStyle(
-                  color: themeData.colorScheme.onPrimaryContainer,
+                  color: widget.themeData.colorScheme.onPrimaryContainer,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -260,6 +288,126 @@ class PinCodeIntergrationBody extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+}
+
+class PinCodeIntergrationBodyInProcess extends StatelessWidget {
+  const PinCodeIntergrationBodyInProcess({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(),
+          ColumnSpacer(height: 10),
+          Text('Adding PIN',
+              style: TextStyle(
+                fontSize: 25,
+              )),
+          ColumnSpacer(height: 5),
+          Text('Code',
+              style: TextStyle(
+                fontSize: 25,
+              )),
+          ColumnSpacer(height: 10),
+          Text('It will take a while')
+        ],
+      ),
+    );
+  }
+}
+
+class PinCodeIntergrationBodySuccess extends StatelessWidget {
+  final ThemeData themeData;
+  const PinCodeIntergrationBodySuccess({super.key, required this.themeData});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset('Assets/icons/ok.png',
+                color: themeData.colorScheme.onBackground),
+            const ColumnSpacer(height: 10),
+            const Text('You Have',
+                style: TextStyle(
+                  fontSize: 25,
+                )),
+            const ColumnSpacer(height: 5),
+            const Text('Added!',
+                style: TextStyle(
+                  fontSize: 25,
+                )),
+            const ColumnSpacer(height: 10),
+            const Text(
+              'Use the entered pin code for secure your card details',
+              textAlign: TextAlign.center,
+            ),
+            const ColumnSpacer(height: 30),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Continue'),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class PinCodeIntergrationBodyFailure extends StatelessWidget {
+  final ThemeData themeData;
+  const PinCodeIntergrationBodyFailure({super.key, required this.themeData});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset('Assets/icons/sad.png',
+                color: themeData.colorScheme.onBackground),
+            const ColumnSpacer(height: 10),
+            const Text('Something',
+                style: TextStyle(
+                  fontSize: 25,
+                )),
+            const ColumnSpacer(height: 5),
+            const Text('Went Wrong',
+                style: TextStyle(
+                  fontSize: 25,
+                )),
+            const ColumnSpacer(height: 5),
+            const Text('Buddy!',
+                style: TextStyle(
+                  fontSize: 25,
+                )),
+            const ColumnSpacer(height: 10),
+            const Text(
+              'Try again to add your pin code to secure your process',
+              textAlign: TextAlign.center,
+            ),
+            const ColumnSpacer(height: 30),
+            ElevatedButton(
+              onPressed: () {
+                BlocProvider.of<PinCodeFormBloc>(context)
+                    .add(PinCodeFormTryAgain());
+              },
+              child: const Text('Try Again'),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

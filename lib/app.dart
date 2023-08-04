@@ -53,7 +53,9 @@ class App extends StatelessWidget {
               create: (_) => OCRBloc(
                   accountCompletionBloc: accountCompletionBloc,
                   authenticationRepository: authenticationRepository)),
-          BlocProvider<PinCodeFormBloc>(create: (_) => PinCodeFormBloc())
+          BlocProvider<PinCodeFormBloc>(
+              create: (_) =>
+                  PinCodeFormBloc(accountCompletionBloc: accountCompletionBloc))
         ],
         child: const AppView(),
       ),

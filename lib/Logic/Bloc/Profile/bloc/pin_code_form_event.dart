@@ -58,3 +58,5 @@ class PinCodeOTP3Unfocused extends PinCodeFormEvent {}
 class PinCodeOTP4Unfocused extends PinCodeFormEvent {}
 
 class PinCodeFormSubmitted extends PinCodeFormEvent {}
+
+class PinCodeFormTryAgain extends PinCodeFormEvent {}

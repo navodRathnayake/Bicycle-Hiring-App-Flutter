@@ -2,13 +2,18 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:final_project/Logic/Bloc/Login/models/models.dart';
 import 'package:final_project/Logic/Bloc/Login/models/password.dart';
+import 'package:final_project/Logic/Bloc/Profile/bloc/account_completion_bloc.dart';
+import 'package:final_project/Services/database/sqlite_helper.dart';
+import 'package:flutter/material.dart';
 import 'package:formz/formz.dart';
 
 part 'pin_code_form_event.dart';
 part 'pin_code_form_state.dart';
 
 class PinCodeFormBloc extends Bloc<PinCodeFormEvent, PinCodeFormState> {
-  PinCodeFormBloc() : super(const PinCodeFormState()) {
+  final AccountCompletionBloc accountCompletionBloc;
+  PinCodeFormBloc({required this.accountCompletionBloc})
+      : super(const PinCodeFormState()) {
     on<PinCodePasswordChanged>(_onPinCodePasswordChanged);
     on<PinCodeOTP1Changed>(_onPinCodeOTP1Changed);
     on<PinCodeOTP2Changed>(_onPinCodeOTP2Changed);
@@ -22,6 +27,7 @@ class PinCodeFormBloc extends Bloc<PinCodeFormEvent, PinCodeFormState> {
     on<PinCodeOTP4Unfocused>(_onPinCodeOTP4Unfocused);
 
     on<PinCodeFormSubmitted>(_onPinCodeFormSubmitted);
+    on<PinCodeFormTryAgain>(_onPinCodeFormTryAgain);
   }
 
   Future<void> _onPinCodePasswordChanged(
@@ -152,6 +158,56 @@ class PinCodeFormBloc extends Bloc<PinCodeFormEvent, PinCodeFormState> {
         otp4: otp4,
         isValid: Formz.validate([password, otp1, otp2, otp3, otp4])));
 
-    if (state.isValid) {}
+    if (state.isValid) {
+      emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
+      try {
+        String newOtp = state.otp1.value.toString() +
+            state.otp2.value.toString() +
+            state.otp3.value.toString() +
+            state.otp4.value.toString();
+
+        debugPrint(newOtp);
+
+        int response = await SqfliteHelper.instance.updateOTP(otp: newOtp);
+
+        var userData = await SqfliteHelper.instance.readUserData();
+        debugPrint('password : ${userData['password']}');
+        debugPrint('state password : ${state.password.value}');
+
+        debugPrint(userData['password'].toString());
+        debugPrint(state.password.value.runtimeType.toString());
+
+        await Future.delayed(const Duration(microseconds: 800));
+
+        if (response == 1 &&
+            userData['password'].toString() ==
+                state.password.value.toString()) {
+          accountCompletionBloc.add(const AccountCompletionStepEvent(
+              currentTappedStep: 4,
+              currentCompletionStep: 3,
+              progressIndicatorValue: 75));
+          emit(state.copyWith(status: FormzSubmissionStatus.success));
+        } else {
+          emit(state.copyWith(status: FormzSubmissionStatus.failure));
+        }
+      } catch (e) {
+        emit(state.copyWith(status: FormzSubmissionStatus.failure));
+      }
+    }
+  }
+
+  Future<void> _onPinCodeFormTryAgain(
+    PinCodeFormTryAgain event,
+    Emitter<PinCodeFormState> emit,
+  ) async {
+    emit(state.copyWith(
+      password: const Password.pure(),
+      otp1: const Number.pure(),
+      otp2: const Number.pure(),
+      otp3: const Number.pure(),
+      otp4: const Number.pure(),
+      isValid: false,
+      status: FormzSubmissionStatus.initial,
+    ));
   }
 }
