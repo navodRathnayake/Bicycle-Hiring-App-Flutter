@@ -1,7 +1,10 @@
 library pin_code_intergration;
 
 import 'package:final_project/Logic/Bloc/Profile/View/widget/pin_code_intergration_body.dart';
+import 'package:final_project/Logic/Bloc/Profile/bloc/pin_code_form_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:formz/formz.dart';
 
 Future<Object?> pinCodeIntergration(
     {required BuildContext context, required ThemeData themeData}) {
@@ -32,43 +35,70 @@ Future<Object?> pinCodeIntergration(
           child: Scaffold(
             resizeToAvoidBottomInset: false,
             backgroundColor: Colors.transparent,
-            body: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Positioned(
-                        left: 0,
-                        right: 0,
-                        top: -30,
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: CircleAvatar(
-                            backgroundColor: Theme.of(context)
-                                .colorScheme
-                                .secondaryContainer,
-                            child: Image.asset(
-                              'Assets/icons/close.png',
-                              scale: 2,
+            body: SingleChildScrollView(
+              child: SizedBox(
+                height: 600,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Positioned(
+                            left: 0,
+                            right: 0,
+                            top: -30,
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: CircleAvatar(
+                                backgroundColor: Theme.of(context)
+                                    .colorScheme
+                                    .secondaryContainer,
+                                child: Image.asset(
+                                  'Assets/icons/close.png',
+                                  scale: 2,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                          SizedBox(
+                            height: 580,
+                            child:
+                                BlocBuilder<PinCodeFormBloc, PinCodeFormState>(
+                              builder: (context, state) {
+                                if (state.status ==
+                                    FormzSubmissionStatus.initial) {
+                                  return PinCodeIntergrationBody(
+                                      themeData: themeData);
+                                } else if (state.status ==
+                                    FormzSubmissionStatus.inProgress) {
+                                  return const PinCodeIntergrationBodyInProcess();
+                                } else if (state.status ==
+                                    FormzSubmissionStatus.success) {
+                                  return PinCodeIntergrationBodySuccess(
+                                      themeData: themeData);
+                                } else if (state.status ==
+                                    FormzSubmissionStatus.failure) {
+                                  return PinCodeIntergrationBodyFailure(
+                                      themeData: themeData);
+                                } else {
+                                  return Container();
+                                }
+                              },
+                            ),
+                          ),
+                          // SigningFormBody(themeData: themeData),
+                          // LoginFormBody(themeData: themeData),
+                          // OTPCodeBody(themeData: themeData),
+                        ],
                       ),
-                      SizedBox(
-                        height: 580,
-                        child: PinCodeIntergrationBody(themeData: themeData),
-                      ),
-                      // SigningFormBody(themeData: themeData),
-                      // LoginFormBody(themeData: themeData),
-                      // OTPCodeBody(themeData: themeData),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
