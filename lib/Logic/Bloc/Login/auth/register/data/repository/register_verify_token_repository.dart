@@ -21,6 +21,7 @@ class RegisterVerifyTokenRepository {
         // login state
         return {
           'result': 1,
+          'userId': response['userId'],
           'error': rawResponse['status code'],
         };
       } else {

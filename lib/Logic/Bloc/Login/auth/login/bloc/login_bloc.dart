@@ -92,14 +92,16 @@ class LoginFormBloc extends Bloc<LoginFormEvent, LoginFormState> {
           // change login response body
 
           SqfliteHelper.instance.updateMode(
-            userName: state.email.value.toString(),
-            password: state.password.value.toString(),
-            token: result['body']['token'].toString(),
-            image: 'null',
-            status: result['body']['status id'] == 2
-                ? 'login-verified'
-                : 'login-nonVerified', // upgrade status form api response
-          );
+              userName: state.email.value.toString(),
+              password: state.password.value.toString(),
+              token: result['body']['token'].toString(),
+              image: 'null',
+              status: result['body']['status id'] == 2
+                  ? 'login-verified'
+                  : 'login-nonVerified',
+              db_id: result['body']['userId']
+                  .toString() // upgrade status form api response
+              );
 
           emit(state.copyWith(
             status: FormzSubmissionStatus.success,

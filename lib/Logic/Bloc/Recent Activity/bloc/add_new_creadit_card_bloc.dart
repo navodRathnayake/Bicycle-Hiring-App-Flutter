@@ -1,9 +1,13 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:final_project/Logic/Bloc/Login/models/models.dart';
+import 'package:final_project/Logic/Bloc/Profile/bloc/account_completion_bloc.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/model/creadit_card_holder_name.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/model/creadit_card_number.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/model/expiry_date.dart';
+import 'package:final_project/Services/database/sqlite_helper.dart';
+import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
+import 'package:flutter/material.dart';
 import 'package:formz/formz.dart';
 
 part 'add_new_creadit_card_event.dart';
@@ -11,7 +15,12 @@ part 'add_new_creadit_card_state.dart';
 
 class AddNewCreaditCardBloc
     extends Bloc<AddNewCreaditCardEvent, AddNewCreaditCardState> {
-  AddNewCreaditCardBloc() : super(const AddNewCreaditCardState()) {
+  final AuthenticationRepository authenticationRepository;
+  final AccountCompletionBloc accountCompletionBloc;
+  AddNewCreaditCardBloc(
+      {required this.authenticationRepository,
+      required this.accountCompletionBloc})
+      : super(const AddNewCreaditCardState()) {
     on<AddNewCreaditCardNumberChanged>(_onAddNewCreaditCardNumberChanged);
     on<AddNewCreaditCardExpiryDateChanged>(
         _onAddNewCreaditCardExpiryDateChanged);
@@ -77,10 +86,78 @@ class AddNewCreaditCardBloc
   Future<void> _onAddNewCreaditCardFormSubmitted(
     AddNewCreaditCardFormSubmittedEvent event,
     Emitter<AddNewCreaditCardState> emit,
-  ) async {}
+  ) async {
+    final cardNumber = CreaditCardNumber.dirty(state.cardNumber.value);
+    final expiryDate = ExpiryDate.dirty(state.expiryDate.value);
+    final cvv = Number.dirty(state.cvv.value);
+    final holderName = HolderName.dirty(state.holderName.value);
+    emit(state.copyWith(
+      cardNumber: cardNumber,
+      expiryDate: expiryDate,
+      cvv: cvv,
+      holderName: holderName,
+      isValid: Formz.validate([cardNumber, expiryDate, cvv, holderName]),
+    ));
+
+    if (state.isValid) {
+      try {
+        emit(state.copyWith(
+          status: FormzSubmissionStatus.inProgress,
+        ));
+        var cards = await SqfliteHelper.instance.readCardsData();
+        debugPrint('CARDS : $cards');
+        var response = await SqfliteHelper.instance.insertCardData(
+          cardNumber: state.cardNumber.value.toString(),
+          expiryDate: state.expiryDate.value.toString(),
+          cvv: state.cvv.value.toString(),
+          holderName: state.holderName.value.toString(),
+        );
+
+        debugPrint(response.toString());
+        var readAgain = await SqfliteHelper.instance.readCardsData();
+        debugPrint('CARDS : $readAgain');
+
+        await Future.delayed(const Duration(milliseconds: 1200));
+
+        emit(state.copyWith(
+          status: FormzSubmissionStatus.success,
+        ));
+
+        accountCompletionBloc.add(const AccountCompletionStepEvent(
+            currentTappedStep: 4,
+            currentCompletionStep: 4,
+            progressIndicatorValue: 100));
+
+        var res =
+            await authenticationRepository.getCurrentAuthenticationStatus();
+        debugPrint(res.toString());
+
+        if (res == AuthenticationStatus.loginNonVerified) {
+          authenticationRepository.loading();
+          await Future.delayed(const Duration(milliseconds: 1200));
+          authenticationRepository.rollBack();
+          await Future.delayed(const Duration(milliseconds: 1200));
+          await SqfliteHelper.instance
+              .updateAutherization(status: 'login-verified');
+          authenticationRepository.verified();
+        }
+      } catch (e) {
+        debugPrint(e.toString());
+        await Future.delayed(const Duration(milliseconds: 1200));
+        emit(state.copyWith(
+          status: FormzSubmissionStatus.failure,
+        ));
+        await Future.delayed(const Duration(milliseconds: 800));
+      }
+    }
+  }
 
   Future<void> _onAddNewCreaditCardFormRollBack(
     AddNewCreaditCardFormRollBackEvent event,
     Emitter<AddNewCreaditCardState> emit,
-  ) async {}
+  ) async {
+    emit(state.copyWith(
+      status: FormzSubmissionStatus.initial,
+    ));
+  }
 }

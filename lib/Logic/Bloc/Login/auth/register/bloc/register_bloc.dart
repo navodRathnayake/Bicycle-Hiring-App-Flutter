@@ -114,12 +114,12 @@ class RegisterFormBloc extends Bloc<RegisterFormEvent, RegisterFormState> {
 
         if (result['result'] == 1) {
           SqfliteHelper.instance.updateMode(
-            userName: state.email.value.toString(),
-            password: state.password.value.toString(),
-            token: result['body']['token'].toString(),
-            image: 'null',
-            status: 'initial',
-          );
+              userName: state.email.value.toString(),
+              password: state.password.value.toString(),
+              token: result['body']['token'].toString(),
+              image: 'null',
+              status: 'initial',
+              db_id: result['body']['userId'].toString());
 
           debugPrint('\n---------------------------------------------------\n');
           var localDB = await SqfliteHelper.instance.readUserData();

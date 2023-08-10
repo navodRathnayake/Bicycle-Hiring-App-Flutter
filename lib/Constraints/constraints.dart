@@ -31,11 +31,11 @@ var creaditCardNumberMaskFormatter = MaskTextInputFormatter(
     type: MaskAutoCompletionType.lazy);
 
 var creaditCardDateMaskFormatter = MaskTextInputFormatter(
-    mask: '##/##',
+    mask: '##-##',
     filter: {"#": RegExp(r'[0-9]')},
     type: MaskAutoCompletionType.lazy);
 
 var creaditCardCVCMaskFormatter = MaskTextInputFormatter(
-    mask: '(###)',
+    mask: '###',
     filter: {"#": RegExp(r'[0-9]')},
     type: MaskAutoCompletionType.lazy);

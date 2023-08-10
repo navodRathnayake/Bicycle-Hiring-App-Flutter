@@ -1,17 +1,26 @@
 library billing_details_page;
 
 import 'package:final_project/Const/Widget/column_spacer.dart';
+import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dialogBox/dialogBox_ok_button.dart';
+import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dialogBox/dialogbox_close_button.dart';
+import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dialogBox/dialogbox_secondary_button.dart';
 import 'package:final_project/Logic/Bloc/Profile/View/widget/custom_list_tile.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/view/widget/credit_card.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/view/widget/dialogBox/add_credits_to_account.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/view/widget/dialogBox/add_new_credit_card.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/view/widget/recent_activity_app_bar.dart';
+import 'package:final_project/Services/database/sqlite_helper.dart';
+import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 
 class BillingDetailsPage extends StatelessWidget {
   final ThemeData themeData;
-  const BillingDetailsPage({super.key, required this.themeData});
+  final AuthenticationRepository authenticationRepository;
+  const BillingDetailsPage(
+      {super.key,
+      required this.themeData,
+      required this.authenticationRepository});
 
   @override
   Widget build(BuildContext context) {
@@ -80,17 +89,24 @@ class BillingDetailsPage extends StatelessWidget {
                     themeData: themeData,
                     title: 'Add Creadits to Account',
                     url: 'Assets/icons/deposit.png',
-                    onTap: () {
-                      addCreaditToAccount(
-                        context: context,
-                        themeData: themeData,
-                        cardNumbers: [
-                          '2345-5678-XXXX-4327',
-                          '3452-7564-XXXX-0897',
-                          '6543-7564-XXXX-7874',
-                          '4353-7654-XXXX-6475',
-                        ],
-                      );
+                    onTap: () async {
+                      debugPrint(authenticationRepository.status.toString());
+                      var res = await authenticationRepository
+                          .getCurrentAuthenticationStatus();
+                      if (res == AuthenticationStatus.loginNonVerified) {
+                        needVerifiedAccount(
+                          context: context,
+                          themeData: themeData,
+                        );
+                      } else if (res == AuthenticationStatus.logingVerified) {
+                        final List<String> cardNumbers =
+                            await SqfliteHelper.instance.readCardNumbers();
+                        addCreaditToAccount(
+                          context: context,
+                          themeData: themeData,
+                          cardNumbers: cardNumbers,
+                        );
+                      }
                     },
                   ),
                 ],
@@ -101,4 +117,70 @@ class BillingDetailsPage extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<void> needVerifiedAccount({
+  required BuildContext context,
+  required ThemeData themeData,
+}) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        content: Container(
+          height: 500,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            child: Center(
+              child: Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset('Assets/icons/sad.png',
+                        color: themeData.colorScheme.onBackground),
+                    const ColumnSpacer(height: 10),
+                    const Text('Cant Access',
+                        style: TextStyle(
+                          fontSize: 25,
+                        )),
+                    const ColumnSpacer(height: 5),
+                    const Text('Without Verified',
+                        style: TextStyle(
+                          fontSize: 25,
+                        )),
+                    const ColumnSpacer(height: 5),
+                    const Text('Buddy!',
+                        style: TextStyle(
+                          fontSize: 25,
+                        )),
+                    const ColumnSpacer(height: 10),
+                    const Text(
+                      'Try to be verified to function this',
+                      textAlign: TextAlign.center,
+                    ),
+                    const ColumnSpacer(height: 30),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Try Again'),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        actions: <Widget>[
+          DialogBoxSecondaryButton(
+              themeData: themeData,
+              label: 'No,later',
+              onTap: Navigator.of(context).pop),
+          DialogBoxOkButton(
+              label: 'Ok, Got it!', onTap: Navigator.of(context).pop),
+        ],
+      );
+    },
+  );
 }

@@ -133,15 +133,16 @@ class ConfirmOTPBloc extends Bloc<ConfirmOTPEvent, ConfirmOTPState> {
         )).getRegisterResponse();
 
         debugPrint(result.toString());
+        debugPrint('userd id : ${result['userId']}');
 
         if (result['result'] == 1) {
           SqfliteHelper.instance.updateMode(
-            userName: userData['userName'].toString(),
-            password: userData['password'].toString(),
-            token: userData['token'].toString(),
-            image: 'null',
-            status: 'login-nonVerified',
-          );
+              userName: userData['userName'].toString(),
+              password: userData['password'].toString(),
+              token: userData['token'].toString(),
+              image: 'null',
+              status: 'login-nonVerified',
+              db_id: result['userId'].toString());
 
           debugPrint('\n---------------------------------------------------\n');
           var localDB = await SqfliteHelper.instance.readUserData();
