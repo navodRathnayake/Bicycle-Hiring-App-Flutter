@@ -6,3 +6,5 @@ abstract class RecentActivityEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class RecentActivityClickedEvent extends RecentActivityEvent {}

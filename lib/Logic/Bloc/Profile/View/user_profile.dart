@@ -2,6 +2,7 @@ library user_profile;
 
 import 'package:final_project/Const/Widget/column_spacer.dart';
 import 'package:final_project/Logic/Bloc/Profile/View/widget/dialogBox/transaction_dialog_box.dart';
+import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/recent_activity_bloc.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/transaction_chart_bloc.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/transaction_bloc.dart';
 import 'package:flutter/material.dart';
@@ -54,6 +55,8 @@ class UserProfile extends StatelessWidget {
                       title: 'View Recent Activities',
                       onTap: () {
                         Navigator.of(context).pushNamed('/recentActivity');
+                        BlocProvider.of<RecentActivityBloc>(context)
+                            .add(RecentActivityClickedEvent());
                       },
                     ),
                     CustomListTile(
