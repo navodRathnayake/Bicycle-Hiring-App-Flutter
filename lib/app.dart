@@ -7,6 +7,8 @@ import 'package:final_project/Logic/Bloc/OCR/bloc/ocr_bloc.dart';
 import 'package:final_project/Logic/Bloc/Profile/View/profile_completion_page.dart';
 import 'package:final_project/Logic/Bloc/Profile/bloc/account_completion_bloc.dart';
 import 'package:final_project/Logic/Bloc/Profile/bloc/pin_code_form_bloc.dart';
+import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/add_new_creadit_card_bloc.dart';
+import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/add_creadit_form_bloc.dart';
 import 'package:final_project/Logic/Bloc/Settings/settings_bloc.dart';
 import 'package:final_project/Logic/Cubit/Network/network_cubit.dart';
 import 'package:final_project/Routes/routes.dart';
@@ -46,25 +48,33 @@ class App extends StatelessWidget {
               authenticationRepository: authenticationRepository,
               userRepository: UserRepository(),
             ),
-            child: const AppView(),
+            child: AppView(authenticationRepository: authenticationRepository),
           ),
-          BlocProvider(create: (_) => accountCompletionBloc),
+          BlocProvider<AccountCompletionBloc>(
+              create: (_) => accountCompletionBloc),
           BlocProvider<OCRBloc>(
               create: (_) => OCRBloc(
                   accountCompletionBloc: accountCompletionBloc,
                   authenticationRepository: authenticationRepository)),
           BlocProvider<PinCodeFormBloc>(
-              create: (_) =>
-                  PinCodeFormBloc(accountCompletionBloc: accountCompletionBloc))
+              create: (_) => PinCodeFormBloc(
+                  accountCompletionBloc: accountCompletionBloc)),
+          BlocProvider<AddNewCreaditCardBloc>(
+            create: (_) => AddNewCreaditCardBloc(
+                authenticationRepository: authenticationRepository,
+                accountCompletionBloc: accountCompletionBloc),
+          ),
+          BlocProvider<AddCreaditFormBloc>(create: (_) => AddCreaditFormBloc()),
         ],
-        child: const AppView(),
+        child: AppView(authenticationRepository: authenticationRepository),
       ),
     );
   }
 }
 
 class AppView extends StatefulWidget {
-  const AppView({super.key});
+  final AuthenticationRepository authenticationRepository;
+  const AppView({super.key, required this.authenticationRepository});
 
   @override
   State<AppView> createState() => _AppViewState();
@@ -133,7 +143,9 @@ class _AppViewState extends State<AppView> {
           themeMode: (state.themeModeStatus == AppThemeMode.lightMode)
               ? ThemeMode.light
               : ThemeMode.dark,
-          onGenerateRoute: Routes.onGenerate,
+          onGenerateRoute:
+              Routes(authenticationRepository: widget.authenticationRepository)
+                  .onGenerate,
         );
       },
     );

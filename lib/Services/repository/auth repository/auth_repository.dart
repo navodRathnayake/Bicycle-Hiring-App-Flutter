@@ -46,8 +46,35 @@ class AuthenticationRepository {
     _controller.add(AuthenticationStatus.loginNonVerified);
   }
 
+  Future<AuthenticationStatus> getCurrentAuthenticationStatus() async {
+    final user = await SqfliteHelper.instance.readUserData();
+    late AuthenticationStatus currentStatus;
+    switch (user['status']) {
+      case 'initial':
+        currentStatus = AuthenticationStatus.initial;
+        break;
+      case 'login-nonVerified':
+        currentStatus = AuthenticationStatus.loginNonVerified;
+        break;
+      case 'login-verified':
+        currentStatus = AuthenticationStatus.logingVerified;
+        break;
+      case 'logout':
+        currentStatus = AuthenticationStatus.logout;
+        break;
+      default:
+        currentStatus = AuthenticationStatus.initial;
+        break;
+    }
+    return currentStatus;
+  }
+
   Future<void> loading() async {
     _controller.add(AuthenticationStatus.loading);
+  }
+
+  Future<void> verified() async {
+    _controller.add(AuthenticationStatus.logingVerified);
   }
 
   Future<void> logIn({
@@ -64,14 +91,15 @@ class AuthenticationRepository {
         // change login response body
 
         SqfliteHelper.instance.updateMode(
-          userName: email.toString(),
-          password: password.toString(),
-          token: result['body']['token'].toString(),
-          image: 'null',
-          status: result['body']['status id'] == 2
-              ? 'login-verified'
-              : 'login-nonVerified', // upgrade status form api response
-        );
+            userName: email.toString(),
+            password: password.toString(),
+            token: result['body']['token'].toString(),
+            image: 'null',
+            status: result['body']['status id'] == 2
+                ? 'login-verified'
+                : 'login-nonVerified',
+            db_id: result['userId'] // upgrade status form api response
+            );
 
         var localDB = await SqfliteHelper.instance.readUserData();
         debugPrint(localDB.toString());

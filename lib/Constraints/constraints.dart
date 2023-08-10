@@ -2,6 +2,7 @@ library constraints;
 
 import 'package:final_project/Logic/Bloc/Cycling/bloc/cycling_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 const page1color = Color(0xfffddcdf);
 const page2color = Color(0xffffdcbd);
@@ -23,3 +24,18 @@ String terms =
 
 String useLicense =
     'Lorem Ipsum is simply dummy text of the printing and typesetting industry. It has and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.';
+
+var creaditCardNumberMaskFormatter = MaskTextInputFormatter(
+    mask: '####-####-####-####',
+    filter: {"#": RegExp(r'[0-9]')},
+    type: MaskAutoCompletionType.lazy);
+
+var creaditCardDateMaskFormatter = MaskTextInputFormatter(
+    mask: '##-##',
+    filter: {"#": RegExp(r'[0-9]')},
+    type: MaskAutoCompletionType.lazy);
+
+var creaditCardCVCMaskFormatter = MaskTextInputFormatter(
+    mask: '###',
+    filter: {"#": RegExp(r'[0-9]')},
+    type: MaskAutoCompletionType.lazy);

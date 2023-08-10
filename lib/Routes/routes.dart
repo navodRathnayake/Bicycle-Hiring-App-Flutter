@@ -12,13 +12,16 @@ import 'package:final_project/Logic/Bloc/Profile/View/profile_completion_page.da
 import 'package:final_project/Logic/Bloc/Recent%20Activity/view/billing_details_page.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/view/recent_activity_route_page.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/view/recent_activity_view.dart';
+import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:final_project/Splash/View/splash_activity.dart';
 import 'package:final_project/bottom_navigation_bar_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Routes {
-  static Route onGenerate(RouteSettings routeSettings) {
+  final AuthenticationRepository authenticationRepository;
+  const Routes({required this.authenticationRepository});
+  Route onGenerate(RouteSettings routeSettings) {
     switch (routeSettings.name) {
       case '/':
         return MaterialPageRoute(
@@ -79,8 +82,10 @@ class Routes {
 
       case '/billing':
         return MaterialPageRoute(
-            builder: (context) =>
-                BillingDetailsPage(themeData: Theme.of(context)));
+            builder: (context) => BillingDetailsPage(
+                  themeData: Theme.of(context),
+                  authenticationRepository: authenticationRepository,
+                ));
 
       case '/recentActivityRoute':
         return MaterialPageRoute(

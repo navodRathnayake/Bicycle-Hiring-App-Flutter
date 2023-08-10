@@ -27,16 +27,19 @@ class SqfliteHelper {
   Future _createDB(Database db, int version) async {
     try {
       await db.execute(
-          'create table Users (token TEXT NOT NULL, userName TEXT NOT NULL, password TEXT NOT NULL, status TEXT NOT NULL, key TEXT NOT NULL, image TEXT NOT NULL)');
+          'create table Users (token TEXT NOT NULL, userName TEXT NOT NULL, password TEXT NOT NULL, status TEXT NOT NULL, key TEXT NOT NULL, image TEXT NOT NULL, db_id TEXT NOT NULL)');
       await db.insert('Users', {
         'key': '1',
         'image': 'initial-image',
         'token': 'initial-token',
         'userName': 'initial-userName',
         'password': 'initial-password',
-        'status': 'initial'
+        'status': 'initial',
+        'db_id': 'initial'
       });
       await db.execute('create table OTPS (id TEXT NOT NULL, otp TEXT )');
+      await db.execute(
+          'create table CARDs (cardNumber TEXT NOT NULL, expiryDate TEXT NOT NULL, cvv TEXT NOT NULL, holderName TEXT NOT NULL )');
       await db.insert('OTPS', {'id': '1', 'otp': 'null'});
       debugPrint('db has created');
     } catch (e) {
@@ -61,7 +64,15 @@ class SqfliteHelper {
       final db = await instance.database;
       final result = await db.query(
         'Users',
-        columns: ['token', 'userName', 'password', 'status', 'key', 'image'],
+        columns: [
+          'token',
+          'userName',
+          'password',
+          'status',
+          'key',
+          'image',
+          'db_id'
+        ],
         where: 'key=?',
         whereArgs: ['1'],
       );
@@ -86,6 +97,60 @@ class SqfliteHelper {
       debugPrint(e.toString());
     }
     return {};
+  }
+
+  Future<List<Map<String, Object?>>> readCardsData() async {
+    try {
+      final db = await instance.database;
+      final result = await db.query(
+        'CARDs',
+        columns: ['cardNumber', 'expiryDate', 'cvv', 'holderName'],
+        // where: 'cardNumber=?',
+        // whereArgs: ['1'],
+      );
+      return result;
+    } catch (e) {
+      debugPrint(e.toString());
+      return [];
+    }
+  }
+
+  Future<List<String>> readCardNumbers() async {
+    try {
+      final db = await instance.database;
+      final result = await db.query(
+        'CARDs',
+        columns: ['cardNumber'],
+        // where: 'cardNumber=?',
+        // whereArgs: ['1'],
+      );
+      List<String> cardNumbers =
+          result.map((map) => map["cardNumber"] as String).toList();
+      return cardNumbers;
+    } catch (e) {
+      debugPrint(e.toString());
+      return [];
+    }
+  }
+
+  Future insertCardData({
+    required String cardNumber,
+    required String expiryDate,
+    required String cvv,
+    required String holderName,
+  }) async {
+    try {
+      final db = await instance.database;
+      await db.insert('CARDs', {
+        'cardNumber': cardNumber,
+        'expiryDate': expiryDate,
+        'cvv': cvv,
+        'holderName': holderName,
+      });
+      return 1;
+    } catch (e) {
+      return 0;
+    }
   }
 
   Future<int> updateOTP({
@@ -123,12 +188,27 @@ class SqfliteHelper {
     required String password,
     required String status,
     required String image,
+    required String db_id,
   }) async {
     try {
       final db = await instance.database;
       await db.rawUpdate(
-          'UPDATE Users SET token = ?, userName = ?, password = ?, status = ?, image = ?  WHERE key = ?',
-          [token, userName, password, status, image, '1']);
+          'UPDATE Users SET token = ?, userName = ?, password = ?, status = ?, image = ?, db_id =?  WHERE key = ?',
+          [token, userName, password, status, image, db_id, '1']);
+      return 1;
+    } catch (e) {
+      debugPrint(e.toString());
+      return 0;
+    }
+  }
+
+  Future<int> updateAutherization({
+    required String status,
+  }) async {
+    try {
+      final db = await instance.database;
+      await db.rawUpdate(
+          'UPDATE Users SET status = ? WHERE key = ?', [status, '1']);
       return 1;
     } catch (e) {
       debugPrint(e.toString());
