@@ -9,6 +9,8 @@ import 'package:final_project/Logic/Bloc/Profile/bloc/account_completion_bloc.da
 import 'package:final_project/Logic/Bloc/Profile/bloc/pin_code_form_bloc.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/add_new_creadit_card_bloc.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/add_creadit_form_bloc.dart';
+import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/transaction_chart_bloc.dart';
+import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/transaction_bloc.dart';
 import 'package:final_project/Logic/Bloc/Settings/settings_bloc.dart';
 import 'package:final_project/Logic/Cubit/Network/network_cubit.dart';
 import 'package:final_project/Routes/routes.dart';
@@ -65,6 +67,9 @@ class App extends StatelessWidget {
                 accountCompletionBloc: accountCompletionBloc),
           ),
           BlocProvider<AddCreaditFormBloc>(create: (_) => AddCreaditFormBloc()),
+          BlocProvider<TransactionBloc>(create: (_) => TransactionBloc()),
+          BlocProvider<TransactionChartBloc>(
+              create: (context) => TransactionChartBloc()),
         ],
         child: AppView(authenticationRepository: authenticationRepository),
       ),

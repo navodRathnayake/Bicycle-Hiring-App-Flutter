@@ -2,7 +2,10 @@ library user_profile;
 
 import 'package:final_project/Const/Widget/column_spacer.dart';
 import 'package:final_project/Logic/Bloc/Profile/View/widget/dialogBox/transaction_dialog_box.dart';
+import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/transaction_chart_bloc.dart';
+import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/transaction_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'widget/custom_list_tile.dart';
 import 'widget/profile_activity_card.dart';
@@ -34,12 +37,17 @@ class UserProfile extends StatelessWidget {
                 child: Column(
                   children: [
                     CustomListTile(
-                      themeData: themeData,
-                      url: 'Assets/icons/transaction.png',
-                      title: 'View Transactions',
-                      onTap: () => transactionDialogBox(
-                          context: context, themeData: themeData),
-                    ),
+                        themeData: themeData,
+                        url: 'Assets/icons/transaction.png',
+                        title: 'View Transactions',
+                        onTap: () {
+                          transactionDialogBox(
+                              context: context, themeData: themeData);
+                          BlocProvider.of<TransactionBloc>(context)
+                              .add(TransactionClickedEvent());
+                          BlocProvider.of<TransactionChartBloc>(context)
+                              .add(TransactionChartClickEvent());
+                        }),
                     CustomListTile(
                       themeData: themeData,
                       url: 'Assets/icons/activities.png',

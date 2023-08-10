@@ -14,7 +14,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     Emitter<TransactionState> emit,
   ) async {
     emit(state.copyWith(
-      status: TransactionStatus.initial,
+      status: TransactionStatus.inProcess,
     ));
 
     await Future.delayed(const Duration(milliseconds: 1200));
@@ -36,9 +36,5 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     ));
 
     await Future.delayed(const Duration(milliseconds: 1200));
-
-    emit(state.copyWith(
-      status: TransactionStatus.initial,
-    ));
   }
 }
