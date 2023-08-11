@@ -1,13 +1,14 @@
 library recent_activity_view.dart;
 
 import 'package:final_project/Const/Widget/column_spacer.dart';
-import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dialogBox/dialogbox_close_button.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/recent_activity_bloc.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/view/widget/day_widget.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/view/widget/recent_activity_app_bar.dart';
+
 import 'package:final_project/Logic/Bloc/Recent%20Activity/view/widget/recent_activity_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class RecentActivityView extends StatelessWidget {
   final List<List> filter;
@@ -104,11 +105,30 @@ class RecentActivitySuccess extends StatelessWidget {
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: filter.length,
-                itemBuilder: (context, index) => DayWidget(
-                  day: filter[index][0],
-                  date: filter[index][1],
-                  isSelected: filter[index][2],
-                  themeData: themeData,
+                itemBuilder: (context, index) => GestureDetector(
+                  onTap: () {
+                    BlocProvider.of<RecentActivityBloc>(context)
+                        .add(RecentActivityItemScrollController(index: index));
+                  },
+                  child: BlocBuilder<RecentActivityBloc, RecentActivityState>(
+                    builder: (context, state) {
+                      if (state.selectedIndex == index) {
+                        return DayWidget(
+                          day: filter[index][0],
+                          date: filter[index][1],
+                          isSelected: true,
+                          themeData: themeData,
+                        );
+                      } else {
+                        return DayWidget(
+                          day: filter[index][0],
+                          date: filter[index][1],
+                          isSelected: false,
+                          themeData: themeData,
+                        );
+                      }
+                    },
+                  ),
                 ),
               ),
             ),
@@ -117,7 +137,11 @@ class RecentActivitySuccess extends StatelessWidget {
           Expanded(
             child: Container(
               color: themeData.colorScheme.secondaryContainer,
-              child: ListView.builder(
+              child: ScrollablePositionedList.builder(
+                itemScrollController:
+                    BlocProvider.of<RecentActivityBloc>(context)
+                        .state
+                        .itemScrollController,
                 itemCount: filter.length,
                 itemBuilder: (context, index) => Row(
                   mainAxisAlignment: MainAxisAlignment.start,

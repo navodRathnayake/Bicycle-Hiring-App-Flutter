@@ -8,3 +8,8 @@ abstract class RecentActivityEvent extends Equatable {
 }
 
 class RecentActivityClickedEvent extends RecentActivityEvent {}
+
+class RecentActivityItemScrollController extends RecentActivityEvent {
+  final int index;
+  const RecentActivityItemScrollController({required this.index});
+}
