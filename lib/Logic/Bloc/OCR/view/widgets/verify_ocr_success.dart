@@ -136,7 +136,7 @@ class UserDataBodyView extends StatelessWidget {
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                     enabled: true,
                   ),
-                  keyboardType: TextInputType.none,
+                  keyboardType: TextInputType.text,
                 ),
                 const ColumnSpacer(height: 10),
                 TextFormField(

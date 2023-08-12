@@ -1,7 +1,7 @@
-import 'dart:math';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:final_project/Logic/Bloc/OCR/data/data%20provider/update_user_patch_api.dart';
+import 'package:final_project/Logic/Bloc/OCR/data/repository%20provider/update_user_patch_repository.dart';
 import 'package:final_project/Logic/Bloc/Profile/bloc/account_completion_bloc.dart';
 import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:flutter/material.dart';
@@ -131,27 +131,44 @@ class OCRBloc extends Bloc<OCREvent, OCRState> {
     Emitter<OCRState> emit,
   ) async {
     debugPrint('User Verified!!!!');
-    // emit(state.copyWith(
-    //   status: OCRStatus.updateFailure,
-    // ));
-    // await Future.delayed(const Duration(milliseconds: 500));
-    // emit(state.copyWith(
-    //   status: OCRStatus.updateInprocess,
-    // ));
-    await Future.delayed(const Duration(milliseconds: 500));
-    emit(state.copyWith(
-      status: OCRStatus.updateSucsses,
-    ));
 
-    accountCompletionBloc.add(const AccountCompletionStepEvent(
-        currentTappedStep: 3,
-        currentCompletionStep: 2,
-        progressIndicatorValue: 50));
+    try {
+      emit(state.copyWith(status: OCRStatus.updateInprocess));
+      await Future.delayed(const Duration(milliseconds: 500));
 
-    debugPrint('dsadsdasdadsadf f  fs dsd fs g fd g df  dfda d ');
-    authenticationRepository.loading();
-    await Future.delayed(const Duration(milliseconds: 800));
-    authenticationRepository.rollBack();
+      final response =
+          await UpdateUserPatchRepository(api: UpdateUserPatchApi(), reqBody: {
+        "firstName": state.userData!['name'].toString(),
+        "dateOfBirth": '1994-09-19',
+        "nic": state.userData!['nic'].toString(),
+        "bloodGroup": state.userData!['blood group'].toString(),
+        "licenseIssueDate": '1994-09-19'
+      }).getPatchUpdateRepository();
+
+      debugPrint(response.toString());
+
+      if (response['result'] == 1) {
+        debugPrint('Updated Successfully');
+        emit(state.copyWith(status: OCRStatus.updateSucsses));
+        await Future.delayed(const Duration(milliseconds: 500));
+
+        accountCompletionBloc.add(const AccountCompletionStepEvent(
+            currentTappedStep: 3,
+            currentCompletionStep: 2,
+            progressIndicatorValue: 50));
+
+        debugPrint('dsadsdasdadsadf f  fs dsd fs g fd g df  dfda d ');
+        authenticationRepository.loading();
+        await Future.delayed(const Duration(milliseconds: 800));
+        authenticationRepository.rollBack();
+      } else {
+        debugPrint('Cannot Updated');
+        emit(state.copyWith(status: OCRStatus.updateFailure));
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      emit(state.copyWith(status: OCRStatus.updateFailure));
+    }
   }
 
   Future<void> _onOCRResetProcessEvent(

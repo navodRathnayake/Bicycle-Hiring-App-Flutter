@@ -16,13 +16,15 @@ class LoginFormRepository {
       if (rawResponseData['status code'] == 200) {
         var token = response['token'].toString();
         var message = response['message'].toString();
-        var statusID = response['status id'].toString();
+        var statusID = response['statusId'].toString();
+        var userID = response['userId'].toString();
 
         return {
           'result': 1,
           'status code': rawResponseData['status code'].toString(),
           'body': {
-            'status id': statusID,
+            'status id': statusID.toString(),
+            'userID': userID,
             'token': token,
             'message': message,
           },

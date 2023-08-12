@@ -4,6 +4,7 @@ import 'package:final_project/Logic/Bloc/Login/auth/register/data/data%20provide
 import 'package:final_project/Logic/Bloc/Login/auth/register/data/repository/register_verify_token_repository.dart';
 import 'package:final_project/Logic/Bloc/Login/models/number.dart';
 import 'package:final_project/Services/database/sqlite_helper.dart';
+import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:formz/formz.dart';
 
@@ -11,7 +12,9 @@ part 'confirm_otp_event.dart';
 part 'confirm_otp_state.dart';
 
 class ConfirmOTPBloc extends Bloc<ConfirmOTPEvent, ConfirmOTPState> {
-  ConfirmOTPBloc() : super(const ConfirmOTPState()) {
+  final AuthenticationRepository authenticationRepository;
+  ConfirmOTPBloc({required this.authenticationRepository})
+      : super(const ConfirmOTPState()) {
     on<ConfirmOTP1Changed>(_onConfirmOTP1Changed);
     on<ConfirmOTP2Changed>(_onConfirmOTP2Changed);
     on<ConfirmOTP3Changed>(_onConfirmOTP3Changed);
@@ -153,6 +156,8 @@ class ConfirmOTPBloc extends Bloc<ConfirmOTPEvent, ConfirmOTPState> {
             status: FormzSubmissionStatus.success,
           ));
 
+          debugPrint('\nUSER ID: ${result['userId'].toString()}');
+
           var dbstatus = await SqfliteHelper.instance.readUserData();
           debugPrint('DB Latest : $dbstatus');
 
@@ -162,6 +167,9 @@ class ConfirmOTPBloc extends Bloc<ConfirmOTPEvent, ConfirmOTPState> {
 
           // trigger login stream
           debugPrint('registered Successfully');
+          authenticationRepository.loading();
+          await Future.delayed(const Duration(milliseconds: 1200));
+          authenticationRepository.nonVerified();
         } else {
           debugPrint('register Failure');
           emit(state.copyWith(

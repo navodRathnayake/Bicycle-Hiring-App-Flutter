@@ -37,7 +37,6 @@ Future<Object?> signInGeneralDialogBox(
           child: MultiBlocProvider(
             providers: [
               BlocProvider<RegisterFormBloc>(create: (_) => RegisterFormBloc()),
-              BlocProvider<ConfirmOTPBloc>(create: (_) => ConfirmOTPBloc()),
             ],
             child: Scaffold(
               resizeToAvoidBottomInset: false,

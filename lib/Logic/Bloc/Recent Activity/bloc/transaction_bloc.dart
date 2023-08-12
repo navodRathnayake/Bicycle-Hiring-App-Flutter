@@ -1,5 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:final_project/Logic/Bloc/Profile/View/data/data%20provider/transaction_requested_api.dart';
+import 'package:final_project/Logic/Bloc/Profile/View/data/repository%20provider/transaction_repository.dart';
+import 'package:flutter/material.dart';
 
 part 'transaction_event.dart';
 part 'transaction_state.dart';
@@ -23,18 +26,40 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       status: TransactionStatus.inProcess,
     ));
 
-    await Future.delayed(const Duration(milliseconds: 1200));
+    final response =
+        await TransactionRequestedRepository(api: TransactionRequestedApi())
+            .getLoginResponse();
 
-    emit(state.copyWith(
-      status: TransactionStatus.success,
-    ));
+    if (response['result'] == 1) {
+      debugPrint(response.toString());
 
-    await Future.delayed(const Duration(milliseconds: 1200));
+      emit(state.copyWith(
+        transactions: response['body']['transactions'],
+      ));
 
-    emit(state.copyWith(
-      status: TransactionStatus.failure,
-    ));
+      debugPrint('STATE VARIABLE ');
+      debugPrint(state.transactions.length.toString());
 
-    await Future.delayed(const Duration(milliseconds: 1200));
+      for (int i = 0; i < state.transactions.length; i++) {
+        debugPrint('\n');
+        debugPrint(state.transactions[i].toString());
+        debugPrint('\n');
+      }
+
+      // debugPrint(state.transactions.toString());
+
+      // await Future.delayed(const Duration(milliseconds: 1200));
+
+      emit(state.copyWith(
+        status: TransactionStatus.success,
+      ));
+    } else {
+      emit(state.copyWith(
+        status: TransactionStatus.failure,
+      ));
+    }
+    // await Future.delayed(const Duration(milliseconds: 1200));
+
+    // await Future.delayed(const Duration(milliseconds: 1200));
   }
 }

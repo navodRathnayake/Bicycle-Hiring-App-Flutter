@@ -13,3 +13,8 @@ Map<String, String> auth = const {
   '/login': '/api/login',
   '/logout': '/api/logout',
 };
+
+Map<String, String> user = const {
+  '/transactions': '/api/v1/transactions',
+  '/updatePatch': '/api/v1/users/',
+};

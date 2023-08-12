@@ -77,28 +77,42 @@ class AuthenticationRepository {
     _controller.add(AuthenticationStatus.logingVerified);
   }
 
+  Future<void> nonVerified() async {
+    _controller.add(AuthenticationStatus.loginNonVerified);
+  }
+
   Future<void> logIn({
     required String email,
     required String password,
   }) async {
     try {
+      debugPrint('\n\n\nAuth loging\n\n\n');
       final result = await LoginFormRepository(
               api:
                   LoginFormApi(reqBody: {'email': email, 'password': password}))
           .getLoginResponse();
 
-      if (result['result'] == 1) {
+      debugPrint('ssdasdadsadasddadsdd');
+
+      debugPrint(result['body']['status id'].toString());
+
+      String userStatus = result['body']['status id'].toString();
+      debugPrint(userStatus);
+
+      if (userStatus.toString().contains('1')) {
         // change login response body
+        debugPrint('popopopop');
+        debugPrint(result['body'].toString());
 
         SqfliteHelper.instance.updateMode(
             userName: email.toString(),
             password: password.toString(),
             token: result['body']['token'].toString(),
             image: 'null',
-            status: result['body']['status id'] == 2
+            status: result['body']['statusId'].toString() == '2'
                 ? 'login-verified'
                 : 'login-nonVerified',
-            db_id: result['userId'] // upgrade status form api response
+            db_id: result['body']['userID'] // upgrade status form api response
             );
 
         var localDB = await SqfliteHelper.instance.readUserData();

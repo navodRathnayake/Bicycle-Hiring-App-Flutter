@@ -3,6 +3,7 @@ library app;
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:final_project/Autheriztion/autherization_bloc.dart';
 import 'package:final_project/Logic/Bloc/Login/View/page_slider.dart';
+import 'package:final_project/Logic/Bloc/Login/auth/forget%20password/confirm%20otp/confirm_otp_bloc.dart';
 import 'package:final_project/Logic/Bloc/OCR/bloc/ocr_bloc.dart';
 import 'package:final_project/Logic/Bloc/Profile/View/profile_completion_page.dart';
 import 'package:final_project/Logic/Bloc/Profile/bloc/account_completion_bloc.dart';
@@ -72,6 +73,9 @@ class App extends StatelessWidget {
           BlocProvider<TransactionChartBloc>(
               create: (_) => TransactionChartBloc()),
           BlocProvider<RecentActivityBloc>(create: (_) => RecentActivityBloc()),
+          BlocProvider<ConfirmOTPBloc>(
+              create: (_) => ConfirmOTPBloc(
+                  authenticationRepository: authenticationRepository)),
         ],
         child: AppView(authenticationRepository: authenticationRepository),
       ),

@@ -56,7 +56,9 @@ class AutherizationBloc extends Bloc<AutherizationEvent, AutherizationState> {
   void _onAuthenticationLogoutRequested(
     AutherizationLogoutRequested event,
     Emitter<AutherizationState> emit,
-  ) {
+  ) async {
+    _authenticationRepository.loading();
+    await Future.delayed(const Duration(milliseconds: 1200));
     _authenticationRepository.logOut();
   }
 

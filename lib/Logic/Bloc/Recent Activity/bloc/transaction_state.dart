@@ -4,7 +4,7 @@ enum TransactionStatus { inProcess, success, failure }
 
 class TransactionState extends Equatable {
   final TransactionStatus status;
-  final List<Map<String, String>> transactions;
+  final List<dynamic> transactions;
 
   const TransactionState({
     this.status = TransactionStatus.inProcess,
@@ -13,7 +13,7 @@ class TransactionState extends Equatable {
 
   TransactionState copyWith({
     TransactionStatus? status,
-    List<Map<String, String>>? transactions,
+    List<dynamic>? transactions,
   }) {
     return TransactionState(
       status: status ?? this.status,

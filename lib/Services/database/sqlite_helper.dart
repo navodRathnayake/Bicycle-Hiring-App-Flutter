@@ -83,6 +83,22 @@ class SqfliteHelper {
     return {};
   }
 
+  Future<Map<String, Object?>> readUserID() async {
+    try {
+      final db = await instance.database;
+      final result = await db.query(
+        'Users',
+        columns: ['db_id'],
+        where: 'key=?',
+        whereArgs: ['1'],
+      );
+      return result[0];
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return {};
+  }
+
   Future<Map<String, Object?>> readOTPData() async {
     try {
       final db = await instance.database;

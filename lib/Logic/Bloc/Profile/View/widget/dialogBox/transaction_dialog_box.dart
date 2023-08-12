@@ -178,14 +178,25 @@ class TransactionSuccess extends StatelessWidget {
         ),
         const Divider(),
         const ColumnSpacer(height: 10),
-        CustomTransactionListTile(
-            themeData: themeData, type: 1, date: 'Jan-23-2023', amount: 2375),
-        CustomTransactionListTile(
-            themeData: themeData, type: 2, date: 'Jan-23-2023', amount: 2375),
-        CustomTransactionListTile(
-            themeData: themeData, type: 2, date: 'Jan-23-2023', amount: 2375),
-        CustomTransactionListTile(
-            themeData: themeData, type: 1, date: 'Jan-23-2023', amount: 2375),
+        // CustomTransactionListTile(
+        //     themeData: themeData, type: 1, date: 'Jan-23-2023', amount: 2375),
+        BlocBuilder<TransactionBloc, TransactionState>(
+          builder: (context, state) {
+            return Container(
+              width: 100,
+              height: 300,
+              child: ListView.builder(
+                itemCount: state.transactions.length,
+                itemBuilder: (context, index) => CustomTransactionListTile(
+                  themeData: themeData,
+                  type: state.transactions[index]['transactionStatus']['id'],
+                  date: state.transactions[index]['createdAt'],
+                  amount: double.parse(state.transactions[index]['amount']),
+                ),
+              ),
+            );
+          },
+        ),
       ],
     );
   }
