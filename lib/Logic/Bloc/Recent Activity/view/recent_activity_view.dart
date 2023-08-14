@@ -43,6 +43,8 @@ class RecentActivityView extends StatelessWidget {
                       themeData: themeData, filter: filter);
                 } else if (state.status == RecentActivityStatus.failure) {
                   return RecentActivityFailure(themeData: themeData);
+                } else if (state.status == RecentActivityStatus.empty) {
+                  return REcentActivityEmpty(themeData: themeData);
                 } else {
                   return Container();
                 }
@@ -94,101 +96,125 @@ class RecentActivitySuccess extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          SizedBox(
-            height: 100,
-            width: double.maxFinite,
-            child: Center(
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: filter.length,
-                itemBuilder: (context, index) => GestureDetector(
-                  onTap: () {
-                    BlocProvider.of<RecentActivityBloc>(context)
-                        .add(RecentActivityItemScrollController(index: index));
+    return BlocBuilder<RecentActivityBloc, RecentActivityState>(
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 100,
+                width: double.maxFinite,
+                child: BlocBuilder<RecentActivityBloc, RecentActivityState>(
+                  builder: (context, state) {
+                    return Center(
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: state.activities.length,
+                        itemBuilder: (context, index) => GestureDetector(
+                          onTap: () {
+                            BlocProvider.of<RecentActivityBloc>(context).add(
+                                RecentActivityItemScrollController(
+                                    index: index));
+                          },
+                          child: BlocBuilder<RecentActivityBloc,
+                              RecentActivityState>(
+                            builder: (context, state) {
+                              if (state.selectedIndex == index) {
+                                return DayWidget(
+                                  day: state.activities[index][1]
+                                      .toString()
+                                      .substring(0, 3),
+                                  date: int.parse(
+                                      state.activities[index][0].toString()),
+                                  isSelected: true,
+                                  themeData: themeData,
+                                );
+                              } else {
+                                return DayWidget(
+                                  day: state.activities[index][1]
+                                      .toString()
+                                      .substring(0, 3),
+                                  date: int.parse(
+                                      state.activities[index][0].toString()),
+                                  isSelected: false,
+                                  themeData: themeData,
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                    );
                   },
-                  child: BlocBuilder<RecentActivityBloc, RecentActivityState>(
-                    builder: (context, state) {
-                      if (state.selectedIndex == index) {
-                        return DayWidget(
-                          day: filter[index][0],
-                          date: filter[index][1],
-                          isSelected: true,
-                          themeData: themeData,
-                        );
-                      } else {
-                        return DayWidget(
-                          day: filter[index][0],
-                          date: filter[index][1],
-                          isSelected: false,
-                          themeData: themeData,
-                        );
-                      }
-                    },
+                ),
+              ),
+              const ColumnSpacer(height: 20),
+              Expanded(
+                child: Container(
+                  color: themeData.colorScheme.secondaryContainer,
+                  child: ScrollablePositionedList.builder(
+                    itemScrollController:
+                        BlocProvider.of<RecentActivityBloc>(context)
+                            .state
+                            .itemScrollController,
+                    itemCount: state.activities.length,
+                    itemBuilder: (context, index) => Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: DayWidget(
+                                  day: state.activities[index][1]
+                                      .toString()
+                                      .substring(0, 3),
+                                  date: int.parse(
+                                      state.activities[index][0].toString()),
+                                  isSelected: false,
+                                  themeData: themeData),
+                            ),
+                          ],
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: int.parse(
+                                state.activities[index][2].length.toString()),
+                            shrinkWrap: true,
+                            itemBuilder: (sddsd, nested) => int.parse(state
+                                        .activities[index][2].length
+                                        .toString()) ==
+                                    0
+                                ? Expanded(child: Container())
+                                : GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context)
+                                          .pushNamed('/recentActivityRoute');
+                                    },
+                                    child: RecentActivityTile(
+                                      startTime: state.activities[index][1],
+                                      endTime:
+                                          state.activities[index][0].toString(),
+                                      startLocation:
+                                          state.activities[index][0].toString(),
+                                      endLocation:
+                                          state.activities[index][1].toString(),
+                                      themeData: themeData,
+                                    ),
+                                  ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
+            ],
           ),
-          const ColumnSpacer(height: 20),
-          Expanded(
-            child: Container(
-              color: themeData.colorScheme.secondaryContainer,
-              child: ScrollablePositionedList.builder(
-                itemScrollController:
-                    BlocProvider.of<RecentActivityBloc>(context)
-                        .state
-                        .itemScrollController,
-                itemCount: filter.length,
-                itemBuilder: (context, index) => Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: DayWidget(
-                              day: filter[index][0],
-                              date: filter[index][1],
-                              isSelected: filter[index][2],
-                              themeData: themeData),
-                        ),
-                      ],
-                    ),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: filter[index][3] == null
-                            ? 0
-                            : filter[index][3].length,
-                        shrinkWrap: true,
-                        itemBuilder: (sddsd, nested) => filter[index][3] == null
-                            ? Expanded(child: Container())
-                            : GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context)
-                                      .pushNamed('/recentActivityRoute');
-                                },
-                                child: RecentActivityTile(
-                                  startTime: filter[index][3][nested][2],
-                                  endTime: filter[index][3][nested][3],
-                                  startLocation: filter[index][3][nested][0],
-                                  endLocation: filter[index][3][nested][1],
-                                  themeData: themeData,
-                                ),
-                              ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -240,6 +266,54 @@ class RecentActivityFailure extends StatelessWidget {
           )
         ],
       ),
+    );
+  }
+}
+
+class REcentActivityEmpty extends StatelessWidget {
+  final ThemeData themeData;
+  const REcentActivityEmpty({super.key, required this.themeData});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const ColumnSpacer(height: 10),
+        Image.asset('Assets/icons/sad.png',
+            color: themeData.colorScheme.onBackground),
+        const ColumnSpacer(height: 10),
+        const Text('Activities',
+            style: TextStyle(
+              fontSize: 25,
+            )),
+        const ColumnSpacer(height: 5),
+        const Text('Were Not',
+            style: TextStyle(
+              fontSize: 25,
+            )),
+        const ColumnSpacer(height: 5),
+        const Text('Found!!',
+            style: TextStyle(
+              fontSize: 25,
+            )),
+        const ColumnSpacer(height: 10),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 30),
+          child: Text(
+            'Try again to fill your account with points',
+            textAlign: TextAlign.center,
+          ),
+        ),
+        const ColumnSpacer(height: 30),
+        ElevatedButton(
+          onPressed: () {
+            BlocProvider.of<RecentActivityBloc>(context)
+                .add(RecentActivityClickedEvent());
+          },
+          child: const Text('Try Again'),
+        )
+      ],
     );
   }
 }

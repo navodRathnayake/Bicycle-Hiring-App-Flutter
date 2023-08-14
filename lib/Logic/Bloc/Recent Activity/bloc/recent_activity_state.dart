@@ -1,11 +1,11 @@
 part of 'recent_activity_bloc.dart';
 
-enum RecentActivityStatus { inProcess, success, failure }
+enum RecentActivityStatus { inProcess, success, failure, empty }
 
 class RecentActivityState extends Equatable {
   final int selectedIndex;
   final RecentActivityStatus status;
-  final List<Map<String, String>> activities;
+  final List<dynamic> activities;
   final ItemScrollController itemScrollController;
 
   const RecentActivityState({
@@ -17,7 +17,7 @@ class RecentActivityState extends Equatable {
 
   RecentActivityState copyWith({
     RecentActivityStatus? status,
-    List<Map<String, String>>? activities,
+    List<dynamic>? activities,
     ItemScrollController? itemScrollController,
     int? selectedIndex,
   }) {
