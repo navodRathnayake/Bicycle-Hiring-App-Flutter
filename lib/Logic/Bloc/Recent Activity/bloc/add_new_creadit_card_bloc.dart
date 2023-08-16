@@ -1,12 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:final_project/Logic/Bloc/Login/models/models.dart';
+import 'package:final_project/Logic/Bloc/OCR/data/data%20provider/update_user_status_api.dart';
+import 'package:final_project/Logic/Bloc/OCR/data/repository%20provider/update_user_status_repository.dart';
 import 'package:final_project/Logic/Bloc/Profile/bloc/account_completion_bloc.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/model/creadit_card_holder_name.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/model/creadit_card_number.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/model/expiry_date.dart';
-import 'package:final_project/Services/data/data%20provider/user_update_patch_api.dart';
-import 'package:final_project/Services/data/repository%20provider/user_update_patch_repository.dart';
 import 'package:final_project/Services/database/sqlite_helper.dart';
 import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:flutter/material.dart';
@@ -134,11 +134,12 @@ class AddNewCreaditCardBloc
             await authenticationRepository.getCurrentAuthenticationStatus();
         debugPrint(res.toString());
 
-        // final updateUserPatch =
-        //     await UserUpdatePatchRepository(api: UserUpdatePatchApi())
-        //         .getPatchUpdateRepository();
+        final updateUserPatch =
+            await UpdateUserStatusRepository(api: UpdateUserStatusApi())
+                .getPatchUpdateRepository();
+        debugPrint('USER STATUS UPDATE INTO 2');
 
-        // debugPrint(updateUserPatch.toString());
+        debugPrint(updateUserPatch.toString());
 
         if (res == AuthenticationStatus.loginNonVerified) {
           authenticationRepository.loading();

@@ -1,6 +1,7 @@
 library user_profile;
 
 import 'package:final_project/Const/Widget/column_spacer.dart';
+import 'package:final_project/Logic/Bloc/Profile/View/profile_info.dart';
 import 'package:final_project/Logic/Bloc/Profile/View/widget/dialogBox/transaction_dialog_box.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/recent_activity_bloc.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/transaction_chart_bloc.dart';
@@ -72,7 +73,10 @@ class UserProfile extends StatelessWidget {
                       themeData: themeData,
                       url: 'Assets/icons/information.png',
                       title: 'Information',
-                      onTap: () {},
+                      onTap: () {
+                        profileInfoDialogBox(
+                            context: context, themeData: themeData);
+                      },
                     ),
                     CustomListTile(
                       themeData: themeData,

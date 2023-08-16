@@ -1,6 +1,7 @@
 library app;
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:final_project/Account/account_bloc.dart';
 import 'package:final_project/Autheriztion/autherization_bloc.dart';
 import 'package:final_project/Logic/Bloc/Login/View/page_slider.dart';
 import 'package:final_project/Logic/Bloc/Login/auth/forget%20password/confirm%20otp/confirm_otp_bloc.dart';
@@ -16,8 +17,8 @@ import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/transaction_bloc
 import 'package:final_project/Logic/Bloc/Settings/settings_bloc.dart';
 import 'package:final_project/Logic/Cubit/Network/network_cubit.dart';
 import 'package:final_project/Routes/routes.dart';
+import 'package:final_project/Services/account%20repository/account_repository.dart';
 import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
-import 'package:final_project/Services/repository/user%20repository/user_repository.dart';
 import 'package:final_project/Splash/View/splash_activity.dart';
 import 'package:final_project/bottom_navigation_bar_controller.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -29,7 +30,11 @@ import 'Constraints/constraints.dart';
 class App extends StatelessWidget {
   final AccountCompletionBloc accountCompletionBloc = AccountCompletionBloc();
   final AuthenticationRepository authenticationRepository;
-  App({super.key, required this.authenticationRepository});
+  final AccountStreamRepository accountStreamRepository;
+  App(
+      {super.key,
+      required this.authenticationRepository,
+      required this.accountStreamRepository});
 
   @override
   Widget build(BuildContext context) {
@@ -44,13 +49,17 @@ class App extends StatelessWidget {
       ],
       child: MultiBlocProvider(
         providers: [
+          BlocProvider<AccountBloc>(
+              create: (_) => AccountBloc(
+                  accountStreamRepository: accountStreamRepository)),
           BlocProvider<SettingsBloc>(create: (_) => SettingsBloc()),
           BlocProvider<NetworkCubit>(
               create: (_) => NetworkCubit(connectivity: Connectivity())),
           BlocProvider(
             create: (_) => AutherizationBloc(
               authenticationRepository: authenticationRepository,
-              userRepository: UserRepository(),
+              accountStreamRepository: accountStreamRepository,
+              // userRepository: UserRepository(),
             ),
             child: AppView(authenticationRepository: authenticationRepository),
           ),

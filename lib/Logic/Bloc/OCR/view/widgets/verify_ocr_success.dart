@@ -87,18 +87,7 @@ class UserDataBodyView extends StatelessWidget {
                   keyboardType: TextInputType.none,
                 ),
                 const ColumnSpacer(height: 10),
-                // TextFormField(
-                //   initialValue: state.userData!['license id'],
-                //   decoration: InputDecoration(
-                //     border: OutlineInputBorder(
-                //       borderRadius: BorderRadius.circular(12),
-                //     ),
-                //     labelText: 'License ID Number',
-                //     floatingLabelBehavior: FloatingLabelBehavior.always,
-                //     enabled: true,
-                //   ),
-                //   keyboardType: TextInputType.none,
-                // ),
+               
                 const ColumnSpacer(height: 10),
                 TextFormField(
                   initialValue: state.userData!['license issued date'],
@@ -113,18 +102,7 @@ class UserDataBodyView extends StatelessWidget {
                   keyboardType: TextInputType.none,
                 ),
                 const ColumnSpacer(height: 10),
-                // TextFormField(
-                //   initialValue: state.userData!['license expiry date'],
-                //   decoration: InputDecoration(
-                //     border: OutlineInputBorder(
-                //       borderRadius: BorderRadius.circular(12),
-                //     ),
-                //     labelText: 'License Expiry Date',
-                //     floatingLabelBehavior: FloatingLabelBehavior.always,
-                //     enabled: true,
-                //   ),
-                //   keyboardType: TextInputType.none,
-                // ),
+          
                 const ColumnSpacer(height: 10),
                 TextFormField(
                   initialValue: state.userData!['dob'],

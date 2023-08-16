@@ -22,7 +22,7 @@ class CyclingRidePage extends StatelessWidget {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
-            child: Points(themeData: themeData),
+            child: Points(themeData: themeData, points: '0000'),
           ),
           const Padding(
             padding: EdgeInsets.only(right: 5.0),

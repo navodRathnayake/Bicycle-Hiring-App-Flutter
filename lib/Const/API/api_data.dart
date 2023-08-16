@@ -18,4 +18,5 @@ Map<String, String> user = const {
   '/transactions': '/api/v1/transactions',
   '/updatePatch': '/api/v1/users/',
   '/recentActivity': '/api/v1/users/19/recent-activities',
+  '/user': '/api/v1/users/',
 };

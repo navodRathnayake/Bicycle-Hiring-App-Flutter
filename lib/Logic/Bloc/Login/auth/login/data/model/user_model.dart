@@ -1,32 +1,42 @@
 library user_model;
 
 import 'package:equatable/equatable.dart';
-import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 
 class User extends Equatable {
+  final String email;
   final String userName;
   final String password;
-  final String token;
   final String image;
-  final AuthenticationStatus status;
+  final String nic;
+  final String bloodGroup;
+  final int points;
 
-  static var empty = User;
+  static const empty = User(
+    userName: '',
+    password: '',
+    image: '',
+    nic: '',
+    email: '',
+    bloodGroup: '',
+    points: 0,
+  );
 
   const User({
+    required this.email,
     required this.userName,
     required this.password,
-    required this.token,
     required this.image,
-    required this.status,
+    required this.nic,
+    required this.points,
+    required this.bloodGroup,
   });
 
-  User.formJson({required Map<String, dynamic> json})
-      : userName = json['userName'],
-        password = json['password'],
-        token = json['token'],
-        image = json['image'],
-        status = json['status'];
+  // User.formJson({required Map<String, dynamic> json})
+  //     : userName = json['userName'],
+  //       password = json['password'],
+  //       token = json['token'],
+  //       image = json['image'];
 
   @override
-  List<Object?> get props => [userName, password, token, image, status];
+  List<Object?> get props => [userName, password, image, nic, points];
 }
