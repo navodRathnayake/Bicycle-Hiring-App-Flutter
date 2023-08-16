@@ -1,19 +1,19 @@
 part of 'transaction_bloc.dart';
 
-enum TransactionStatus { initial, inProcess, success, failure }
+enum TransactionStatus { inProcess, success, failure }
 
 class TransactionState extends Equatable {
   final TransactionStatus status;
-  final List<Map<String, String>> transactions;
+  final List<dynamic> transactions;
 
   const TransactionState({
-    this.status = TransactionStatus.initial,
+    this.status = TransactionStatus.inProcess,
     this.transactions = const [],
   });
 
   TransactionState copyWith({
     TransactionStatus? status,
-    List<Map<String, String>>? transactions,
+    List<dynamic>? transactions,
   }) {
     return TransactionState(
       status: status ?? this.status,

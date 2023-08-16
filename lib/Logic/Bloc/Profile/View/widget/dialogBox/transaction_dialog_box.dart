@@ -6,6 +6,8 @@ import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dialogBox/dialogbo
 import 'package:final_project/Logic/Bloc/Profile/View/widget/charts/transaction_chart.dart';
 import 'package:final_project/Logic/Bloc/Profile/View/widget/custom_transaction_list_tile.dart';
 import 'package:final_project/Logic/Bloc/Profile/bloc/profile_bloc.dart';
+import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/transaction_chart_bloc.dart';
+import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/transaction_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -112,27 +114,18 @@ class TransactionListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListBody(
-      children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('Account Transaction',
-                style: themeData.textTheme.headlineSmall),
-            DialogBoxCloseButton(themeData: themeData),
-          ],
-        ),
-        const Divider(),
-        const ColumnSpacer(height: 10),
-        CustomTransactionListTile(
-            themeData: themeData, type: 1, date: 'Jan-23-2023', amount: 2375),
-        CustomTransactionListTile(
-            themeData: themeData, type: 2, date: 'Jan-23-2023', amount: 2375),
-        CustomTransactionListTile(
-            themeData: themeData, type: 2, date: 'Jan-23-2023', amount: 2375),
-        CustomTransactionListTile(
-            themeData: themeData, type: 1, date: 'Jan-23-2023', amount: 2375),
-      ],
+    return BlocBuilder<TransactionBloc, TransactionState>(
+      builder: (context, state) {
+        if (state.status == TransactionStatus.inProcess) {
+          return TransactionInprocess(themeData: themeData);
+        } else if (state.status == TransactionStatus.success) {
+          return TransactionSuccess(themeData: themeData);
+        } else if (state.status == TransactionStatus.failure) {
+          return TransactionFailure(themeData: themeData);
+        } else {
+          return Container();
+        }
+      },
     );
   }
 }
@@ -150,6 +143,173 @@ class TransactionChartView extends StatelessWidget {
       TransactionChart(themeData: themeData),
       TransactionChart(themeData: themeData),
     ];
+    return BlocBuilder<TransactionChartBloc, TransactionChartState>(
+      builder: (context, state) {
+        if (state.status == TransactionChartStatus.inProcess) {
+          return TransactionChartInprocess(themeData: themeData);
+        } else if (state.status == TransactionChartStatus.success) {
+          return TransactionChartSuccess(
+              themeData: themeData, controller: controller, pages: pages);
+        } else if (state.status == TransactionChartStatus.failure) {
+          return TransactionChartFailure(themeData: themeData);
+        } else {
+          return Container();
+        }
+      },
+    );
+  }
+}
+
+class TransactionSuccess extends StatelessWidget {
+  final ThemeData themeData;
+  const TransactionSuccess({super.key, required this.themeData});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListBody(
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Account Transaction',
+                style: themeData.textTheme.headlineSmall),
+            DialogBoxCloseButton(themeData: themeData),
+          ],
+        ),
+        const Divider(),
+        const ColumnSpacer(height: 10),
+        // CustomTransactionListTile(
+        //     themeData: themeData, type: 1, date: 'Jan-23-2023', amount: 2375),
+        BlocBuilder<TransactionBloc, TransactionState>(
+          builder: (context, state) {
+            return Container(
+              width: 100,
+              height: 300,
+              child: ListView.builder(
+                itemCount: state.transactions.length,
+                itemBuilder: (context, index) => CustomTransactionListTile(
+                  themeData: themeData,
+                  type: state.transactions[index]['transactionStatus']['id'],
+                  date: state.transactions[index]['createdAt'],
+                  amount: double.parse(state.transactions[index]['amount']),
+                ),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class TransactionInprocess extends StatelessWidget {
+  final ThemeData themeData;
+  const TransactionInprocess({super.key, required this.themeData});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            DialogBoxCloseButton(themeData: themeData),
+          ],
+        ),
+        const ColumnSpacer(height: 30),
+        const CircularProgressIndicator(),
+        const ColumnSpacer(height: 10),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 50),
+          child: Text('Adding Creadit',
+              style: TextStyle(
+                fontSize: 25,
+              )),
+        ),
+        const ColumnSpacer(height: 5),
+        const Text('Card',
+            style: TextStyle(
+              fontSize: 25,
+            )),
+        const ColumnSpacer(height: 10),
+        const Text('It will take a while')
+      ],
+    );
+  }
+}
+
+class TransactionFailure extends StatelessWidget {
+  final ThemeData themeData;
+  const TransactionFailure({super.key, required this.themeData});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 0),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                DialogBoxCloseButton(themeData: themeData),
+              ],
+            ),
+            const ColumnSpacer(height: 10),
+            Image.asset('Assets/icons/sad.png',
+                color: themeData.colorScheme.onBackground),
+            const ColumnSpacer(height: 10),
+            const Text('Something',
+                style: TextStyle(
+                  fontSize: 25,
+                )),
+            const ColumnSpacer(height: 5),
+            const Text('Went Wrong',
+                style: TextStyle(
+                  fontSize: 25,
+                )),
+            const ColumnSpacer(height: 5),
+            const Text('Buddy!',
+                style: TextStyle(
+                  fontSize: 25,
+                )),
+            const ColumnSpacer(height: 10),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 30),
+              child: Text(
+                'Try again to fill your account with points',
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const ColumnSpacer(height: 30),
+            ElevatedButton(
+              onPressed: () {
+                BlocProvider.of<TransactionBloc>(context)
+                    .add(TransactionClickedEvent());
+              },
+              child: const Text('Try Again'),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class TransactionChartSuccess extends StatelessWidget {
+  final List<Widget> pages;
+  final ThemeData themeData;
+  final PageController controller;
+  const TransactionChartSuccess(
+      {super.key,
+      required this.themeData,
+      required this.controller,
+      required this.pages});
+
+  @override
+  Widget build(BuildContext context) {
     return ListBody(
       children: <Widget>[
         Row(
@@ -183,6 +343,102 @@ class TransactionChartView extends StatelessWidget {
             'A bar chart is a type of chart that presents categorical data with rectangular bars with heights or lengths proportional to the values that they represent. Bar charts are used to compare different categories or discrete data and are useful for identifying possible relationships between them.'),
         const ColumnSpacer(height: 10),
       ],
+    );
+  }
+}
+
+class TransactionChartInprocess extends StatelessWidget {
+  final ThemeData themeData;
+  const TransactionChartInprocess({super.key, required this.themeData});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            DialogBoxCloseButton(themeData: themeData),
+          ],
+        ),
+        const ColumnSpacer(height: 30),
+        const CircularProgressIndicator(),
+        const ColumnSpacer(height: 10),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 50),
+          child: Text('Adding Creadit',
+              style: TextStyle(
+                fontSize: 25,
+              )),
+        ),
+        const ColumnSpacer(height: 5),
+        const Text('Card',
+            style: TextStyle(
+              fontSize: 25,
+            )),
+        const ColumnSpacer(height: 10),
+        const Text('It will take a while')
+      ],
+    );
+  }
+}
+
+class TransactionChartFailure extends StatelessWidget {
+  final ThemeData themeData;
+  const TransactionChartFailure({super.key, required this.themeData});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 0),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                DialogBoxCloseButton(themeData: themeData),
+              ],
+            ),
+            const ColumnSpacer(height: 10),
+            Image.asset('Assets/icons/sad.png',
+                color: themeData.colorScheme.onBackground),
+            const ColumnSpacer(height: 10),
+            const Text('Something',
+                style: TextStyle(
+                  fontSize: 25,
+                )),
+            const ColumnSpacer(height: 5),
+            const Text('Went Wrong',
+                style: TextStyle(
+                  fontSize: 25,
+                )),
+            const ColumnSpacer(height: 5),
+            const Text('Buddy!',
+                style: TextStyle(
+                  fontSize: 25,
+                )),
+            const ColumnSpacer(height: 10),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 30),
+              child: Text(
+                'Try again to fill your account with points',
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const ColumnSpacer(height: 30),
+            ElevatedButton(
+              onPressed: () {
+                BlocProvider.of<TransactionChartBloc>(context)
+                    .add(TransactionChartClickEvent());
+              },
+              child: const Text('Try Again'),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

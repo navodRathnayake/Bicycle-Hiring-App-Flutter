@@ -14,3 +14,8 @@ class AutherizationStatusChanged extends AutherizationEvent {
 }
 
 class AutherizationLogoutRequested extends AutherizationEvent {}
+
+class AccountStreamChanged extends AutherizationEvent {
+  final AccountStreamStatus status;
+  const AccountStreamChanged({required this.status});
+}

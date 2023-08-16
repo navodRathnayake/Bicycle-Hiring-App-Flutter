@@ -2,6 +2,7 @@ library main;
 
 import 'dart:io';
 
+import 'package:final_project/Services/account%20repository/account_repository.dart';
 import 'package:final_project/Services/push%20notification/notification.dart';
 import 'package:final_project/Services/push%20notification/push_notification_healper_class.dart';
 import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
@@ -60,6 +61,7 @@ void main(List<String> args) async {
 
   runApp(App(
     authenticationRepository: AuthenticationRepository(),
+    accountStreamRepository: AccountStreamRepository(),
   ));
 }
 
