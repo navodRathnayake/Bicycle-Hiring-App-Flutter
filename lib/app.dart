@@ -11,6 +11,7 @@ import 'package:final_project/Logic/Bloc/Profile/bloc/account_completion_bloc.da
 import 'package:final_project/Logic/Bloc/Profile/bloc/pin_code_form_bloc.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/add_new_creadit_card_bloc.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/add_creadit_form_bloc.dart';
+import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/local_pin_bloc.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/recent_activity_bloc.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/transaction_chart_bloc.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/transaction_bloc.dart';
