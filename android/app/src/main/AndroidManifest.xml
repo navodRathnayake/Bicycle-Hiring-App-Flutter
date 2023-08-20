@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="dev.navod.flutter.final_project">
+    <uses-permission android:name = "android.permission.CAMERA"/>
    <application
         android:label="final_project"
         android:name="${applicationName}"
@@ -20,6 +21,8 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
+              <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyDLolQ01Bk6VsbKWX_O3-PDX-z1na4OxEU"/>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

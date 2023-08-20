@@ -3,6 +3,7 @@ library app;
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:final_project/Account/account_bloc.dart';
 import 'package:final_project/Autheriztion/autherization_bloc.dart';
+import 'package:final_project/Logic/Bloc/Cycling/bloc/qr_scan_bloc.dart';
 import 'package:final_project/Logic/Bloc/Login/View/page_slider.dart';
 import 'package:final_project/Logic/Bloc/Login/auth/forget%20password/confirm%20otp/confirm_otp_bloc.dart';
 import 'package:final_project/Logic/Bloc/OCR/bloc/ocr_bloc.dart';
@@ -85,6 +86,7 @@ class App extends StatelessWidget {
           BlocProvider<ConfirmOTPBloc>(
               create: (_) => ConfirmOTPBloc(
                   authenticationRepository: authenticationRepository)),
+          BlocProvider<QRScanBloc>(create: (_) => QRScanBloc()),
         ],
         child: AppView(authenticationRepository: authenticationRepository),
       ),

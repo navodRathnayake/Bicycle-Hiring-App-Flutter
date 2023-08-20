@@ -66,8 +66,10 @@ dependencies:
   mask_text_input_formatter: ^2.5.0
   scrollable_positioned_list: ^0.3.8
   intl: ^0.18.1
+  google_maps_flutter: ^2.4.0
+  mobile_scanner: ^3.4.1
+  qr_scanner_overlay: ^0.0.2
   
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
