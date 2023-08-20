@@ -90,7 +90,10 @@ class UserProfile extends StatelessWidget {
                         themeData: themeData,
                         url: 'Assets/icons/carbon_foot_print.png',
                         title: 'Caarbon Foot Print',
-                        onTap: () {},
+                        onTap: () {
+                          debugPrint('AAAA');
+                          Navigator.of(context).pushNamed('/mapSample');
+                        },
                       )
                     ],
                   ),

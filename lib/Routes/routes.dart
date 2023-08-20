@@ -15,6 +15,7 @@ import 'package:final_project/Logic/Bloc/Recent%20Activity/view/recent_activity_
 import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:final_project/Splash/View/splash_activity.dart';
 import 'package:final_project/bottom_navigation_bar_controller.dart';
+import 'package:final_project/sample_map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -134,6 +135,9 @@ class Routes {
       case '/profileCompletion':
         return MaterialPageRoute(
             builder: (context) => const ProfileCompletion());
+
+      case '/mapSample':
+        return MaterialPageRoute(builder: (context) => const MapSample());
 
       default:
         return MaterialPageRoute(

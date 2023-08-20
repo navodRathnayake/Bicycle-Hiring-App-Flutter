@@ -3,6 +3,7 @@ library app;
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:final_project/Account/account_bloc.dart';
 import 'package:final_project/Autheriztion/autherization_bloc.dart';
+import 'package:final_project/Logic/Bloc/Cycling/bloc/qr_scan_bloc.dart';
 import 'package:final_project/Logic/Bloc/Login/View/page_slider.dart';
 import 'package:final_project/Logic/Bloc/Login/auth/forget%20password/confirm%20otp/confirm_otp_bloc.dart';
 import 'package:final_project/Logic/Bloc/OCR/bloc/ocr_bloc.dart';
@@ -11,7 +12,6 @@ import 'package:final_project/Logic/Bloc/Profile/bloc/account_completion_bloc.da
 import 'package:final_project/Logic/Bloc/Profile/bloc/pin_code_form_bloc.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/add_new_creadit_card_bloc.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/add_creadit_form_bloc.dart';
-import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/local_pin_bloc.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/recent_activity_bloc.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/transaction_chart_bloc.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/transaction_bloc.dart';
@@ -86,6 +86,7 @@ class App extends StatelessWidget {
           BlocProvider<ConfirmOTPBloc>(
               create: (_) => ConfirmOTPBloc(
                   authenticationRepository: authenticationRepository)),
+          BlocProvider<QRScanBloc>(create: (_) => QRScanBloc()),
         ],
         child: AppView(authenticationRepository: authenticationRepository),
       ),

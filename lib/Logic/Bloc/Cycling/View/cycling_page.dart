@@ -1,5 +1,6 @@
 library cycling_page;
 
+import 'package:final_project/Logic/Bloc/Cycling/View/modal%20bottom%20sheets/qr_model_bottom_sheet.dart';
 import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:final_project/Const/Widget/column_spacer.dart';
@@ -125,7 +126,8 @@ class ScanQRView extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pushNamed('/cyclingStepperPage');
+                    qrModalBottomSheet(context: context, themeData: themeData);
+                    // Navigator.of(context).pushNamed('/cyclingStepperPage');
                   },
                   child: Container(
                     decoration: BoxDecoration(

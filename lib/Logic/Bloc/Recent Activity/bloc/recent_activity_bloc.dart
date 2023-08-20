@@ -16,6 +16,8 @@ class RecentActivityBloc
       : super(
             RecentActivityState(itemScrollController: ItemScrollController())) {
     on<RecentActivityClickedEvent>(_onRecentActivityClickEvent);
+    on<RecentActivityCurrentActivityChanged>(
+        _onRecentActivityCurrentActivityIndexChanged);
     on<RecentActivityItemScrollController>(
         _onRecentActivityItemScrollController);
   }
@@ -87,6 +89,15 @@ class RecentActivityBloc
 
     debugPrint('Selected Index : ${state.selectedIndex}');
     debugPrint(event.index.toString());
+  }
+
+  Future<void> _onRecentActivityCurrentActivityIndexChanged(
+    RecentActivityCurrentActivityChanged event,
+    Emitter<RecentActivityState> emit,
+  ) async {
+    emit(state.copyWith(
+      currentRecentActivityIndex: state.currentRecentActivityIndex,
+    ));
   }
 }
 
