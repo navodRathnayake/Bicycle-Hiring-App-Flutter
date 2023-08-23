@@ -3,7 +3,10 @@ library app;
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:final_project/Account/account_bloc.dart';
 import 'package:final_project/Autheriztion/autherization_bloc.dart';
+import 'package:final_project/Logic/Bloc/Cycling/View/cycling_stepper_page.dart';
+import 'package:final_project/Logic/Bloc/Cycling/View/cycling_ride_page.dart';
 import 'package:final_project/Logic/Bloc/Cycling/bloc/qr_scan_bloc.dart';
+import 'package:final_project/Logic/Bloc/Cycling/bloc/stepper_bloc.dart';
 import 'package:final_project/Logic/Bloc/Login/View/page_slider.dart';
 import 'package:final_project/Logic/Bloc/Login/auth/forget%20password/confirm%20otp/confirm_otp_bloc.dart';
 import 'package:final_project/Logic/Bloc/OCR/bloc/ocr_bloc.dart';
@@ -30,6 +33,7 @@ import 'Constraints/constraints.dart';
 
 class App extends StatelessWidget {
   final AccountCompletionBloc accountCompletionBloc = AccountCompletionBloc();
+  final StepperBloc stepperBloc = StepperBloc();
   final AuthenticationRepository authenticationRepository;
   final AccountStreamRepository accountStreamRepository;
   App(
@@ -86,7 +90,11 @@ class App extends StatelessWidget {
           BlocProvider<ConfirmOTPBloc>(
               create: (_) => ConfirmOTPBloc(
                   authenticationRepository: authenticationRepository)),
-          BlocProvider<QRScanBloc>(create: (_) => QRScanBloc()),
+          BlocProvider<StepperBloc>(create: (context) => stepperBloc),
+          BlocProvider<QRScanBloc>(
+              create: (_) => QRScanBloc(
+                  stepperBloc: stepperBloc,
+                  authenticationRepository: authenticationRepository)),
         ],
         child: AppView(authenticationRepository: authenticationRepository),
       ),
@@ -108,6 +116,7 @@ class _AppViewState extends State<AppView> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData themeData = Theme.of(context);
     return BlocBuilder<SettingsBloc, SettingsState>(
       builder: (context, state) {
         return MaterialApp(
@@ -147,6 +156,15 @@ class _AppViewState extends State<AppView> {
                       SplashActivity.route(),
                       (route) => false,
                     );
+                  case AuthenticationStatus.onServiceInitial:
+                    _navigator.pushAndRemoveUntil<void>(
+                        CyclingStepperPage.route(
+                            authenticationRepository:
+                                widget.authenticationRepository),
+                        (route) => false);
+                  case AuthenticationStatus.onService:
+                    _navigator.pushAndRemoveUntil<void>(
+                        CyclingRidePage.route(), (route) => false);
                 }
               },
               child: child,

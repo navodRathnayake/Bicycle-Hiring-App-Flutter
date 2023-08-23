@@ -16,6 +16,10 @@ class AutherizationState extends Equatable {
       : this._(status: AuthenticationStatus.logout);
   const AutherizationState.loading()
       : this._(status: AuthenticationStatus.loading);
+  const AutherizationState.onServiceInitial()
+      : this._(status: AuthenticationStatus.onServiceInitial);
+  const AutherizationState.onService()
+      : this._(status: AuthenticationStatus.onService);
 
   AutherizationState copyWith({
     AuthenticationStatus? status,

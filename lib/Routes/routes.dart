@@ -1,6 +1,6 @@
 library routes;
 
-import 'package:final_project/Logic/Bloc/Cycling/View/cicling_stepper_page.dart';
+import 'package:final_project/Logic/Bloc/Cycling/View/cycling_stepper_page.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/cycling_page.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/cycling_ride_page.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/steps/bicycle_data_view.dart';
@@ -117,13 +117,13 @@ class Routes {
 
       case '/cyclingStepperPage':
         return MaterialPageRoute(
-          builder: (context) =>
-              CyclingStepperPage(themeData: Theme.of(context)),
+          builder: (context) => CyclingStepperPage(
+              authenticationRepository: authenticationRepository),
         );
 
       case '/cyclingRidePage':
         return MaterialPageRoute(
-          builder: (context) => CyclingRidePage(themeData: Theme.of(context)),
+          builder: (context) => const CyclingRidePage(),
         );
 
       case '/verifyDrivingLicenseSelection':

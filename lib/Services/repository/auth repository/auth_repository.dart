@@ -13,7 +13,9 @@ enum AuthenticationStatus {
   loginNonVerified,
   logingVerified,
   logout,
-  loading
+  loading,
+  onService,
+  onServiceInitial,
 }
 
 class AuthenticationRepository {
@@ -34,7 +36,10 @@ class AuthenticationRepository {
         yield AuthenticationStatus.logingVerified;
       case 'logout':
         yield AuthenticationStatus.logout;
-        break;
+      case 'on-service':
+        yield AuthenticationStatus.onService;
+      case 'on-service-initial':
+        yield AuthenticationStatus.onServiceInitial;
       default:
         yield AuthenticationStatus.initial;
     }
@@ -62,6 +67,9 @@ class AuthenticationRepository {
       case 'logout':
         currentStatus = AuthenticationStatus.logout;
         break;
+      case 'on-service':
+        currentStatus = AuthenticationStatus.onService;
+        break;
       default:
         currentStatus = AuthenticationStatus.initial;
         break;
@@ -79,6 +87,14 @@ class AuthenticationRepository {
 
   Future<void> nonVerified() async {
     _controller.add(AuthenticationStatus.loginNonVerified);
+  }
+
+  Future<void> onService() async {
+    _controller.add(AuthenticationStatus.onService);
+  }
+
+  Future<void> onServiceInitial() async {
+    _controller.add(AuthenticationStatus.onServiceInitial);
   }
 
   Future<void> logIn({
@@ -99,7 +115,8 @@ class AuthenticationRepository {
       String userStatus = result['body']['status id'].toString();
       debugPrint(userStatus);
 
-      if (userStatus.toString().contains('1')) {
+      if (userStatus.toString().contains('1') ||
+          userStatus.toString().contains('2')) {
         // change login response body
         debugPrint('popopopop');
         debugPrint(result['body'].toString());

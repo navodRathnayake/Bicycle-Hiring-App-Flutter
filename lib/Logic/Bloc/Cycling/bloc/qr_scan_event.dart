@@ -14,3 +14,5 @@ class QRScanOnDetectEvent extends QRScanEvent {
 }
 
 class QRScanTryAgainEvent extends QRScanEvent {}
+
+class QRScanRollBackEvent extends QRScanEvent {}

@@ -88,6 +88,7 @@ class LoginFormBloc extends Bloc<LoginFormEvent, LoginFormState> {
           'email': state.email.value,
           'password': state.password.value
         })).getLoginResponse();
+        debugPrint('PASS');
         if (result['result'] == 1) {
           // change login response body
 
