@@ -135,6 +135,8 @@ class PackageSelection extends StatelessWidget {
             onTap: () {
               BlocProvider.of<CyclingBloc>(context)
                   .add(CyclePackagePressEvent(index: index));
+              BlocProvider.of<StepperBloc>(context)
+                  .add(PackageOnChangedEvent(index: index));
             },
             child: Container(
               decoration: BoxDecoration(

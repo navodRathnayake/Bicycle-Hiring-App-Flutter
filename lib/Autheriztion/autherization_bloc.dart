@@ -134,6 +134,10 @@ class AutherizationBloc extends Bloc<AutherizationEvent, AutherizationState> {
       case AuthenticationStatus.loading:
         accountStreamRepository.streamOut();
         return emit(const AutherizationState.loading());
+      case AuthenticationStatus.onServiceInitial:
+        return emit(const AutherizationState.onServiceInitial());
+      case AuthenticationStatus.onService:
+        return emit(const AutherizationState.onService());
     }
   }
 

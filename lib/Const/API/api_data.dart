@@ -20,3 +20,7 @@ Map<String, String> user = const {
   '/recentActivity': '/api/v1/users/19/recent-activities',
   '/user': '/api/v1/users/',
 };
+
+Map<String, String> bicycle = const {
+  '/bicycle': '/api/v1/bicycles/',
+};

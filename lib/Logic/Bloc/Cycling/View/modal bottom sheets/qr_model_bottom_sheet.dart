@@ -101,18 +101,17 @@ class QRScanInProcess extends StatelessWidget {
               const ColumnSpacer(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 50),
-                child: Text(state.inProcessMsg,
-                    style: const TextStyle(
-                      fontSize: 25,
-                    )),
+                child: Text(
+                  state.inProcessMsg,
+                  style: const TextStyle(
+                    fontSize: 25,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
               const ColumnSpacer(height: 5),
-              const Text('Card',
-                  style: TextStyle(
-                    fontSize: 25,
-                  )),
               const ColumnSpacer(height: 10),
-              const Text('It will take a while')
+              const Text('It will take a while'),
             ],
           );
         },
@@ -126,9 +125,20 @@ class QRScanSuccess extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    return Center(
       child: Column(
-        children: [Text('Success')],
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            'Assets/icons/ok.png',
+          ),
+          const ColumnSpacer(height: 10),
+          const Text(
+            'Validation Process \nHas Successfully\nCompleted!',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          ),
+        ],
       ),
     );
   }

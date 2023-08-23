@@ -10,12 +10,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rolling_switch/rolling_switch.dart';
 
-class CyclingRidePage extends StatelessWidget {
-  final ThemeData themeData;
-  const CyclingRidePage({super.key, required this.themeData});
+class CyclingRidePage extends StatefulWidget {
+  const CyclingRidePage({super.key});
+
+  static Route<void> route() {
+    return MaterialPageRoute<void>(builder: (_) => const CyclingRidePage());
+  }
 
   @override
+  State<CyclingRidePage> createState() => _CyclingRidePageState();
+}
+
+class _CyclingRidePageState extends State<CyclingRidePage> {
+  @override
   Widget build(BuildContext context) {
+    final ThemeData themeData = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,

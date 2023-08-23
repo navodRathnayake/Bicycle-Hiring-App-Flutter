@@ -12,7 +12,7 @@ class QRScanState extends Equatable {
     this.displayValue = '',
     this.status = QRScanStatus.initial,
     this.errorMsg = 'Null',
-    this.inProcessMsg = 'Validating The/nQR Code',
+    this.inProcessMsg = 'Validating The\nQR Code',
   });
 
   QRScanState copyWith({
