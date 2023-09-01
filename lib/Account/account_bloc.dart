@@ -70,14 +70,14 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       debugPrint(response.toString());
 
       if (response['result'] == 1) {
-        User user = const User(
-          userName: '',
-          password: '',
+        User user = User(
+          userName: response['body']['users']['firstName']!.toString(),
+          password: response['body']['users']['password']!.toString(),
           image: '',
-          nic: '',
-          points: 0,
-          bloodGroup: '',
-          email: '',
+          nic: response['body']['users']['nic']!.toString(),
+          points: double.parse(response['body']['users']['points']!.toString()),
+          bloodGroup: response['body']['users']['bloodGroup']!.toString(),
+          email: response['body']['users']['email']!.toString(),
         );
         debugPrint('User has Updated!');
         return user;

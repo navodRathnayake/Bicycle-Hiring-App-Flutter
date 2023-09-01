@@ -7,7 +7,7 @@ class RideState extends Equatable {
   final String msg;
   const RideState({
     this.status = RideStatus.inProcess,
-    this.msg = '',
+    this.msg = 'Validating Payment',
   });
 
   RideState copyWith({

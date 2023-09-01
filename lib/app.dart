@@ -49,6 +49,9 @@ class App extends StatelessWidget {
       debugPrint('Firebase Device Code : $value');
     });
 
+    final AccountBloc accountBloc =
+        AccountBloc(accountStreamRepository: accountStreamRepository);
+
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider<AuthenticationRepository>(
@@ -56,9 +59,7 @@ class App extends StatelessWidget {
       ],
       child: MultiBlocProvider(
         providers: [
-          BlocProvider<AccountBloc>(
-              create: (_) => AccountBloc(
-                  accountStreamRepository: accountStreamRepository)),
+          BlocProvider<AccountBloc>(create: (_) => accountBloc),
           BlocProvider<SettingsBloc>(create: (_) => SettingsBloc()),
           BlocProvider<NetworkCubit>(
               create: (_) => NetworkCubit(connectivity: Connectivity())),
@@ -98,7 +99,8 @@ class App extends StatelessWidget {
                   stepperBloc: stepperBloc,
                   authenticationRepository: authenticationRepository)),
           BlocProvider<RideBloc>(
-              create: (_) => RideBloc(stepperInstance: stepperBloc)),
+              create: (_) => RideBloc(
+                  stepperInstance: stepperBloc, userAccount: accountBloc)),
         ],
         child: AppView(authenticationRepository: authenticationRepository),
       ),

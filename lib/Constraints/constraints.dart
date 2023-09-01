@@ -39,3 +39,13 @@ var creaditCardCVCMaskFormatter = MaskTextInputFormatter(
     mask: '###',
     filter: {"#": RegExp(r'[0-9]')},
     type: MaskAutoCompletionType.lazy);
+
+Map<String, double> packagePool = {
+  'min30': 13.50,
+  'min60': 25.50,
+  'min120': 45.50,
+  'hour5': 175.50,
+};
+
+int transactionTypeAddCreadits = 1;
+int transactionTypeCycling = 2;

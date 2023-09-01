@@ -177,7 +177,7 @@ class CyclingInProcess extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 50),
                 child: Text(
-                  state.msg,
+                  state.msg.toString(),
                   style: const TextStyle(
                     fontSize: 25,
                   ),
