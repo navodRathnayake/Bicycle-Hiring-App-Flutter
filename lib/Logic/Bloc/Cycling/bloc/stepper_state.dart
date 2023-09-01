@@ -19,6 +19,12 @@ class StepperState extends Equatable {
   const StepperState.step1() : this._(currentStep: 1);
   const StepperState.step2() : this._(currentStep: 2);
   const StepperState.step3() : this._(currentStep: 3);
+  const StepperState.rollback()
+      : this._(
+          bicycle: const Bicycle(),
+          currentStep: 1,
+          package: Package.min120,
+        );
 
   StepperState copyWith({
     Bicycle? bicycle,

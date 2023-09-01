@@ -32,3 +32,5 @@ class PackageOnChangedEvent extends StepperEvent {
 }
 
 class StepperRollBackEvent extends StepperEvent {}
+
+class StepperAcceptEvent extends StepperEvent {}

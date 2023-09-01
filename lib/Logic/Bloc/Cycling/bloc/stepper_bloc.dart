@@ -12,6 +12,7 @@ class StepperBloc extends Bloc<StepperEvent, StepperState> {
     on<BicycleInfoPassEvent>(_onBicycleInfoPass);
     on<PackageOnChangedEvent>(_onPackageChanged);
     on<StepperRollBackEvent>(_stepperRollBack);
+    on<StepperAcceptEvent>(_onStepperAccept);
   }
 
   Future<void> _onStepperChanged(
@@ -72,6 +73,11 @@ class StepperBloc extends Bloc<StepperEvent, StepperState> {
     StepperRollBackEvent event,
     Emitter<StepperState> emit,
   ) async {
-    emit(const StepperState.initial());
+    emit(const StepperState.rollback());
   }
+
+  Future<void> _onStepperAccept(
+    StepperAcceptEvent event,
+    Emitter<StepperState> emit,
+  ) async {}
 }
