@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:final_project/Logic/Bloc/Cycling/model/bicycle_model.dart';
@@ -21,18 +23,18 @@ class StepperBloc extends Bloc<StepperEvent, StepperState> {
   ) async {
     switch (event.currentStep) {
       case 0:
-        emit(const StepperState.step1());
+        emit(state.copyWith(currentStep: 1));
         break;
       case 1:
-        emit(const StepperState.step2());
+        emit(state.copyWith(currentStep: 2));
         break;
 
       case 2:
-        emit(const StepperState.step3());
+        emit(state.copyWith(currentStep: 3));
         break;
 
       default:
-        emit(const StepperState.step1());
+        emit(state.copyWith(currentStep: 1));
         break;
     }
   }
@@ -54,18 +56,23 @@ class StepperBloc extends Bloc<StepperEvent, StepperState> {
     switch (event.index) {
       case 0:
         emit(state.copyWith(package: Package.min30));
+        debugPrint('SELECTED PACKAGE : min30');
         break;
       case 1:
         emit(state.copyWith(package: Package.min60));
+        debugPrint('SELECTED PACKAGE : min60');
         break;
       case 2:
         emit(state.copyWith(package: Package.min120));
+        debugPrint('SELECTED PACKAGE : min120');
         break;
       case 3:
         emit(state.copyWith(package: Package.hour5));
+        debugPrint('SELECTED PACKAGE : hour5');
         break;
       default:
         emit(state.copyWith(package: Package.min120));
+        debugPrint('SELECTED PACKAGE : min120');
     }
   }
 

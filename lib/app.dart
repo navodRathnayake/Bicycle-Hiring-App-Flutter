@@ -98,9 +98,7 @@ class App extends StatelessWidget {
               create: (_) => QRScanBloc(
                   stepperBloc: stepperBloc,
                   authenticationRepository: authenticationRepository)),
-          BlocProvider<RideBloc>(
-              create: (_) => RideBloc(
-                  stepperInstance: stepperBloc, userAccount: accountBloc)),
+          BlocProvider<RideBloc>(create: (_) => RideBloc()),
         ],
         child: AppView(authenticationRepository: authenticationRepository),
       ),

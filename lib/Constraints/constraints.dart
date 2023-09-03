@@ -49,3 +49,45 @@ Map<String, double> packagePool = {
 
 int transactionTypeAddCreadits = 1;
 int transactionTypeCycling = 2;
+
+List<Map<String, dynamic>> stations = [
+  {
+    'name': 'Peradeniya',
+    'location': [
+      {
+        'lang': '7.2809683',
+        'long': '80.6200033',
+      },
+      {
+        'lang': '222',
+        'long': '222',
+      },
+    ]
+  },
+  {
+    'name': 'Kandy',
+    'location': [
+      {
+        'lang': '333',
+        'long': '333',
+      },
+      {
+        'lang': '444',
+        'long': '444',
+      },
+    ]
+  },
+  {
+    'name': 'Colombo',
+    'location': [
+      {
+        'lang': '555',
+        'long': '555',
+      },
+      {
+        'lang': '666',
+        'long': '666',
+      },
+    ]
+  }
+];
