@@ -95,10 +95,12 @@ class BicycleTermAndConditionView extends StatelessWidget {
                         'PACKAGE : ${BlocProvider.of<StepperBloc>(context).state.package}');
                     Navigator.of(context).pushNamed('/cyclingRidePage');
                     BlocProvider.of<RideBloc>(context).add(RideInitialEvent(
-                        user: BlocProvider.of<AccountBloc>(context).state.user,
-                        package: BlocProvider.of<StepperBloc>(context)
-                            .state
-                            .package));
+                      user: BlocProvider.of<AccountBloc>(context).state.user,
+                      package:
+                          BlocProvider.of<StepperBloc>(context).state.package,
+                      bicycle:
+                          BlocProvider.of<StepperBloc>(context).state.bicycle,
+                    ));
                   },
                 ),
               ],

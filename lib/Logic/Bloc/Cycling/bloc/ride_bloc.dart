@@ -1,12 +1,15 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:final_project/Account/account_bloc.dart';
 import 'package:final_project/Constraints/constraints.dart';
 import 'package:final_project/Logic/Bloc/Cycling/bloc/stepper_bloc.dart';
+import 'package:final_project/Logic/Bloc/Cycling/data/data%20provider/path_post_api.dart';
 import 'package:final_project/Logic/Bloc/Cycling/data/data%20provider/transaction_post_api.dart';
+import 'package:final_project/Logic/Bloc/Cycling/data/repository%20provider/path_post_repository.dart';
 import 'package:final_project/Logic/Bloc/Cycling/data/repository%20provider/transaction_post_repository.dart';
+import 'package:final_project/Logic/Bloc/Cycling/model/bicycle_model.dart';
 import 'package:final_project/Logic/Bloc/Cycling/src/validate_location.dart';
 import 'package:final_project/Logic/Bloc/Login/auth/login/data/model/user_model.dart';
+import 'package:final_project/Services/account%20repository/account_repository.dart';
 import 'package:final_project/Services/data/data%20provider/user_update_patch_api.dart';
 import 'package:final_project/Services/data/repository%20provider/user_update_patch_repository.dart';
 import 'package:flutter/foundation.dart';
@@ -16,7 +19,8 @@ part 'ride_event.dart';
 part 'ride_state.dart';
 
 class RideBloc extends Bloc<RideEvent, RideState> {
-  RideBloc() : super(const RideState()) {
+  final AccountStreamRepository accountStreamRepository;
+  RideBloc({required this.accountStreamRepository}) : super(const RideState()) {
     on<RideInitialEvent>(_onRideInitial);
   }
 
@@ -35,65 +39,13 @@ class RideBloc extends Bloc<RideEvent, RideState> {
 
       debugPrint('CURRENT PACKAGE : ${event.package}');
 
-      if (_validatePayment(
-          currentPackage: event.package, balance: event.user.points)) {
-        debugPrint('USER HAS VALIDATED FOR THE PAYMENT');
-        await Future.delayed(const Duration(milliseconds: 1200));
-        emit(state.copyWith(msg: 'Payment being process'));
-        debugPrint('msg : ${state.msg}');
-
-        double newBalance = event.user.points -
-            double.parse(_getAmount(currentPackage: event.package));
-
-        debugPrint('New Balance : $newBalance');
-
-        var userUpdatePatch =
-            await UserUpdatePatchRepository(api: UserUpdatePatchApi())
-                .getPatchUpdateRepository(
-                    reqBody: {"points": newBalance.toString()});
-        debugPrint('USER PATCH RESPONSE $userUpdatePatch');
-
-        if (userUpdatePatch['result'] == 1) {
-          debugPrint('User update successfully');
-
-          var response =
-              await TransactionPostRepository(api: TransactionPostApi())
-                  .postTransaction(
-                      amount: _getAmount(currentPackage: event.package),
-                      transactionType: transactionTypeCycling.toString());
-          debugPrint(response.toString());
-
-          await Future.delayed(const Duration(milliseconds: 1200));
-
-          emit(state.copyWith(
-            msg: 'Bicycle Configuration',
-          ));
-        } else {
-          emit(state.copyWith(
-            msg: 'Payment Process Has\nBeen Failed',
-            status: RideStatus.failure,
-          ));
-
-          throw Exception('Payment Process Has\nBeen Failed');
-        }
-      } else {
-        debugPrint('USER HAS NOT VALIDATED FOR THE PAYMENT');
-
-        emit(state.copyWith(
-          msg: 'USER HAS NOT VALIDATED FOR THE PAYMENT',
-          status: RideStatus.failure,
-        ));
-
-        throw Exception('USER HAS NOT VALIDATED FOR THE PAYMENT');
-      }
-
       // Bicycle configiration
-      var response = await getCurrentLocation();
-      debugPrint(response.toString());
+      var geolocatorResponse = await getCurrentLocation();
+      debugPrint(geolocatorResponse.toString());
 
       Map<String, dynamic> validateResult = isValidLocation(
-          lang: response.latitude.toString(),
-          long: response.longitude.toString(),
+          lang: geolocatorResponse.latitude.toString(),
+          long: geolocatorResponse.longitude.toString(),
           stations: stations);
 
       debugPrint(validateResult.toString());
@@ -103,9 +55,65 @@ class RideBloc extends Bloc<RideEvent, RideState> {
             currentPackage: event.package, balance: event.user.points)) {
           // process
           debugPrint('PAYMENT Validation : PASS');
+          await Future.delayed(const Duration(milliseconds: 1200));
+          emit(state.copyWith(msg: 'Payment being process'));
+          debugPrint('msg : ${state.msg}');
+
+          double newBalance = event.user.points -
+              double.parse(_getAmount(currentPackage: event.package));
+
+          debugPrint('New Balance : $newBalance');
+
+          var userUpdatePatch =
+              await UserUpdatePatchRepository(api: UserUpdatePatchApi())
+                  .getPatchUpdateRepository(
+                      reqBody: {"points": newBalance.toString()});
+          debugPrint('USER PATCH RESPONSE $userUpdatePatch');
+
+          if (userUpdatePatch['result'] == 1) {
+            debugPrint('User update successfully');
+
+            var transactionResponse =
+                await TransactionPostRepository(api: TransactionPostApi())
+                    .postTransaction(
+                        amount: _getAmount(currentPackage: event.package),
+                        transactionType: transactionTypeCycling.toString());
+            debugPrint(transactionResponse.toString());
+
+            await Future.delayed(const Duration(milliseconds: 1200));
+
+            emit(state.copyWith(
+              msg: 'Bicycle Configuration',
+            ));
+            // task
+            debugPrint('PAYMENT HAS COMPLETED');
+            await accountStreamRepository.streamIn();
+            Future.delayed(const Duration(milliseconds: 1200));
+            await accountStreamRepository.streamIdel();
+            //table creations
+            _tableConfiguration(
+                event.bicycle.bicycleID,
+                geolocatorResponse.latitude.toString(),
+                geolocatorResponse.longitude.toString(),
+                validateResult['station']!);
+          } else {
+            emit(state.copyWith(
+              msg: 'Payment Process Has\nBeen Failed',
+              status: RideStatus.failure,
+            ));
+
+            throw Exception('Payment Process Has\nBeen Failed');
+          }
           // process
         } else {
           debugPrint('PAYMENT VALIDATION : FAIL');
+          debugPrint('USER HAS NOT VALIDATED FOR THE PAYMENT');
+
+          emit(state.copyWith(
+            msg: 'USER HAS NOT VALIDATED FOR THE PAYMENT',
+            status: RideStatus.failure,
+          ));
+
           throw Exception(
               'The account balance has less minimum points to get the relevent service. Please fulfill your account with creadits');
         }
@@ -152,5 +160,25 @@ class RideBloc extends Bloc<RideEvent, RideState> {
     } else {
       return '00.00';
     }
+  }
+
+  Future<void> _tableConfiguration(
+      String bicycleID, String lang, String long, String station) async {
+    var pathResponse =
+        await PathPostRepository(api: PathPostApi()).postPath(reqBody: {
+      "bicycleId": bicycleID,
+      "startLong": lang,
+      "startLang": long,
+      "startLocation": station
+    });
+
+    debugPrint("""
+---------------------------------------
+
+${pathResponse.toString()}
+
+---------------------------------------
+
+""");
   }
 }

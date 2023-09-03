@@ -11,13 +11,20 @@ class PathPostApi {
   String endPoint = path['/path']!;
   PathPostApi();
 
-  Future<Map<String, dynamic>> postTransactionData(
+  Future<Map<String, dynamic>> postPath(
       {required String bearerToken,
       required Map<String, String> reqBody}) async {
     try {
       var url = Uri.http(domain, endPoint);
 
       debugPrint(url.toString());
+
+      debugPrint('---> user id : ${int.parse(reqBody['user_id']!.toString())}');
+      debugPrint(
+          '---> bicycle id : ${int.parse(reqBody['bicycleId']!.toString())}');
+      debugPrint('---> lang : ${reqBody['startLong']!.toString()}');
+      debugPrint('---> long : ${reqBody['startLang']!.toString()}');
+      debugPrint('---> station : ${reqBody['startLocation']!.toString()}');
 
       var response = await http.post(url,
           headers: {
@@ -26,17 +33,17 @@ class PathPostApi {
             'Authorization': 'Bearer $bearerToken'
           },
           body: jsonEncode({
-            "user_id": reqBody['userID'].toString(),
-            "bicycleId": reqBody['bicycleId'].toString(),
-            "startLong": reqBody['startLong'].toString(),
-            "startLang": reqBody['startLang'].toString(),
-            "endLong": 'temp',
-            "endLang": 'temp',
-            "startLocation": reqBody['startLocation'],
+            "user_id": int.parse(reqBody['user_id']!.toString()),
+            "bicycleId": int.parse(reqBody['bicycleId']!.toString()),
+            "startLong": reqBody['startLong']!.toString(),
+            "startLang": reqBody['startLang']!.toString(),
+            "endLong": '111',
+            "endLang": '111',
+            "startLocation": reqBody['startLocation']!.toString(),
             "endLocation": 'temp',
             "distance": 00.00
           }));
-      debugPrint('API {transaction - post} - Completed');
+      debugPrint('API {path - post} - Completed');
       debugPrint(response.statusCode.toString());
       debugPrint(response.body);
       debugPrint(bearerToken);

@@ -1,10 +1,7 @@
 library validation_dialog_box;
 
 import 'package:final_project/Const/Widget/column_spacer.dart';
-import 'package:final_project/Const/Widget/row_spacer.dart';
-import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dialogBox/dialogbox_close_button.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dialogBox/dialogbox_ok_button.dart';
-import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dialogBox/dialogbox_secondary_button.dart';
 import 'package:flutter/material.dart';
 
 Future<void> validationDialogBox(

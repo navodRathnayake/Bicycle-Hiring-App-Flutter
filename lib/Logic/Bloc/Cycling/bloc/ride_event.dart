@@ -10,9 +10,11 @@ class RideEvent extends Equatable {
 class RideInitialEvent extends RideEvent {
   final User user;
   final Package package;
+  final Bicycle bicycle;
 
-  const RideInitialEvent({required this.user, required this.package});
+  const RideInitialEvent(
+      {required this.user, required this.package, required this.bicycle});
 
   @override
-  List<Object> get props => [user, package];
+  List<Object> get props => [user, package, bicycle];
 }
