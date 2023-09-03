@@ -3,8 +3,10 @@ import 'package:equatable/equatable.dart';
 import 'package:final_project/Constraints/constraints.dart';
 import 'package:final_project/Logic/Bloc/Cycling/bloc/stepper_bloc.dart';
 import 'package:final_project/Logic/Bloc/Cycling/data/data%20provider/path_post_api.dart';
+import 'package:final_project/Logic/Bloc/Cycling/data/data%20provider/recent_activity_post_api.dart';
 import 'package:final_project/Logic/Bloc/Cycling/data/data%20provider/transaction_post_api.dart';
 import 'package:final_project/Logic/Bloc/Cycling/data/repository%20provider/path_post_repository.dart';
+import 'package:final_project/Logic/Bloc/Cycling/data/repository%20provider/recent_activity_post_repository.dart';
 import 'package:final_project/Logic/Bloc/Cycling/data/repository%20provider/transaction_post_repository.dart';
 import 'package:final_project/Logic/Bloc/Cycling/model/bicycle_model.dart';
 import 'package:final_project/Logic/Bloc/Cycling/src/validate_location.dart';
@@ -92,10 +94,14 @@ class RideBloc extends Bloc<RideEvent, RideState> {
             await accountStreamRepository.streamIdel();
             //table creations
             _tableConfiguration(
-                event.bicycle.bicycleID,
-                geolocatorResponse.latitude.toString(),
-                geolocatorResponse.longitude.toString(),
-                validateResult['station']!);
+              bicycleID: event.bicycle.bicycleID,
+              lang: geolocatorResponse.latitude.toString(),
+              long: geolocatorResponse.longitude.toString(),
+              station: validateResult['station']!,
+              amount: double.parse(_getAmount(currentPackage: event.package))
+                  .toString(),
+              stationID: validateResult['id'],
+            );
           } else {
             emit(state.copyWith(
               msg: 'Payment Process Has\nBeen Failed',
@@ -162,8 +168,14 @@ class RideBloc extends Bloc<RideEvent, RideState> {
     }
   }
 
-  Future<void> _tableConfiguration(
-      String bicycleID, String lang, String long, String station) async {
+  Future<void> _tableConfiguration({
+    required String bicycleID,
+    required String stationID,
+    required String lang,
+    required String long,
+    required String station,
+    required String amount,
+  }) async {
     var pathResponse =
         await PathPostRepository(api: PathPostApi()).postPath(reqBody: {
       "bicycleId": bicycleID,
@@ -180,5 +192,17 @@ ${pathResponse.toString()}
 ---------------------------------------
 
 """);
+
+    var recentActivityResponse =
+        await RecentActivityPostRepository(api: RecentActivityPostApi())
+            .postRecentActivity(reqBody: {
+      "pathID": pathResponse['body']['path']['pathId'].toString(),
+      "stationID": stationID,
+      "bicycleID": bicycleID,
+      "amount": amount,
+    });
+
+    debugPrint('Recent Activity has generated!');
+    debugPrint(recentActivityResponse.toString());
   }
 }

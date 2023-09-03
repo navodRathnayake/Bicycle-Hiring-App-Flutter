@@ -10,6 +10,7 @@ Map<String, dynamic> isValidLocation({
   late String tempLang = '';
   late String tempLong = '';
   late String tempStation = '';
+  late String tempStationID = '';
   bool isValidate = false;
 
   for (int i = 0; i < stations.length; i++) {
@@ -19,6 +20,7 @@ Map<String, dynamic> isValidLocation({
         tempLang = stations[i]['location'][k]['lang'];
         tempLong = stations[i]['location'][k]['long'];
         tempStation = stations[i]['name'];
+        tempStationID = stations[i]['id'];
         isValidate = true;
         break;
       } else {
@@ -30,6 +32,7 @@ Map<String, dynamic> isValidLocation({
     }
   }
   return {
+    'id': tempStationID,
     'validate': isValidate,
     'lang': tempLang,
     'long': tempLong,

@@ -52,6 +52,7 @@ int transactionTypeCycling = 2;
 
 List<Map<String, dynamic>> stations = [
   {
+    'id': '1',
     'name': 'Peradeniya',
     'location': [
       {
@@ -65,6 +66,7 @@ List<Map<String, dynamic>> stations = [
     ]
   },
   {
+    'id': '2',
     'name': 'Kandy',
     'location': [
       {
@@ -78,6 +80,7 @@ List<Map<String, dynamic>> stations = [
     ]
   },
   {
+    'id': '3',
     'name': 'Colombo',
     'location': [
       {

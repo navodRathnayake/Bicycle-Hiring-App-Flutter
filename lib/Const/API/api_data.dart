@@ -28,3 +28,7 @@ Map<String, String> bicycle = const {
 Map<String, String> path = const {
   '/path': '/api/v1/paths',
 };
+
+Map<String, String> postRecentActivity = const {
+  '/recent_activities': '/api/v1/recentactivities'
+};
