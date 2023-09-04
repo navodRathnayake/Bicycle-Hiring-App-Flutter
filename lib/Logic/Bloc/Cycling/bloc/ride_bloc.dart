@@ -17,6 +17,7 @@ import 'package:final_project/Services/account%20repository/account_repository.d
 import 'package:final_project/Services/data/data%20provider/user_update_patch_api.dart';
 import 'package:final_project/Services/data/repository%20provider/user_update_patch_repository.dart';
 import 'package:final_project/Services/database/sqlite_helper.dart';
+import 'package:final_project/Services/push%20notification/push_notification_healper_class.dart';
 import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -96,7 +97,13 @@ class RideBloc extends Bloc<RideEvent, RideState> {
               msg: 'Bicycle Configuration',
             ));
             // task
+            String amount = _getAmount(currentPackage: event.package);
             debugPrint('PAYMENT HAS COMPLETED');
+            PushNotificationHealperClass().showNotification(
+              title: 'Payment Notification',
+              body:
+                  'You have charged $amount for relevant ${event.package} package',
+            );
             await accountStreamRepository.streamIn();
             Future.delayed(const Duration(milliseconds: 1200));
             await accountStreamRepository.streamIdel();
@@ -115,7 +122,18 @@ class RideBloc extends Bloc<RideEvent, RideState> {
               await SqfliteHelper.instance
                   .updateAutherization(status: 'on-service');
               emit(state.copyWith(status: RideStatus.success));
+              PushNotificationHealperClass().showNotification(
+                title: 'Configuration has success',
+                body:
+                    'The configuration process has successfully completed. Ride your bicycle to reach your destination today safely!',
+              );
             } else {
+              _refillAccount(currentPackage: event.package);
+              PushNotificationHealperClass().showNotification(
+                title: 'Configuration Process Failure',
+                body:
+                    'The configuration process failed while configuring hardware. Your account has successfully fullfill with your creadits. Try again and reach your destination',
+              );
               throw Exception(
                   'The Bicycle Configuration process may have failure');
             }
@@ -234,6 +252,29 @@ ${pathResponse.toString()}
     } catch (e) {
       debugPrint(e.toString());
       return 0;
+    }
+  }
+
+  Future<void> _refillAccount({
+    required Package currentPackage,
+  }) async {
+    var userUpdatePatch = await UserUpdatePatchRepository(
+            api: UserUpdatePatchApi())
+        .getPatchUpdateRepository(
+            reqBody: {"points": _getAmount(currentPackage: currentPackage)});
+    debugPrint('USER PATCH RESPONSE $userUpdatePatch');
+
+    if (userUpdatePatch['result'] == 1) {
+      debugPrint('User update successfully');
+
+      var transactionResponse =
+          await TransactionPostRepository(api: TransactionPostApi())
+              .postTransaction(
+                  amount: _getAmount(currentPackage: currentPackage),
+                  transactionType: '3');
+      debugPrint(transactionResponse.toString());
+
+      await Future.delayed(const Duration(milliseconds: 1200));
     }
   }
 }

@@ -1,9 +1,11 @@
 library cycling_ride_page;
 
 import 'package:final_project/Const/Widget/column_spacer.dart';
+import 'package:final_project/Logic/Bloc/Cycling/View/validation_dialog_box.dart';
 import 'package:final_project/Logic/Bloc/Cycling/bloc/qr_scan_bloc.dart';
 import 'package:final_project/Logic/Bloc/Cycling/bloc/ride_bloc.dart';
 import 'package:final_project/Logic/Bloc/Cycling/bloc/stepper_bloc.dart';
+import 'package:final_project/Logic/Bloc/Cycling/src/get_current_location.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/avatar.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/custom_settings_icon.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/points.dart';
@@ -12,6 +14,7 @@ import 'package:final_project/Services/database/sqlite_helper.dart';
 import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:rolling_switch/rolling_switch.dart';
 
 class CyclingRidePage extends StatefulWidget {
@@ -223,81 +226,99 @@ class CyclingSuccess extends StatelessWidget {
             const ColumnSpacer(height: 10),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: themeData.colorScheme.secondaryContainer,
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text('CURRENT LOCATION'),
-                          const ColumnSpacer(height: 10),
-                          Text(
-                            'Peradeniya',
-                            style: TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
-                                color: themeData.colorScheme.onBackground),
-                          ),
-                          Text(
-                            'Kandy',
-                            style: TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
-                                color: themeData.colorScheme.onBackground),
-                          ),
-                          const ColumnSpacer(height: 20),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Stack(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(30),
-                                child: Image.asset(
-                                  'Assets/icons/location_on_map.jpg',
-                                  scale: 4,
+              child: GestureDetector(
+                onTap: () async {
+                  var serviceEnabled =
+                      await Geolocator.isLocationServiceEnabled();
+                  if (serviceEnabled) {
+                    Navigator.of(context).pushNamed('/mapLauncher');
+                  } else {
+                    validationDialogBox(
+                        context: context,
+                        themeData: themeData,
+                        msg:
+                            'The following device has denied the google location service. Please turn on the location service in your app settings or give the permission to this app.');
+                  }
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: themeData.colorScheme.secondaryContainer,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text('CURRENT LOCATION'),
+                            const ColumnSpacer(height: 10),
+                            Text(
+                              BlocProvider.of<StepperBloc>(context)
+                                  .state
+                                  .bicycle
+                                  .station,
+                              style: TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                  color: themeData.colorScheme.onBackground),
+                            ),
+                            Text(
+                              'Station',
+                              style: TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                  color: themeData.colorScheme.onBackground),
+                            ),
+                            const ColumnSpacer(height: 20),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Stack(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(30),
+                                  child: Image.asset(
+                                    'Assets/icons/location_on_map.jpg',
+                                    scale: 4,
+                                  ),
                                 ),
-                              ),
-                              Positioned(
-                                top: 0,
-                                bottom: 0,
-                                left: 0,
-                                right: 0,
-                                child: CircleAvatar(
-                                  radius: 30,
-                                  backgroundColor:
-                                      Colors.blue.shade600.withOpacity(0.5),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.blue.shade700,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Image.asset(
-                                          'Assets/icons/navigation.png',
-                                          scale: 2,
-                                          color:
-                                              themeData.colorScheme.background,
+                                Positioned(
+                                  top: 0,
+                                  bottom: 0,
+                                  left: 0,
+                                  right: 0,
+                                  child: CircleAvatar(
+                                    radius: 30,
+                                    backgroundColor:
+                                        Colors.blue.shade600.withOpacity(0.5),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: CircleAvatar(
+                                        backgroundColor: Colors.blue.shade700,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Image.asset(
+                                            'Assets/icons/navigation.png',
+                                            scale: 2,
+                                            color: themeData
+                                                .colorScheme.background,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ],
+                              ],
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -388,6 +409,7 @@ class CyclingSuccess extends StatelessWidget {
                         ),
                         const ColumnSpacer(height: 10),
                         Container(
+                          height: 160,
                           decoration: BoxDecoration(
                             color: themeData.colorScheme.secondaryContainer,
                             borderRadius: BorderRadius.circular(30),
@@ -431,16 +453,11 @@ class CyclingSuccess extends StatelessWidget {
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Container(
-                                      color: Colors.amber,
-                                      child: const Column(
+                                      child: Column(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.end,
+                                            MainAxisAlignment.center,
                                         children: [
-                                          RotationTransition(
-                                            turns: AlwaysStoppedAnimation(
-                                                -90 / 360),
-                                            child: LockBikeToggle(),
-                                          ),
+                                          Image.asset('Assets/icons/lock.png'),
                                         ],
                                       ),
                                     ),
