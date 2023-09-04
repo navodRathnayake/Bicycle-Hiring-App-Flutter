@@ -1,5 +1,6 @@
 library routes;
 
+import 'package:final_project/Const/API/api_data.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/cycling_stepper_page.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/cycling_page.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/cycling_ride_page.dart';
@@ -123,7 +124,8 @@ class Routes {
 
       case '/cyclingRidePage':
         return MaterialPageRoute(
-          builder: (context) => const CyclingRidePage(),
+          builder: (context) => CyclingRidePage(
+              authenticationRepository: authenticationRepository),
         );
 
       case '/verifyDrivingLicenseSelection':

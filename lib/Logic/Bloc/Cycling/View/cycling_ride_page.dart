@@ -1,21 +1,29 @@
 library cycling_ride_page;
 
 import 'package:final_project/Const/Widget/column_spacer.dart';
+import 'package:final_project/Logic/Bloc/Cycling/bloc/qr_scan_bloc.dart';
 import 'package:final_project/Logic/Bloc/Cycling/bloc/ride_bloc.dart';
+import 'package:final_project/Logic/Bloc/Cycling/bloc/stepper_bloc.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/avatar.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/custom_settings_icon.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/points.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/popup_settings_menu.dart';
+import 'package:final_project/Services/database/sqlite_helper.dart';
 import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rolling_switch/rolling_switch.dart';
 
 class CyclingRidePage extends StatefulWidget {
-  const CyclingRidePage({super.key});
+  final AuthenticationRepository authenticationRepository;
+  const CyclingRidePage({super.key, required this.authenticationRepository});
 
-  static Route<void> route() {
-    return MaterialPageRoute<void>(builder: (_) => const CyclingRidePage());
+  static Route<void> route(
+      {required AuthenticationRepository authenticationRepository}) {
+    return MaterialPageRoute<void>(
+        builder: (_) => CyclingRidePage(
+              authenticationRepository: authenticationRepository,
+            ));
   }
 
   @override
@@ -55,9 +63,15 @@ class _CyclingRidePageState extends State<CyclingRidePage> {
           } else if (state.status == RideStatus.success) {
             return CyclingSuccess(themeData: themeData);
           } else if (state.status == RideStatus.failure) {
-            return CyclingFailure(themeData: themeData);
+            return CyclingFailure(
+              themeData: themeData,
+              authenticationRepository: widget.authenticationRepository,
+            );
           } else {
-            return CyclingFailure(themeData: themeData);
+            return CyclingFailure(
+              themeData: themeData,
+              authenticationRepository: widget.authenticationRepository,
+            );
           }
         },
       ),
@@ -493,7 +507,11 @@ class CyclingSuccess extends StatelessWidget {
 
 class CyclingFailure extends StatelessWidget {
   final ThemeData themeData;
-  const CyclingFailure({super.key, required this.themeData});
+  final AuthenticationRepository authenticationRepository;
+  const CyclingFailure(
+      {super.key,
+      required this.themeData,
+      required this.authenticationRepository});
 
   @override
   Widget build(BuildContext context) {
@@ -533,9 +551,16 @@ class CyclingFailure extends StatelessWidget {
                 ),
                 const ColumnSpacer(height: 30),
                 ElevatedButton(
-                  onPressed: () {
-                    // BlocProvider.of<QRScanBloc>(context)
-                    //     .add(QRScanTryAgainEvent());
+                  onPressed: () async {
+                    BlocProvider.of<QRScanBloc>(context)
+                        .add(QRScanRollBackEvent());
+                    BlocProvider.of<StepperBloc>(context)
+                        .add(StepperRollBackEvent());
+                    SqfliteHelper.instance
+                        .updateAutherization(status: 'login-verified');
+                    authenticationRepository.loading();
+                    await Future.delayed(const Duration(milliseconds: 1200));
+                    authenticationRepository.verified();
                   },
                   child: const Text('Try Again'),
                 )
