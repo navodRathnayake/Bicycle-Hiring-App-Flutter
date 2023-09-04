@@ -1,6 +1,7 @@
 library cycling_ride_page;
 
 import 'package:final_project/Const/Widget/column_spacer.dart';
+import 'package:final_project/Logic/Bloc/Cycling/View/modal%20bottom%20sheets/bicycle_profile_modal_bottom_sheet.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/validation_dialog_box.dart';
 import 'package:final_project/Logic/Bloc/Cycling/bloc/qr_scan_bloc.dart';
 import 'package:final_project/Logic/Bloc/Cycling/bloc/ride_bloc.dart';
@@ -328,45 +329,53 @@ class CyclingSuccess extends StatelessWidget {
               child: Row(
                 children: [
                   Flexible(
-                    child: Container(
-                      height: 330,
-                      decoration: BoxDecoration(
-                        color: themeData.colorScheme.secondaryContainer,
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Stack(
-                        children: [
-                          const CircleAvatar(
-                            radius: 150,
-                            backgroundColor: Colors.amber,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset('Assets/icons/bicycle_sharing.png'),
-                                Text(
-                                  'CYCLE',
-                                  style: TextStyle(
-                                    color: themeData.colorScheme.background,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                ),
-                                const ColumnSpacer(height: 10),
-                                Text(
-                                  'PROFILE',
-                                  style: TextStyle(
-                                      color: themeData.colorScheme.onBackground,
+                    child: GestureDetector(
+                      onTap: () {
+                        bicycleProfileModalBottomSheet(
+                            context: context, themeData: themeData);
+                      },
+                      child: Container(
+                        height: 330,
+                        decoration: BoxDecoration(
+                          color: themeData.colorScheme.secondaryContainer,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Stack(
+                          children: [
+                            const CircleAvatar(
+                              radius: 150,
+                              backgroundColor: Colors.amber,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                      'Assets/icons/bicycle_sharing.png'),
+                                  Text(
+                                    'CYCLE',
+                                    style: TextStyle(
+                                      color: themeData.colorScheme.background,
                                       fontSize: 20,
                                       fontWeight: FontWeight.normal,
-                                      letterSpacing: 5),
-                                ),
-                              ],
+                                    ),
+                                  ),
+                                  const ColumnSpacer(height: 10),
+                                  Text(
+                                    'PROFILE',
+                                    style: TextStyle(
+                                        color:
+                                            themeData.colorScheme.onBackground,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.normal,
+                                        letterSpacing: 5),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
