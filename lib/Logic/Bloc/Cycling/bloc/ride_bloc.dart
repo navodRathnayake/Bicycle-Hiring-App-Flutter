@@ -2,9 +2,11 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:final_project/Constraints/constraints.dart';
 import 'package:final_project/Logic/Bloc/Cycling/bloc/stepper_bloc.dart';
+import 'package:final_project/Logic/Bloc/Cycling/data/data%20provider/bicycle_patch_api.dart';
 import 'package:final_project/Logic/Bloc/Cycling/data/data%20provider/path_post_api.dart';
 import 'package:final_project/Logic/Bloc/Cycling/data/data%20provider/recent_activity_post_api.dart';
 import 'package:final_project/Logic/Bloc/Cycling/data/data%20provider/transaction_post_api.dart';
+import 'package:final_project/Logic/Bloc/Cycling/data/repository%20provider/bicycle_patch_repository.dart';
 import 'package:final_project/Logic/Bloc/Cycling/data/repository%20provider/path_post_repository.dart';
 import 'package:final_project/Logic/Bloc/Cycling/data/repository%20provider/recent_activity_post_repository.dart';
 import 'package:final_project/Logic/Bloc/Cycling/data/repository%20provider/transaction_post_repository.dart';
@@ -14,6 +16,8 @@ import 'package:final_project/Logic/Bloc/Login/auth/login/data/model/user_model.
 import 'package:final_project/Services/account%20repository/account_repository.dart';
 import 'package:final_project/Services/data/data%20provider/user_update_patch_api.dart';
 import 'package:final_project/Services/data/repository%20provider/user_update_patch_repository.dart';
+import 'package:final_project/Services/database/sqlite_helper.dart';
+import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,7 +26,11 @@ part 'ride_state.dart';
 
 class RideBloc extends Bloc<RideEvent, RideState> {
   final AccountStreamRepository accountStreamRepository;
-  RideBloc({required this.accountStreamRepository}) : super(const RideState()) {
+  final AuthenticationRepository authenticationRepository;
+  RideBloc(
+      {required this.accountStreamRepository,
+      required this.authenticationRepository})
+      : super(const RideState()) {
     on<RideInitialEvent>(_onRideInitial);
   }
 
@@ -93,7 +101,7 @@ class RideBloc extends Bloc<RideEvent, RideState> {
             Future.delayed(const Duration(milliseconds: 1200));
             await accountStreamRepository.streamIdel();
             //table creations
-            _tableConfiguration(
+            int tableConfigurationResponse = await _tableConfiguration(
               bicycleID: event.bicycle.bicycleID,
               lang: geolocatorResponse.latitude.toString(),
               long: geolocatorResponse.longitude.toString(),
@@ -102,6 +110,15 @@ class RideBloc extends Bloc<RideEvent, RideState> {
                   .toString(),
               stationID: validateResult['id'],
             );
+            if (tableConfigurationResponse == 1) {
+              emit(state.copyWith(msg: 'Bicycle Configuration\nHas Done'));
+              await SqfliteHelper.instance
+                  .updateAutherization(status: 'on-service');
+              emit(state.copyWith(status: RideStatus.success));
+            } else {
+              throw Exception(
+                  'The Bicycle Configuration process may have failure');
+            }
           } else {
             emit(state.copyWith(
               msg: 'Payment Process Has\nBeen Failed',
@@ -168,7 +185,7 @@ class RideBloc extends Bloc<RideEvent, RideState> {
     }
   }
 
-  Future<void> _tableConfiguration({
+  Future<int> _tableConfiguration({
     required String bicycleID,
     required String stationID,
     required String lang,
@@ -176,15 +193,16 @@ class RideBloc extends Bloc<RideEvent, RideState> {
     required String station,
     required String amount,
   }) async {
-    var pathResponse =
-        await PathPostRepository(api: PathPostApi()).postPath(reqBody: {
-      "bicycleId": bicycleID,
-      "startLong": lang,
-      "startLang": long,
-      "startLocation": station
-    });
+    try {
+      var pathResponse =
+          await PathPostRepository(api: PathPostApi()).postPath(reqBody: {
+        "bicycleId": bicycleID,
+        "startLong": lang,
+        "startLang": long,
+        "startLocation": station
+      });
 
-    debugPrint("""
+      debugPrint("""
 ---------------------------------------
 
 ${pathResponse.toString()}
@@ -193,16 +211,29 @@ ${pathResponse.toString()}
 
 """);
 
-    var recentActivityResponse =
-        await RecentActivityPostRepository(api: RecentActivityPostApi())
-            .postRecentActivity(reqBody: {
-      "pathID": pathResponse['body']['path']['pathId'].toString(),
-      "stationID": stationID,
-      "bicycleID": bicycleID,
-      "amount": amount,
-    });
+      var recentActivityResponse =
+          await RecentActivityPostRepository(api: RecentActivityPostApi())
+              .postRecentActivity(reqBody: {
+        "pathID": pathResponse['body']['path']['pathId'].toString(),
+        "stationID": stationID,
+        "bicycleID": bicycleID,
+        "amount": amount,
+      });
 
-    debugPrint('Recent Activity has generated!');
-    debugPrint(recentActivityResponse.toString());
+      debugPrint('Recent Activity has generated!');
+      debugPrint(recentActivityResponse.toString());
+
+      var bicyclePatchResponse =
+          await BicyclePatchRepository(api: BicyclePatchApi())
+              .bicyclePatch(bicycleID: bicycleID);
+
+      debugPrint('Bicycle Status has updated successfully!');
+      debugPrint(bicyclePatchResponse.toString());
+
+      return 1;
+    } catch (e) {
+      debugPrint(e.toString());
+      return 0;
+    }
   }
 }

@@ -23,6 +23,7 @@ Map<String, String> user = const {
 
 Map<String, String> bicycle = const {
   '/bicycle': '/api/v1/bicycles/',
+  '/patch': '/api/v1/bicycles'
 };
 
 Map<String, String> path = const {

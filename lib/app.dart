@@ -99,8 +99,9 @@ class App extends StatelessWidget {
                   stepperBloc: stepperBloc,
                   authenticationRepository: authenticationRepository)),
           BlocProvider<RideBloc>(
-              create: (_) =>
-                  RideBloc(accountStreamRepository: accountStreamRepository)),
+              create: (_) => RideBloc(
+                  accountStreamRepository: accountStreamRepository,
+                  authenticationRepository: authenticationRepository)),
         ],
         child: AppView(authenticationRepository: authenticationRepository),
       ),
