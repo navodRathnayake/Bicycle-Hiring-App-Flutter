@@ -84,9 +84,9 @@ class AutherizationBloc extends Bloc<AutherizationEvent, AutherizationState> {
 
       debugPrint(
           'USER NAME : ${response['body']['users']['firstName']!.toString()}');
-      int points = response['body']['users']['points'] == null
-          ? 0
-          : int.parse(response['body']['users']['points']!.toString());
+      double points = response['body']['users']['points'] == null
+          ? 0.00
+          : double.parse(response['body']['users']['points']!.toString());
 
       if (response['result'] == 1) {
         User user = User(

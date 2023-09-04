@@ -95,10 +95,7 @@ Future<Object?> profileInfoDialogBox(
                                       const ColumnSpacer(height: 30),
                                       SizedBox(
                                         width: 120,
-                                        child: Points(
-                                            themeData: themeData,
-                                            points:
-                                                state.user!.points.toString()),
+                                        child: Points(themeData: themeData),
                                       ),
                                     ],
                                   ),

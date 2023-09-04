@@ -21,6 +21,8 @@ void main(List<String> args) async {
   NotificationService().initNotification();
   HttpOverrides.global = MyHttpOverrides();
   final messaging = FirebaseMessaging.instance;
+  final AccountStreamRepository accountStreamRepository =
+      AccountStreamRepository();
   // final _messageStreamController = BehaviorSubject<RemoteMessage>();
   final settings = await messaging.requestPermission(
     alert: true,
@@ -60,8 +62,9 @@ void main(List<String> args) async {
   });
 
   runApp(App(
-    authenticationRepository: AuthenticationRepository(),
-    accountStreamRepository: AccountStreamRepository(),
+    authenticationRepository: AuthenticationRepository(
+        accountStreamRepository: accountStreamRepository),
+    accountStreamRepository: accountStreamRepository,
   ));
 }
 

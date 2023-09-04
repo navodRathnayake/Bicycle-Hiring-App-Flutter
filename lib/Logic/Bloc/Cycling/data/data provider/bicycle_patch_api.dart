@@ -1,38 +1,36 @@
-library user_update_patch_api;
+library bicycle_patch_api;
 
 import 'dart:convert';
 
 import 'package:final_project/Const/API/api_data.dart';
-import 'package:final_project/Services/database/sqlite_helper.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
-class UserUpdatePatchApi {
+class BicyclePatchApi {
   String baseUrl = domain;
-  String endPoint = user['/updatePatch']!;
-  UserUpdatePatchApi();
+  String endPoint = bicycle['/patch']!;
+  BicyclePatchApi();
 
-  Future<Map<String, dynamic>> getPatchUpdateApi(
-      {required String bearerToken,
-      required Map<String, String> reqBody}) async {
+  Future<Map<String, dynamic>> bicyclePatch(
+      {required String bearerToken, required String bicycleID}) async {
+    String patchEndPoint = '$endPoint/$bicycleID';
+    debugPrint('BICYCLE ID : $patchEndPoint');
     try {
-      final userID = await SqfliteHelper.instance.readUserID();
-      final String patchEndPoint = endPoint + userID['db_id'].toString();
-      debugPrint(patchEndPoint);
-
       var url = Uri.http(domain, patchEndPoint);
 
       debugPrint(url.toString());
+
       var response = await http.patch(url,
           headers: {
             'Content-type': 'application/vnd.api+json',
             'Accept': 'application/vnd.api+json',
             'Authorization': 'Bearer $bearerToken'
           },
-          body: jsonEncode(reqBody));
-      debugPrint('API {user patch} - Completed');
+          body: jsonEncode({"statusId": "2"}));
+      debugPrint('API {bicycle - patch} - Completed');
       debugPrint(response.statusCode.toString());
       debugPrint(response.body);
+      debugPrint(bearerToken);
       return {
         'status': response.statusCode,
         'body': response.body,

@@ -5,6 +5,7 @@ import 'package:final_project/Logic/Bloc/Login/auth/login/data/data%20provider/l
 import 'package:final_project/Logic/Bloc/Login/auth/login/data/repository/login_form_repository.dart';
 import 'package:final_project/Logic/Bloc/Login/auth/logout/data/data%20provider/logout_request_api.dart';
 import 'package:final_project/Logic/Bloc/Login/auth/logout/data/repository/logout_request_repository.dart';
+import 'package:final_project/Services/account%20repository/account_repository.dart';
 import 'package:final_project/Services/database/sqlite_helper.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +20,10 @@ enum AuthenticationStatus {
 }
 
 class AuthenticationRepository {
+  final AccountStreamRepository accountStreamRepository;
   final _controller = StreamController<AuthenticationStatus>();
+
+  AuthenticationRepository({required this.accountStreamRepository});
 
   Stream<AuthenticationStatus> get status async* {
     final user = await SqfliteHelper.instance.readUserData();
@@ -62,13 +66,17 @@ class AuthenticationRepository {
         currentStatus = AuthenticationStatus.loginNonVerified;
         break;
       case 'login-verified':
+        await accountStreamRepository.streamIn();
         currentStatus = AuthenticationStatus.logingVerified;
+        await accountStreamRepository.streamIdel();
         break;
       case 'logout':
         currentStatus = AuthenticationStatus.logout;
         break;
       case 'on-service':
+        await accountStreamRepository.streamIn();
         currentStatus = AuthenticationStatus.onService;
+        await accountStreamRepository.streamIdel();
         break;
       default:
         currentStatus = AuthenticationStatus.initial;
@@ -78,11 +86,15 @@ class AuthenticationRepository {
   }
 
   Future<void> loading() async {
+    await accountStreamRepository.streamIn();
     _controller.add(AuthenticationStatus.loading);
+    await accountStreamRepository.streamIdel();
   }
 
   Future<void> verified() async {
+    await accountStreamRepository.streamIn();
     _controller.add(AuthenticationStatus.logingVerified);
+    await accountStreamRepository.streamIdel();
   }
 
   Future<void> nonVerified() async {
@@ -90,11 +102,15 @@ class AuthenticationRepository {
   }
 
   Future<void> onService() async {
+    await accountStreamRepository.streamIn();
     _controller.add(AuthenticationStatus.onService);
+    await accountStreamRepository.streamIdel();
   }
 
   Future<void> onServiceInitial() async {
+    await accountStreamRepository.streamIn();
     _controller.add(AuthenticationStatus.onServiceInitial);
+    await accountStreamRepository.streamIdel();
   }
 
   Future<void> logIn({
@@ -138,6 +154,8 @@ class AuthenticationRepository {
         debugPrint('Successfuly login');
         debugPrint(result['body'].toString());
 
+        await accountStreamRepository.streamIn();
+
         if (result['body']['status id'] == '1') {
           _controller.add(AuthenticationStatus.loginNonVerified);
           debugPrint('AUTH STREAMER : loginNonVerified');
@@ -148,6 +166,8 @@ class AuthenticationRepository {
           _controller.add(AuthenticationStatus.logout);
           debugPrint('AUTH STREAMER : logout');
         }
+
+        await accountStreamRepository.streamIdel();
 
         // add routes here - navigator.pop()
       } else {

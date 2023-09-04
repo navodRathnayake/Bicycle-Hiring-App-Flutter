@@ -1,6 +1,11 @@
 library cycling_page;
 
+import 'package:final_project/Account/account_bloc.dart';
+import 'package:final_project/Constraints/constraints.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/modal%20bottom%20sheets/qr_model_bottom_sheet.dart';
+import 'package:final_project/Logic/Bloc/Cycling/View/validation_dialog_box.dart';
+import 'package:final_project/Logic/Bloc/Cycling/bloc/stepper_bloc.dart';
+import 'package:final_project/Logic/Bloc/Cycling/src/validate_location.dart';
 import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:final_project/Const/Widget/column_spacer.dart';
@@ -10,6 +15,7 @@ import 'package:final_project/Logic/Bloc/Home/View/Widget/custom_settings_icon.d
 import 'package:final_project/Logic/Bloc/Home/View/Widget/points.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/popup_settings_menu.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:qr_scanner_overlay/qr_scanner_overlay.dart';
 
 class CyclingPage extends StatelessWidget {
   final ThemeData themeData;
@@ -23,7 +29,7 @@ class CyclingPage extends StatelessWidget {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
-            child: Points(themeData: themeData, points: '0000'),
+            child: Points(themeData: themeData),
           ),
           const Padding(
             padding: EdgeInsets.only(right: 5.0),
@@ -125,8 +131,46 @@ class ScanQRView extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: GestureDetector(
-                  onTap: () {
-                    qrModalBottomSheet(context: context, themeData: themeData);
+                  onTap: () async {
+                    var response = await getCurrentLocation();
+                    debugPrint(response.toString());
+
+                    Map<String, dynamic> validateResult = isValidLocation(
+                        lang: response.latitude.toString(),
+                        long: response.longitude.toString(),
+                        stations: stations);
+
+                    debugPrint(validateResult.toString());
+
+                    String msg = '';
+
+                    if (validateResult['validate']) {
+                      // ignore: use_build_context_synchronously
+                      if (BlocProvider.of<AccountBloc>(context)
+                              .state
+                              .user
+                              .points >
+                          packagePool['min30']!) {
+                        // ignore: use_build_context_synchronously
+                        qrModalBottomSheet(
+                            context: context, themeData: themeData);
+                      } else {
+                        msg =
+                            'The account balance has less minimum points to get the relevent service. Please fulfill your account with creadits';
+                        // ignore: use_build_context_synchronously
+                        validationDialogBox(
+                            context: context, themeData: themeData, msg: msg);
+                      }
+                    } else {
+                      msg =
+                          'The following access location has identifyied as fake. Try again to access the relevant bicycle being at correct location';
+                      // ignore: use_build_context_synchronously
+                      validationDialogBox(
+                          context: context, themeData: themeData, msg: msg);
+                    }
+
+                    // qrModalBottomSheet(context: context, themeData: themeData);
+
                     // Navigator.of(context).pushNamed('/cyclingStepperPage');
                   },
                   child: Container(

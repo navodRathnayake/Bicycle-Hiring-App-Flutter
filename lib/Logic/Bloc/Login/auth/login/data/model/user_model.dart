@@ -9,7 +9,7 @@ class User extends Equatable {
   final String image;
   final String nic;
   final String bloodGroup;
-  final int points;
+  final double points;
 
   static const empty = User(
     userName: '',
@@ -18,7 +18,7 @@ class User extends Equatable {
     nic: '',
     email: '',
     bloodGroup: '',
-    points: 0,
+    points: 0.00,
   );
 
   const User({

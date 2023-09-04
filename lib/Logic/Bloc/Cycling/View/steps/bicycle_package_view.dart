@@ -82,8 +82,12 @@ class PackageBody extends StatelessWidget {
               Center(
                   child: GestureDetector(
                 onTap: () {
+                  debugPrint(
+                      'CURRENT PACKAGE BTN : ${BlocProvider.of<StepperBloc>(context).state.package}');
                   BlocProvider.of<StepperBloc>(context)
                       .add(const CycleStepperChanged(currentStep: 2));
+                  debugPrint(
+                      'AFTER PACKAGE BTN : ${BlocProvider.of<StepperBloc>(context).state.package}');
                 },
                 child: Container(
                   decoration: BoxDecoration(

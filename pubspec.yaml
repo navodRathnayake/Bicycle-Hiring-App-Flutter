@@ -69,6 +69,8 @@ dependencies:
   google_maps_flutter: ^2.4.0
   mobile_scanner: ^3.4.1
   qr_scanner_overlay: ^0.0.2
+  geolocator: ^10.0.0
+  hydrated_bloc: ^9.1.2
   
 dev_dependencies:
   flutter_test:

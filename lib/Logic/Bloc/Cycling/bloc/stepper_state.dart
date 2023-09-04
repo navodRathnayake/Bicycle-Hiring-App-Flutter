@@ -11,14 +11,22 @@ class StepperState extends Equatable {
       {this.currentStep = 0,
       this.bicycle = const Bicycle(),
       this.package = Package.min120});
+
   const StepperState(
       {required this.bicycle,
       required this.currentStep,
       this.package = Package.min120});
+
   const StepperState.initial() : this._();
   const StepperState.step1() : this._(currentStep: 1);
   const StepperState.step2() : this._(currentStep: 2);
   const StepperState.step3() : this._(currentStep: 3);
+  const StepperState.rollback()
+      : this._(
+          bicycle: const Bicycle(),
+          currentStep: 1,
+          package: Package.min120,
+        );
 
   StepperState copyWith({
     Bicycle? bicycle,
@@ -34,4 +42,24 @@ class StepperState extends Equatable {
 
   @override
   List<Object?> get props => [currentStep, bicycle, package];
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'bicycle': bicycle,
+      'currentStep': currentStep,
+      'package': package,
+    };
+  }
+
+  factory StepperState.fromMap(Map<String, dynamic> map) {
+    return StepperState(
+        bicycle: map['bicycle'] as Bicycle,
+        currentStep: map['currentStep'] as int,
+        package: map['package'] as Package);
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory StepperState.fromJson(String source) =>
+      StepperState.fromMap(json.decode(source) as Map<String, dynamic>);
 }

@@ -9,6 +9,7 @@ import 'package:final_project/Logic/Bloc/Home/View/Widget/avatar.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/custom_settings_icon.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/points.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/popup_settings_menu.dart';
+import 'package:final_project/Services/database/sqlite_helper.dart';
 import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,6 +42,8 @@ class _CyclingStepperPageState extends State<CyclingStepperPage> {
             onTap: () async {
               BlocProvider.of<QRScanBloc>(context).add(QRScanRollBackEvent());
               BlocProvider.of<StepperBloc>(context).add(StepperRollBackEvent());
+              SqfliteHelper.instance
+                  .updateAutherization(status: 'login-verified');
               widget.authenticationRepository.loading();
               await Future.delayed(const Duration(milliseconds: 1200));
               widget.authenticationRepository.verified();
@@ -59,7 +62,7 @@ class _CyclingStepperPageState extends State<CyclingStepperPage> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
-            child: Points(themeData: themeData, points: '000000'),
+            child: Points(themeData: themeData),
           ),
           const Padding(
             padding: EdgeInsets.only(right: 5.0),

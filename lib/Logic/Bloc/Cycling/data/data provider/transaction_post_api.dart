@@ -1,38 +1,40 @@
-library user_update_patch_api;
+library transaction_post_api;
 
 import 'dart:convert';
 
 import 'package:final_project/Const/API/api_data.dart';
-import 'package:final_project/Services/database/sqlite_helper.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
-class UserUpdatePatchApi {
+class TransactionPostApi {
   String baseUrl = domain;
-  String endPoint = user['/updatePatch']!;
-  UserUpdatePatchApi();
+  String endPoint = user['/transactions']!;
+  TransactionPostApi();
 
-  Future<Map<String, dynamic>> getPatchUpdateApi(
+  Future<Map<String, dynamic>> postTransactionData(
       {required String bearerToken,
       required Map<String, String> reqBody}) async {
     try {
-      final userID = await SqfliteHelper.instance.readUserID();
-      final String patchEndPoint = endPoint + userID['db_id'].toString();
-      debugPrint(patchEndPoint);
-
-      var url = Uri.http(domain, patchEndPoint);
+      var url = Uri.http(domain, endPoint);
 
       debugPrint(url.toString());
-      var response = await http.patch(url,
+
+      var response = await http.post(url,
           headers: {
             'Content-type': 'application/vnd.api+json',
             'Accept': 'application/vnd.api+json',
             'Authorization': 'Bearer $bearerToken'
           },
-          body: jsonEncode(reqBody));
-      debugPrint('API {user patch} - Completed');
+          body: jsonEncode({
+            "userId": int.parse(reqBody['userId']!.toString()),
+            "amount": reqBody['amount']!.toString(),
+            "transactionStatusId":
+                int.parse(reqBody['transactionStatusId']!.toString())
+          }));
+      debugPrint('API {transaction - post} - Completed');
       debugPrint(response.statusCode.toString());
       debugPrint(response.body);
+      debugPrint(bearerToken);
       return {
         'status': response.statusCode,
         'body': response.body,

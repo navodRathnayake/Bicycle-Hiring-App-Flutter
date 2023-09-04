@@ -39,3 +39,58 @@ var creaditCardCVCMaskFormatter = MaskTextInputFormatter(
     mask: '###',
     filter: {"#": RegExp(r'[0-9]')},
     type: MaskAutoCompletionType.lazy);
+
+Map<String, double> packagePool = {
+  'min30': 13.50,
+  'min60': 25.50,
+  'min120': 45.50,
+  'hour5': 175.50,
+};
+
+int transactionTypeAddCreadits = 1;
+int transactionTypeCycling = 2;
+
+List<Map<String, dynamic>> stations = [
+  {
+    'id': '1',
+    'name': 'Peradeniya',
+    'location': [
+      {
+        'lang': '7.2809683',
+        'long': '80.6200033',
+      },
+      {
+        'lang': '222',
+        'long': '222',
+      },
+    ]
+  },
+  {
+    'id': '2',
+    'name': 'Kandy',
+    'location': [
+      {
+        'lang': '333',
+        'long': '333',
+      },
+      {
+        'lang': '444',
+        'long': '444',
+      },
+    ]
+  },
+  {
+    'id': '3',
+    'name': 'Colombo',
+    'location': [
+      {
+        'lang': '555',
+        'long': '555',
+      },
+      {
+        'lang': '666',
+        'long': '666',
+      },
+    ]
+  }
+];

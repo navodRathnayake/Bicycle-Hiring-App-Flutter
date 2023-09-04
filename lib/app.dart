@@ -5,6 +5,7 @@ import 'package:final_project/Account/account_bloc.dart';
 import 'package:final_project/Autheriztion/autherization_bloc.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/cycling_stepper_page.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/cycling_ride_page.dart';
+import 'package:final_project/Logic/Bloc/Cycling/bloc/ride_bloc.dart';
 import 'package:final_project/Logic/Bloc/Cycling/bloc/qr_scan_bloc.dart';
 import 'package:final_project/Logic/Bloc/Cycling/bloc/stepper_bloc.dart';
 import 'package:final_project/Logic/Bloc/Login/View/page_slider.dart';
@@ -36,16 +37,20 @@ class App extends StatelessWidget {
   final StepperBloc stepperBloc = StepperBloc();
   final AuthenticationRepository authenticationRepository;
   final AccountStreamRepository accountStreamRepository;
-  App(
-      {super.key,
-      required this.authenticationRepository,
-      required this.accountStreamRepository});
+  App({
+    super.key,
+    required this.authenticationRepository,
+    required this.accountStreamRepository,
+  });
 
   @override
   Widget build(BuildContext context) {
     FirebaseMessaging.instance.getToken().then((value) {
       debugPrint('Firebase Device Code : $value');
     });
+
+    final AccountBloc accountBloc =
+        AccountBloc(accountStreamRepository: accountStreamRepository);
 
     return MultiRepositoryProvider(
       providers: [
@@ -54,9 +59,7 @@ class App extends StatelessWidget {
       ],
       child: MultiBlocProvider(
         providers: [
-          BlocProvider<AccountBloc>(
-              create: (_) => AccountBloc(
-                  accountStreamRepository: accountStreamRepository)),
+          BlocProvider<AccountBloc>(create: (_) => accountBloc),
           BlocProvider<SettingsBloc>(create: (_) => SettingsBloc()),
           BlocProvider<NetworkCubit>(
               create: (_) => NetworkCubit(connectivity: Connectivity())),
@@ -90,10 +93,14 @@ class App extends StatelessWidget {
           BlocProvider<ConfirmOTPBloc>(
               create: (_) => ConfirmOTPBloc(
                   authenticationRepository: authenticationRepository)),
-          BlocProvider<StepperBloc>(create: (context) => stepperBloc),
+          BlocProvider<StepperBloc>(create: (_) => stepperBloc),
           BlocProvider<QRScanBloc>(
               create: (_) => QRScanBloc(
                   stepperBloc: stepperBloc,
+                  authenticationRepository: authenticationRepository)),
+          BlocProvider<RideBloc>(
+              create: (_) => RideBloc(
+                  accountStreamRepository: accountStreamRepository,
                   authenticationRepository: authenticationRepository)),
         ],
         child: AppView(authenticationRepository: authenticationRepository),

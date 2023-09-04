@@ -1,11 +1,15 @@
 library bicycle_term_and_condition_view;
 
+import 'package:final_project/Account/account_bloc.dart';
+import 'package:final_project/Logic/Bloc/Cycling/bloc/ride_bloc.dart';
+import 'package:final_project/Logic/Bloc/Cycling/bloc/stepper_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:final_project/Const/Widget/column_spacer.dart';
 import 'package:final_project/Const/Widget/row_spacer.dart';
 import 'package:final_project/Constraints/constraints.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dialogBox/dialogBox_ok_button.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dialogBox/dialogbox_secondary_button.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BicycleTermAndConditionView extends StatelessWidget {
   final ThemeData themeData;
@@ -13,6 +17,8 @@ class BicycleTermAndConditionView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint(
+        'CURRENT PACKAGE initial : ${BlocProvider.of<StepperBloc>(context).state.package}');
     return SizedBox(
       height: 600,
       child: Padding(
@@ -85,7 +91,16 @@ class BicycleTermAndConditionView extends StatelessWidget {
                 DialogBoxOkButton(
                   label: 'A C C E P T',
                   onTap: () {
+                    debugPrint(
+                        'PACKAGE : ${BlocProvider.of<StepperBloc>(context).state.package}');
                     Navigator.of(context).pushNamed('/cyclingRidePage');
+                    BlocProvider.of<RideBloc>(context).add(RideInitialEvent(
+                      user: BlocProvider.of<AccountBloc>(context).state.user,
+                      package:
+                          BlocProvider.of<StepperBloc>(context).state.package,
+                      bicycle:
+                          BlocProvider.of<StepperBloc>(context).state.bicycle,
+                    ));
                   },
                 ),
               ],
