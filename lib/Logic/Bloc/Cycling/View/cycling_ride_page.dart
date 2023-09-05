@@ -1,12 +1,12 @@
 library cycling_ride_page;
 
 import 'package:final_project/Const/Widget/column_spacer.dart';
+import 'package:final_project/Logic/Bloc/Cycling/View/map_launcher.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/modal%20bottom%20sheets/bicycle_profile_modal_bottom_sheet.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/validation_dialog_box.dart';
 import 'package:final_project/Logic/Bloc/Cycling/bloc/qr_scan_bloc.dart';
 import 'package:final_project/Logic/Bloc/Cycling/bloc/ride_bloc.dart';
 import 'package:final_project/Logic/Bloc/Cycling/bloc/stepper_bloc.dart';
-import 'package:final_project/Logic/Bloc/Cycling/src/get_current_location.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/avatar.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/custom_settings_icon.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/points.dart';
@@ -19,14 +19,20 @@ import 'package:geolocator/geolocator.dart';
 import 'package:rolling_switch/rolling_switch.dart';
 
 class CyclingRidePage extends StatefulWidget {
+  final ThemeData themeData;
   final AuthenticationRepository authenticationRepository;
-  const CyclingRidePage({super.key, required this.authenticationRepository});
+  const CyclingRidePage(
+      {super.key,
+      required this.authenticationRepository,
+      required this.themeData});
 
   static Route<void> route(
-      {required AuthenticationRepository authenticationRepository}) {
+      {required AuthenticationRepository authenticationRepository,
+      required ThemeData themeData}) {
     return MaterialPageRoute<void>(
         builder: (_) => CyclingRidePage(
               authenticationRepository: authenticationRepository,
+              themeData: themeData,
             ));
   }
 
@@ -41,10 +47,36 @@ class _CyclingRidePageState extends State<CyclingRidePage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
+        leading: Padding(
+          padding: const EdgeInsets.all(10),
+          child: BlocBuilder<RideBloc, RideState>(
+            builder: (context, state) {
+              if (state.status == RideStatus.map) {
+                return GestureDetector(
+                  onTap: () async {
+                    BlocProvider.of<RideBloc>(context)
+                        .add(RideMapRollBackOnPressed());
+                  },
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        'Assets/icons/back_arrow.png',
+                        scale: 2,
+                        color: widget.themeData.colorScheme.onBackground,
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                return Container();
+              }
+            },
+          ),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
-            child: Points(themeData: themeData),
+            child: Points(themeData: widget.themeData),
           ),
           const Padding(
             padding: EdgeInsets.only(right: 5.0),
@@ -56,7 +88,7 @@ class _CyclingRidePageState extends State<CyclingRidePage> {
                   authenticationRepository:
                       RepositoryProvider.of<AuthenticationRepository>(context),
                   icon: CustomSettingsIcon(
-                    themeData: themeData,
+                    themeData: widget.themeData,
                   ))),
         ],
       ),
@@ -71,6 +103,8 @@ class _CyclingRidePageState extends State<CyclingRidePage> {
               themeData: themeData,
               authenticationRepository: widget.authenticationRepository,
             );
+          } else if (state.status == RideStatus.map) {
+            return MapLauncher(themeData: themeData);
           } else {
             return CyclingFailure(
               themeData: themeData,
@@ -232,7 +266,8 @@ class CyclingSuccess extends StatelessWidget {
                   var serviceEnabled =
                       await Geolocator.isLocationServiceEnabled();
                   if (serviceEnabled) {
-                    Navigator.of(context).pushNamed('/mapLauncher');
+                    BlocProvider.of<RideBloc>(context)
+                        .add(RideMapLauncherOnPressed());
                   } else {
                     validationDialogBox(
                         context: context,

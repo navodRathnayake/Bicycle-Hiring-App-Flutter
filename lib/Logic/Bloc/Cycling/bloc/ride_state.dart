@@ -1,6 +1,6 @@
 part of 'ride_bloc.dart';
 
-enum RideStatus { inProcess, success, failure }
+enum RideStatus { inProcess, success, map, failure }
 
 enum LockStatus { inProcess, lock, unlock }
 

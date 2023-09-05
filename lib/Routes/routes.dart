@@ -126,7 +126,8 @@ class Routes {
       case '/cyclingRidePage':
         return MaterialPageRoute(
           builder: (context) => CyclingRidePage(
-              authenticationRepository: authenticationRepository),
+              authenticationRepository: authenticationRepository,
+              themeData: Theme.of(context)),
         );
 
       case '/verifyDrivingLicenseSelection':

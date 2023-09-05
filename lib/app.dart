@@ -173,7 +173,8 @@ class _AppViewState extends State<AppView> {
                     _navigator.pushAndRemoveUntil<void>(
                         CyclingRidePage.route(
                             authenticationRepository:
-                                widget.authenticationRepository),
+                                widget.authenticationRepository,
+                            themeData: themeData),
                         (route) => false);
                 }
               },

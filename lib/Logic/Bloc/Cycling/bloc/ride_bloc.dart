@@ -34,6 +34,8 @@ class RideBloc extends Bloc<RideEvent, RideState> {
       : super(const RideState()) {
     on<RideInitialEvent>(_onRideInitial);
     on<RideLockPressedEvent>(_onRideLockPressed);
+    on<RideMapLauncherOnPressed>(_onRideMapLauncherOnPressed);
+    on<RideMapRollBackOnPressed>(_onRideMapRollBackOnPressed);
   }
 
   Future<void> _onRideInitial(
@@ -222,6 +224,27 @@ class RideBloc extends Bloc<RideEvent, RideState> {
     } catch (e) {
       debugPrint(e.toString());
     }
+  }
+
+  Future<void> _onRideMapLauncherOnPressed(
+    RideMapLauncherOnPressed event,
+    Emitter<RideState> emit,
+  ) async {
+    emit(state.copyWith(
+      status: RideStatus.inProcess,
+      msg: 'Finding Routes',
+    ));
+    await Future.delayed(const Duration(milliseconds: 1200));
+    emit(state.copyWith(status: RideStatus.map));
+  }
+
+  Future<void> _onRideMapRollBackOnPressed(
+    RideMapRollBackOnPressed event,
+    Emitter<RideState> emit,
+  ) async {
+    emit(state.copyWith(status: RideStatus.inProcess, msg: 'Finding Routes'));
+    await Future.delayed(const Duration(milliseconds: 1200));
+    emit(state.copyWith(status: RideStatus.success));
   }
 
   bool _validatePayment(

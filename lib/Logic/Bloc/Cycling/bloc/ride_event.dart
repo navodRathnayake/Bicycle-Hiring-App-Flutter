@@ -26,3 +26,7 @@ class RideLockPressedEvent extends RideEvent {
   @override
   List<Object> get props => [bicycle];
 }
+
+class RideMapLauncherOnPressed extends RideEvent {}
+
+class RideMapRollBackOnPressed extends RideEvent {}
