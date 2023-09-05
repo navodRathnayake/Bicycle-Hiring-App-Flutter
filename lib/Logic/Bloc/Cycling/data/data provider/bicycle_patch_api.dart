@@ -12,7 +12,9 @@ class BicyclePatchApi {
   BicyclePatchApi();
 
   Future<Map<String, dynamic>> bicyclePatch(
-      {required String bearerToken, required String bicycleID}) async {
+      {required String bearerToken,
+      required String bicycleID,
+      required String bicycleStatus}) async {
     String patchEndPoint = '$endPoint/$bicycleID';
     debugPrint('BICYCLE ID : $patchEndPoint');
     try {
@@ -26,7 +28,7 @@ class BicyclePatchApi {
             'Accept': 'application/vnd.api+json',
             'Authorization': 'Bearer $bearerToken'
           },
-          body: jsonEncode({"statusId": "2"}));
+          body: jsonEncode({"statusId": bicycleStatus}));
       debugPrint('API {bicycle - patch} - Completed');
       debugPrint(response.statusCode.toString());
       debugPrint(response.body);

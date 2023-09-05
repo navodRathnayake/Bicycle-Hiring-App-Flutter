@@ -33,6 +33,7 @@ class RideBloc extends Bloc<RideEvent, RideState> {
       required this.authenticationRepository})
       : super(const RideState()) {
     on<RideInitialEvent>(_onRideInitial);
+    on<RideLockPressedEvent>(_onRideLockPressed);
   }
 
   Future<void> _onRideInitial(
@@ -171,6 +172,58 @@ class RideBloc extends Bloc<RideEvent, RideState> {
     }
   }
 
+  Future<void> _onRideLockPressed(
+    RideLockPressedEvent event,
+    Emitter<RideState> emit,
+  ) async {
+    try {
+      if (state.lockStatus == LockStatus.lock) {
+        emit(state.copyWith(
+          lockStatus: LockStatus.inProcess,
+        ));
+        await Future.delayed(const Duration(milliseconds: 1200));
+        var bicycleUnlockResponse =
+            await BicyclePatchRepository(api: BicyclePatchApi()).bicyclePatch(
+                bicycleID: event.bicycle.bicycleID, bicycleStatus: '2');
+
+        if (bicycleUnlockResponse['result'] == 1) {
+          debugPrint(bicycleUnlockResponse.toString());
+          debugPrint('Bicycle has unlocked!');
+          emit(state.copyWith(
+            lockStatus: LockStatus.unlock,
+          ));
+        } else {
+          debugPrint('LOCK ALERT : CANNOT UNLOCK');
+          emit(state.copyWith(
+            lockStatus: LockStatus.lock,
+          ));
+        }
+      } else if (state.lockStatus == LockStatus.unlock) {
+        emit(state.copyWith(
+          lockStatus: LockStatus.inProcess,
+        ));
+        await Future.delayed(const Duration(milliseconds: 1200));
+        var bicycleLockResponse =
+            await BicyclePatchRepository(api: BicyclePatchApi()).bicyclePatch(
+                bicycleID: event.bicycle.bicycleID, bicycleStatus: '3');
+        if (bicycleLockResponse['result'] == 1) {
+          debugPrint(bicycleLockResponse.toString());
+          debugPrint('bicycle has locked!');
+          emit(state.copyWith(
+            lockStatus: LockStatus.lock,
+          ));
+        } else {
+          debugPrint('LOCK ALERT : CANNOT LOCK');
+          emit(state.copyWith(
+            lockStatus: LockStatus.unlock,
+          ));
+        }
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
   bool _validatePayment(
       {required Package currentPackage, required double balance}) {
     if (currentPackage == Package.min30 && (balance >= packagePool['min30']!)) {
@@ -220,7 +273,8 @@ class RideBloc extends Bloc<RideEvent, RideState> {
         "startLocation": station
       });
 
-      debugPrint("""
+      debugPrint(
+          """
 ---------------------------------------
 
 ${pathResponse.toString()}
@@ -243,7 +297,7 @@ ${pathResponse.toString()}
 
       var bicyclePatchResponse =
           await BicyclePatchRepository(api: BicyclePatchApi())
-              .bicyclePatch(bicycleID: bicycleID);
+              .bicyclePatch(bicycleID: bicycleID, bicycleStatus: '2');
 
       debugPrint('Bicycle Status has updated successfully!');
       debugPrint(bicyclePatchResponse.toString());

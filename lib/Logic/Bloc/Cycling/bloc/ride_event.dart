@@ -18,3 +18,11 @@ class RideInitialEvent extends RideEvent {
   @override
   List<Object> get props => [user, package, bicycle];
 }
+
+class RideLockPressedEvent extends RideEvent {
+  final Bicycle bicycle;
+  const RideLockPressedEvent({required this.bicycle});
+
+  @override
+  List<Object> get props => [bicycle];
+}
