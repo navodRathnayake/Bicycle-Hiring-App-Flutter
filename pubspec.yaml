@@ -71,6 +71,7 @@ dependencies:
   qr_scanner_overlay: ^0.0.2
   geolocator: ^10.0.0
   hydrated_bloc: ^9.1.2
+  webview_flutter: ^4.2.4
   
 dev_dependencies:
   flutter_test:

@@ -10,7 +10,8 @@ class BicyclePatchRepository {
 
   const BicyclePatchRepository({required this.api});
 
-  Future<Map<String, dynamic>> bicyclePatch({required String bicycleID}) async {
+  Future<Map<String, dynamic>> bicyclePatch(
+      {required String bicycleID, required String bicycleStatus}) async {
     try {
       var userBearerToken = await SqfliteHelper.instance.readBearerToken();
       debugPrint(userBearerToken.toString());
@@ -19,7 +20,9 @@ class BicyclePatchRepository {
       debugPrint('USER ID : ${userID['db_id']}');
 
       final rawResponseData = await api.bicyclePatch(
-          bearerToken: userBearerToken, bicycleID: bicycleID);
+          bearerToken: userBearerToken,
+          bicycleID: bicycleID,
+          bicycleStatus: bicycleStatus);
       final response =
           convert.jsonDecode(rawResponseData['body']) as Map<String, dynamic>;
 

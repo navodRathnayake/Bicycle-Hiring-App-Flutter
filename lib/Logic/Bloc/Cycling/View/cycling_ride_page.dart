@@ -1,21 +1,39 @@
 library cycling_ride_page;
 
 import 'package:final_project/Const/Widget/column_spacer.dart';
+import 'package:final_project/Logic/Bloc/Cycling/View/map_launcher.dart';
+import 'package:final_project/Logic/Bloc/Cycling/View/modal%20bottom%20sheets/bicycle_profile_modal_bottom_sheet.dart';
+import 'package:final_project/Logic/Bloc/Cycling/View/validation_dialog_box.dart';
+import 'package:final_project/Logic/Bloc/Cycling/bloc/qr_scan_bloc.dart';
 import 'package:final_project/Logic/Bloc/Cycling/bloc/ride_bloc.dart';
+import 'package:final_project/Logic/Bloc/Cycling/bloc/stepper_bloc.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/avatar.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/custom_settings_icon.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/points.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/popup_settings_menu.dart';
+import 'package:final_project/Services/database/sqlite_helper.dart';
 import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:rolling_switch/rolling_switch.dart';
 
 class CyclingRidePage extends StatefulWidget {
-  const CyclingRidePage({super.key});
+  final ThemeData themeData;
+  final AuthenticationRepository authenticationRepository;
+  const CyclingRidePage(
+      {super.key,
+      required this.authenticationRepository,
+      required this.themeData});
 
-  static Route<void> route() {
-    return MaterialPageRoute<void>(builder: (_) => const CyclingRidePage());
+  static Route<void> route(
+      {required AuthenticationRepository authenticationRepository,
+      required ThemeData themeData}) {
+    return MaterialPageRoute<void>(
+        builder: (_) => CyclingRidePage(
+              authenticationRepository: authenticationRepository,
+              themeData: themeData,
+            ));
   }
 
   @override
@@ -29,10 +47,36 @@ class _CyclingRidePageState extends State<CyclingRidePage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
+        leading: Padding(
+          padding: const EdgeInsets.all(10),
+          child: BlocBuilder<RideBloc, RideState>(
+            builder: (context, state) {
+              if (state.status == RideStatus.map) {
+                return GestureDetector(
+                  onTap: () async {
+                    BlocProvider.of<RideBloc>(context)
+                        .add(RideMapRollBackOnPressed());
+                  },
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        'Assets/icons/back_arrow.png',
+                        scale: 2,
+                        color: widget.themeData.colorScheme.onBackground,
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                return Container();
+              }
+            },
+          ),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
-            child: Points(themeData: themeData),
+            child: Points(themeData: widget.themeData),
           ),
           const Padding(
             padding: EdgeInsets.only(right: 5.0),
@@ -44,7 +88,7 @@ class _CyclingRidePageState extends State<CyclingRidePage> {
                   authenticationRepository:
                       RepositoryProvider.of<AuthenticationRepository>(context),
                   icon: CustomSettingsIcon(
-                    themeData: themeData,
+                    themeData: widget.themeData,
                   ))),
         ],
       ),
@@ -55,9 +99,17 @@ class _CyclingRidePageState extends State<CyclingRidePage> {
           } else if (state.status == RideStatus.success) {
             return CyclingSuccess(themeData: themeData);
           } else if (state.status == RideStatus.failure) {
-            return CyclingFailure(themeData: themeData);
+            return CyclingFailure(
+              themeData: themeData,
+              authenticationRepository: widget.authenticationRepository,
+            );
+          } else if (state.status == RideStatus.map) {
+            return MapLauncher(themeData: themeData);
           } else {
-            return CyclingFailure(themeData: themeData);
+            return CyclingFailure(
+              themeData: themeData,
+              authenticationRepository: widget.authenticationRepository,
+            );
           }
         },
       ),
@@ -209,81 +261,100 @@ class CyclingSuccess extends StatelessWidget {
             const ColumnSpacer(height: 10),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: themeData.colorScheme.secondaryContainer,
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text('CURRENT LOCATION'),
-                          const ColumnSpacer(height: 10),
-                          Text(
-                            'Peradeniya',
-                            style: TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
-                                color: themeData.colorScheme.onBackground),
-                          ),
-                          Text(
-                            'Kandy',
-                            style: TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
-                                color: themeData.colorScheme.onBackground),
-                          ),
-                          const ColumnSpacer(height: 20),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Stack(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(30),
-                                child: Image.asset(
-                                  'Assets/icons/location_on_map.jpg',
-                                  scale: 4,
+              child: GestureDetector(
+                onTap: () async {
+                  var serviceEnabled =
+                      await Geolocator.isLocationServiceEnabled();
+                  if (serviceEnabled) {
+                    BlocProvider.of<RideBloc>(context)
+                        .add(RideMapLauncherOnPressed());
+                  } else {
+                    validationDialogBox(
+                        context: context,
+                        themeData: themeData,
+                        msg:
+                            'The following device has denied the google location service. Please turn on the location service in your app settings or give the permission to this app.');
+                  }
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: themeData.colorScheme.secondaryContainer,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text('CURRENT LOCATION'),
+                            const ColumnSpacer(height: 10),
+                            Text(
+                              BlocProvider.of<StepperBloc>(context)
+                                  .state
+                                  .bicycle
+                                  .station,
+                              style: TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                  color: themeData.colorScheme.onBackground),
+                            ),
+                            Text(
+                              'Station',
+                              style: TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                  color: themeData.colorScheme.onBackground),
+                            ),
+                            const ColumnSpacer(height: 20),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Stack(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(30),
+                                  child: Image.asset(
+                                    'Assets/icons/location_on_map.jpg',
+                                    scale: 4,
+                                  ),
                                 ),
-                              ),
-                              Positioned(
-                                top: 0,
-                                bottom: 0,
-                                left: 0,
-                                right: 0,
-                                child: CircleAvatar(
-                                  radius: 30,
-                                  backgroundColor:
-                                      Colors.blue.shade600.withOpacity(0.5),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.blue.shade700,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Image.asset(
-                                          'Assets/icons/navigation.png',
-                                          scale: 2,
-                                          color:
-                                              themeData.colorScheme.background,
+                                Positioned(
+                                  top: 0,
+                                  bottom: 0,
+                                  left: 0,
+                                  right: 0,
+                                  child: CircleAvatar(
+                                    radius: 30,
+                                    backgroundColor:
+                                        Colors.blue.shade600.withOpacity(0.5),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: CircleAvatar(
+                                        backgroundColor: Colors.blue.shade700,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Image.asset(
+                                            'Assets/icons/navigation.png',
+                                            scale: 2,
+                                            color: themeData
+                                                .colorScheme.background,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ],
+                              ],
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -293,45 +364,53 @@ class CyclingSuccess extends StatelessWidget {
               child: Row(
                 children: [
                   Flexible(
-                    child: Container(
-                      height: 330,
-                      decoration: BoxDecoration(
-                        color: themeData.colorScheme.secondaryContainer,
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Stack(
-                        children: [
-                          const CircleAvatar(
-                            radius: 150,
-                            backgroundColor: Colors.amber,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset('Assets/icons/bicycle_sharing.png'),
-                                Text(
-                                  'CYCLE',
-                                  style: TextStyle(
-                                    color: themeData.colorScheme.background,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                ),
-                                const ColumnSpacer(height: 10),
-                                Text(
-                                  'PROFILE',
-                                  style: TextStyle(
-                                      color: themeData.colorScheme.onBackground,
+                    child: GestureDetector(
+                      onTap: () {
+                        bicycleProfileModalBottomSheet(
+                            context: context, themeData: themeData);
+                      },
+                      child: Container(
+                        height: 330,
+                        decoration: BoxDecoration(
+                          color: themeData.colorScheme.secondaryContainer,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Stack(
+                          children: [
+                            const CircleAvatar(
+                              radius: 150,
+                              backgroundColor: Colors.amber,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                      'Assets/icons/bicycle_sharing.png'),
+                                  Text(
+                                    'CYCLE',
+                                    style: TextStyle(
+                                      color: themeData.colorScheme.background,
                                       fontSize: 20,
                                       fontWeight: FontWeight.normal,
-                                      letterSpacing: 5),
-                                ),
-                              ],
+                                    ),
+                                  ),
+                                  const ColumnSpacer(height: 10),
+                                  Text(
+                                    'PROFILE',
+                                    style: TextStyle(
+                                        color:
+                                            themeData.colorScheme.onBackground,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.normal,
+                                        letterSpacing: 5),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -373,67 +452,144 @@ class CyclingSuccess extends StatelessWidget {
                           ),
                         ),
                         const ColumnSpacer(height: 10),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: themeData.colorScheme.secondaryContainer,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Flexible(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'LOCK',
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                          color: themeData
-                                              .colorScheme.onBackground,
+                        GestureDetector(
+                          onTap: () {
+                            BlocProvider.of<RideBloc>(context).add(
+                              RideLockPressedEvent(
+                                  bicycle: BlocProvider.of<StepperBloc>(context)
+                                      .state
+                                      .bicycle),
+                            );
+                          },
+                          child: Container(
+                            height: 160,
+                            decoration: BoxDecoration(
+                              color: themeData.colorScheme.secondaryContainer,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Flexible(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        BlocBuilder<RideBloc, RideState>(
+                                          builder: (context, state) {
+                                            if (state.lockStatus ==
+                                                LockStatus.inProcess) {
+                                              return Text(
+                                                'Wait To',
+                                                style: TextStyle(
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: themeData
+                                                      .colorScheme.onBackground,
+                                                ),
+                                              );
+                                            } else if (state.lockStatus ==
+                                                LockStatus.lock) {
+                                              return Text(
+                                                'LOCK',
+                                                style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: themeData
+                                                      .colorScheme.onBackground,
+                                                ),
+                                              );
+                                            } else if (state.lockStatus ==
+                                                LockStatus.unlock) {
+                                              return Text(
+                                                'UNLOCK',
+                                                style: TextStyle(
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: themeData
+                                                      .colorScheme.onBackground,
+                                                ),
+                                              );
+                                            } else {
+                                              return Container();
+                                            }
+                                          },
                                         ),
-                                      ),
-                                      Text(
-                                        'your bike',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.normal,
-                                          color: themeData
-                                              .colorScheme.onBackground,
+                                        BlocBuilder<RideBloc, RideState>(
+                                          builder: (context, state) {
+                                            if (state.lockStatus ==
+                                                LockStatus.inProcess) {
+                                              return Text(
+                                                'process',
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.normal,
+                                                  color: themeData
+                                                      .colorScheme.onBackground,
+                                                ),
+                                              );
+                                            } else if ((state.lockStatus ==
+                                                    LockStatus.lock) &&
+                                                (state.lockStatus ==
+                                                    LockStatus.unlock)) {
+                                              return Text(
+                                                'your bike',
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.normal,
+                                                  color: themeData
+                                                      .colorScheme.onBackground,
+                                                ),
+                                              );
+                                            } else {
+                                              return Container();
+                                            }
+                                          },
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Flexible(
-                                child: SizedBox(
-                                  height: 160,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      color: Colors.amber,
-                                      child: const Column(
+                                Flexible(
+                                  child: SizedBox(
+                                    height: 160,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.end,
+                                            MainAxisAlignment.center,
                                         children: [
-                                          RotationTransition(
-                                            turns: AlwaysStoppedAnimation(
-                                                -90 / 360),
-                                            child: LockBikeToggle(),
+                                          BlocBuilder<RideBloc, RideState>(
+                                            builder: (context, state) {
+                                              if (state.lockStatus ==
+                                                  LockStatus.inProcess) {
+                                                return const CircularProgressIndicator();
+                                              } else if (state.lockStatus ==
+                                                  LockStatus.lock) {
+                                                return Image.asset(
+                                                    'Assets/icons/lock.png');
+                                              } else if (state.lockStatus ==
+                                                  LockStatus.unlock) {
+                                                return Image.asset(
+                                                    'Assets/icons/unlock.png');
+                                              } else {
+                                                return Image.asset(
+                                                    'Assets/icons/unlock.png');
+                                              }
+                                            },
                                           ),
                                         ],
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -493,7 +649,11 @@ class CyclingSuccess extends StatelessWidget {
 
 class CyclingFailure extends StatelessWidget {
   final ThemeData themeData;
-  const CyclingFailure({super.key, required this.themeData});
+  final AuthenticationRepository authenticationRepository;
+  const CyclingFailure(
+      {super.key,
+      required this.themeData,
+      required this.authenticationRepository});
 
   @override
   Widget build(BuildContext context) {
@@ -533,9 +693,16 @@ class CyclingFailure extends StatelessWidget {
                 ),
                 const ColumnSpacer(height: 30),
                 ElevatedButton(
-                  onPressed: () {
-                    // BlocProvider.of<QRScanBloc>(context)
-                    //     .add(QRScanTryAgainEvent());
+                  onPressed: () async {
+                    BlocProvider.of<QRScanBloc>(context)
+                        .add(QRScanRollBackEvent());
+                    BlocProvider.of<StepperBloc>(context)
+                        .add(StepperRollBackEvent());
+                    SqfliteHelper.instance
+                        .updateAutherization(status: 'login-verified');
+                    authenticationRepository.loading();
+                    await Future.delayed(const Duration(milliseconds: 1200));
+                    authenticationRepository.verified();
                   },
                   child: const Text('Try Again'),
                 )

@@ -4,7 +4,6 @@ import 'package:final_project/Account/account_bloc.dart';
 import 'package:final_project/Constraints/constraints.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/modal%20bottom%20sheets/qr_model_bottom_sheet.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/validation_dialog_box.dart';
-import 'package:final_project/Logic/Bloc/Cycling/bloc/stepper_bloc.dart';
 import 'package:final_project/Logic/Bloc/Cycling/src/validate_location.dart';
 import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +14,6 @@ import 'package:final_project/Logic/Bloc/Home/View/Widget/custom_settings_icon.d
 import 'package:final_project/Logic/Bloc/Home/View/Widget/points.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/popup_settings_menu.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:qr_scanner_overlay/qr_scanner_overlay.dart';
 
 class CyclingPage extends StatelessWidget {
   final ThemeData themeData;

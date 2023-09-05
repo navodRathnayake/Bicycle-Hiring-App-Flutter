@@ -1,8 +1,10 @@
 library routes;
 
+import 'package:final_project/Const/API/api_data.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/cycling_stepper_page.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/cycling_page.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/cycling_ride_page.dart';
+import 'package:final_project/Logic/Bloc/Cycling/View/map_launcher.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/steps/bicycle_data_view.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/steps/bicycle_package_view.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/steps/bicycle_term_and_condition_view.dart';
@@ -123,7 +125,9 @@ class Routes {
 
       case '/cyclingRidePage':
         return MaterialPageRoute(
-          builder: (context) => const CyclingRidePage(),
+          builder: (context) => CyclingRidePage(
+              authenticationRepository: authenticationRepository,
+              themeData: Theme.of(context)),
         );
 
       case '/verifyDrivingLicenseSelection':
@@ -138,6 +142,11 @@ class Routes {
 
       case '/mapSample':
         return MaterialPageRoute(builder: (context) => const MapSample());
+
+      case '/mapLauncher':
+        return MaterialPageRoute(
+          builder: (context) => MapLauncher(themeData: Theme.of(context)),
+        );
 
       default:
         return MaterialPageRoute(
