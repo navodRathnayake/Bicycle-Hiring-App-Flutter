@@ -1,5 +1,6 @@
 library bicycle_data_view;
 
+import 'package:final_project/Logic/Bloc/Cycling/bloc/ride_bloc.dart';
 import 'package:final_project/Logic/Bloc/Cycling/bloc/stepper_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:final_project/Const/Widget/column_spacer.dart';
@@ -101,7 +102,10 @@ class BicycleDataView extends StatelessWidget {
                         ),
                         const ColumnSpacer(height: 5),
                         Text(
-                          state.bicycle.station.toString(),
+                          BlocProvider.of<RideBloc>(context)
+                              .state
+                              .startLocation
+                              .toString(),
                           style: const TextStyle(
                               fontSize: 25, fontWeight: FontWeight.bold),
                         )

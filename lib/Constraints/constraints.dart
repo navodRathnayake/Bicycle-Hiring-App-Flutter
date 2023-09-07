@@ -47,6 +47,13 @@ Map<String, double> packagePool = {
   'hour5': 175.50,
 };
 
+Map<String, int> packageTime = {
+  'min30': 30,
+  'min60': 60,
+  'min120': 120,
+  'hour5': 600,
+};
+
 int transactionTypeAddCreadits = 1;
 int transactionTypeCycling = 2;
 
@@ -67,11 +74,11 @@ List<Map<String, dynamic>> stations = [
   },
   {
     'id': '2',
-    'name': 'Kandy',
+    'name': 'Gelioya',
     'location': [
       {
-        'lang': '333',
-        'long': '333',
+        'lang': '7.2135333',
+        'long': '80.5966583',
       },
       {
         'lang': '444',

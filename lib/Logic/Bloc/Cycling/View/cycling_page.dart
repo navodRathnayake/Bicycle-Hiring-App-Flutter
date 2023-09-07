@@ -4,6 +4,7 @@ import 'package:final_project/Account/account_bloc.dart';
 import 'package:final_project/Constraints/constraints.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/modal%20bottom%20sheets/qr_model_bottom_sheet.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/validation_dialog_box.dart';
+import 'package:final_project/Logic/Bloc/Cycling/bloc/ride_bloc.dart';
 import 'package:final_project/Logic/Bloc/Cycling/src/validate_location.dart';
 import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:flutter/material.dart';
@@ -133,6 +134,9 @@ class ScanQRView extends StatelessWidget {
                     var response = await getCurrentLocation();
                     debugPrint(response.toString());
 
+                    debugPrint('Latitude : ${response.latitude}');
+                    debugPrint('Langatude : ${response.longitude}');
+
                     Map<String, dynamic> validateResult = isValidLocation(
                         lang: response.latitude.toString(),
                         long: response.longitude.toString(),
@@ -144,6 +148,11 @@ class ScanQRView extends StatelessWidget {
 
                     if (validateResult['validate']) {
                       // ignore: use_build_context_synchronously
+                      BlocProvider.of<RideBloc>(context).add(
+                          RideStartLocationDataEvent(
+                              startLang: response.latitude.toString(),
+                              startLong: response.longitude.toString(),
+                              startLocation: validateResult['station']));
                       if (BlocProvider.of<AccountBloc>(context)
                               .state
                               .user

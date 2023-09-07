@@ -52,6 +52,10 @@ class App extends StatelessWidget {
     final AccountBloc accountBloc =
         AccountBloc(accountStreamRepository: accountStreamRepository);
 
+    final QRScanBloc qrScanBloc = QRScanBloc(
+        stepperBloc: stepperBloc,
+        authenticationRepository: authenticationRepository);
+
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider<AuthenticationRepository>(
@@ -94,14 +98,14 @@ class App extends StatelessWidget {
               create: (_) => ConfirmOTPBloc(
                   authenticationRepository: authenticationRepository)),
           BlocProvider<StepperBloc>(create: (_) => stepperBloc),
-          BlocProvider<QRScanBloc>(
-              create: (_) => QRScanBloc(
-                  stepperBloc: stepperBloc,
-                  authenticationRepository: authenticationRepository)),
+          BlocProvider<QRScanBloc>(create: (_) => qrScanBloc),
           BlocProvider<RideBloc>(
               create: (_) => RideBloc(
-                  accountStreamRepository: accountStreamRepository,
-                  authenticationRepository: authenticationRepository)),
+                    accountStreamRepository: accountStreamRepository,
+                    authenticationRepository: authenticationRepository,
+                    stepperBloc: stepperBloc,
+                    qrScanBloc: qrScanBloc,
+                  )),
         ],
         child: AppView(authenticationRepository: authenticationRepository),
       ),

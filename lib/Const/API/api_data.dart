@@ -33,3 +33,7 @@ Map<String, String> path = const {
 Map<String, String> postRecentActivity = const {
   '/recent_activities': '/api/v1/recentactivities'
 };
+
+Map<String, String> patchRecentActivity = const {
+  '/patch': '/api/v1/recentactivities/'
+};
