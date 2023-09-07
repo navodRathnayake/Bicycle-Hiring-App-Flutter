@@ -1,12 +1,16 @@
 import 'package:bloc/bloc.dart';
+
 import 'package:equatable/equatable.dart';
 import 'package:final_project/Constraints/constraints.dart';
+import 'package:final_project/Logic/Bloc/Cycling/bloc/qr_scan_bloc.dart';
 import 'package:final_project/Logic/Bloc/Cycling/bloc/stepper_bloc.dart';
 import 'package:final_project/Logic/Bloc/Cycling/data/data%20provider/bicycle_patch_api.dart';
+import 'package:final_project/Logic/Bloc/Cycling/data/data%20provider/path_patch_api.dart';
 import 'package:final_project/Logic/Bloc/Cycling/data/data%20provider/path_post_api.dart';
 import 'package:final_project/Logic/Bloc/Cycling/data/data%20provider/recent_activity_post_api.dart';
 import 'package:final_project/Logic/Bloc/Cycling/data/data%20provider/transaction_post_api.dart';
 import 'package:final_project/Logic/Bloc/Cycling/data/repository%20provider/bicycle_patch_repository.dart';
+import 'package:final_project/Logic/Bloc/Cycling/data/repository%20provider/path_patch_repository.dart';
 import 'package:final_project/Logic/Bloc/Cycling/data/repository%20provider/path_post_repository.dart';
 import 'package:final_project/Logic/Bloc/Cycling/data/repository%20provider/recent_activity_post_repository.dart';
 import 'package:final_project/Logic/Bloc/Cycling/data/repository%20provider/transaction_post_repository.dart';
@@ -21,6 +25,7 @@ import 'package:final_project/Services/push%20notification/push_notification_hea
 import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 
 part 'ride_event.dart';
 part 'ride_state.dart';
@@ -28,14 +33,21 @@ part 'ride_state.dart';
 class RideBloc extends Bloc<RideEvent, RideState> {
   final AccountStreamRepository accountStreamRepository;
   final AuthenticationRepository authenticationRepository;
-  RideBloc(
-      {required this.accountStreamRepository,
-      required this.authenticationRepository})
-      : super(const RideState()) {
+  final StepperBloc stepperBloc;
+  final QRScanBloc qrScanBloc;
+  RideBloc({
+    required this.accountStreamRepository,
+    required this.authenticationRepository,
+    required this.stepperBloc,
+    required this.qrScanBloc,
+  }) : super(const RideState()) {
     on<RideInitialEvent>(_onRideInitial);
     on<RideLockPressedEvent>(_onRideLockPressed);
-    on<RideMapLauncherOnPressed>(_onRideMapLauncherOnPressed);
-    on<RideMapRollBackOnPressed>(_onRideMapRollBackOnPressed);
+    on<RideMapLauncherOnPressedEvent>(_onRideMapLauncherOnPressed);
+    on<RideMapRollBackOnPressedEvent>(_onRideMapRollBackOnPressed);
+    on<RideCompleteOnPressedEvent>(_onRideCompleteOnPressed);
+    on<RideStartLocationDataEvent>(_onRideStartLocation);
+    on<RideEndLocationDataEvent>(_onRideEndLocation);
   }
 
   Future<void> _onRideInitial(
@@ -111,7 +123,7 @@ class RideBloc extends Bloc<RideEvent, RideState> {
             Future.delayed(const Duration(milliseconds: 1200));
             await accountStreamRepository.streamIdel();
             //table creations
-            int tableConfigurationResponse = await _tableConfiguration(
+            var tableConfigurationResponse = await _tableConfiguration(
               bicycleID: event.bicycle.bicycleID,
               lang: geolocatorResponse.latitude.toString(),
               long: geolocatorResponse.longitude.toString(),
@@ -120,8 +132,11 @@ class RideBloc extends Bloc<RideEvent, RideState> {
                   .toString(),
               stationID: validateResult['id'],
             );
-            if (tableConfigurationResponse == 1) {
-              emit(state.copyWith(msg: 'Bicycle Configuration\nHas Done'));
+            if (tableConfigurationResponse['result'] == 1) {
+              emit(state.copyWith(
+                msg: 'Bicycle Configuration\nHas Done',
+                pathID: tableConfigurationResponse['pathID'],
+              ));
               await SqfliteHelper.instance
                   .updateAutherization(status: 'on-service');
               emit(state.copyWith(status: RideStatus.success));
@@ -227,7 +242,7 @@ class RideBloc extends Bloc<RideEvent, RideState> {
   }
 
   Future<void> _onRideMapLauncherOnPressed(
-    RideMapLauncherOnPressed event,
+    RideMapLauncherOnPressedEvent event,
     Emitter<RideState> emit,
   ) async {
     emit(state.copyWith(
@@ -239,12 +254,152 @@ class RideBloc extends Bloc<RideEvent, RideState> {
   }
 
   Future<void> _onRideMapRollBackOnPressed(
-    RideMapRollBackOnPressed event,
+    RideMapRollBackOnPressedEvent event,
     Emitter<RideState> emit,
   ) async {
     emit(state.copyWith(status: RideStatus.inProcess, msg: 'Finding Routes'));
     await Future.delayed(const Duration(milliseconds: 1200));
     emit(state.copyWith(status: RideStatus.success));
+  }
+
+  Future<void> _onRideCompleteOnPressed(
+    RideCompleteOnPressedEvent event,
+    Emitter<RideState> emit,
+  ) async {
+    emit(state.copyWith(
+        status: RideStatus.inProcess, msg: 'Route Completion\nProcess'));
+    await Future.delayed(const Duration(milliseconds: 1200));
+
+    try {
+      emit(state.copyWith(
+          completeStatus: CompleteStatus.initial, msg: 'Configuring Routes'));
+      debugPrint(DateTime.now().toString());
+
+      DateTime regDate = DateTime.parse(event.date);
+      DateTime completedDate = DateTime.parse(DateTime.now().toString());
+
+      await Future.delayed(const Duration(milliseconds: 1200));
+
+      Duration difference = completedDate.difference(regDate);
+
+      if (difference.inMinutes <
+          _getPackagetime(currentPackage: event.package)) {
+      } else {
+        debugPrint('User did not complete the service on time');
+
+        await Future.delayed(const Duration(milliseconds: 1200));
+
+        emit(state.copyWith(msg: 'Charging Procedure'));
+
+        await Future.delayed(const Duration(milliseconds: 1200));
+
+        ///
+        double newBalance =
+            event.user.points - double.parse(difference.toString());
+
+        debugPrint('New Time based Balance : $newBalance');
+
+        var userUpdatePatch =
+            await UserUpdatePatchRepository(api: UserUpdatePatchApi())
+                .getPatchUpdateRepository(
+                    reqBody: {"points": newBalance.toString()});
+        debugPrint('USER PATCH RESPONSE $userUpdatePatch');
+
+        var transactionResponse =
+            await TransactionPostRepository(api: TransactionPostApi())
+                .postTransaction(
+                    amount: _getAmount(currentPackage: event.package),
+                    transactionType: transactionTypeCycling.toString());
+        debugPrint(transactionResponse.toString());
+
+        if (userUpdatePatch['result'] == 1) {
+          debugPrint('User update successfully');
+        } else {
+          throw Exception('Update Failure');
+        }
+
+        if (transactionResponse['result'] == 1) {
+          debugPrint('User update successfully');
+        } else {
+          throw Exception('Update Failure');
+        }
+      }
+
+      emit(state.copyWith(msg: 'Bicycle Configuration'));
+      Future.delayed(const Duration(milliseconds: 1200));
+
+      int bicycleRollBackResponse =
+          await _bicycleStateRollBack(bicycleID: event.bicycle.bicycleID);
+
+      double distance = Geolocator.distanceBetween(
+          double.parse(state.startLang),
+          double.parse(state.startLong),
+          double.parse(state.endLang),
+          double.parse(state.endLong));
+
+      debugPrint('ROUTE DISTANCE : $distance');
+
+      int pathPatchResponse = await _updatePathData(
+        pathID: state.pathID,
+        reqBody: {
+          'endLang': state.endLang,
+          'endLong': state.endLong,
+          'endLocation': state.endLocation,
+          'distance': distance.toString(),
+        },
+      );
+
+      if ((bicycleRollBackResponse == 1) && (pathPatchResponse == 1)) {
+        // db insert all rollback events
+        debugPrint('PreProcesses are completed!');
+
+        emit(state.copyWith(msg: 'Account Configuration'));
+
+        await Future.delayed(const Duration(milliseconds: 1200));
+
+        emit(state.copyWith(msg: 'Route Completion'));
+        await Future.delayed(const Duration(milliseconds: 600));
+
+        emit(const RideState());
+        stepperBloc.add(StepperRollBackEvent());
+        qrScanBloc.add(QRScanRollBackEvent());
+
+        SqfliteHelper.instance.updateAutherization(status: 'login-verified');
+        authenticationRepository.loading();
+        await Future.delayed(const Duration(milliseconds: 1200));
+        authenticationRepository.verified();
+      } else {
+        await Future.delayed(const Duration(milliseconds: 1200));
+        emit(state.copyWith(
+            msg: 'Cannot Complete the Route that you are involving'));
+        throw Exception('Update Failure');
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      emit(state.copyWith(msg: 'Completion Failure'));
+    }
+  }
+
+  Future<void> _onRideStartLocation(
+    RideStartLocationDataEvent event,
+    Emitter<RideState> emit,
+  ) async {
+    emit(state.copyWith(
+      startLang: event.startLang,
+      startLong: event.startLong,
+      startLocation: event.startLocation,
+    ));
+  }
+
+  Future<void> _onRideEndLocation(
+    RideEndLocationDataEvent event,
+    Emitter<RideState> emit,
+  ) async {
+    emit(state.copyWith(
+      endLang: event.endLang,
+      endLong: event.endLong,
+      endLocation: event.endLocation,
+    ));
   }
 
   bool _validatePayment(
@@ -279,7 +434,21 @@ class RideBloc extends Bloc<RideEvent, RideState> {
     }
   }
 
-  Future<int> _tableConfiguration({
+  int _getPackagetime({required Package currentPackage}) {
+    if (currentPackage == Package.min30) {
+      return packageTime['min30']!;
+    } else if (currentPackage == Package.min60) {
+      return packageTime['min60']!;
+    } else if (currentPackage == Package.min120) {
+      return packageTime['min120']!;
+    } else if (currentPackage == Package.min30) {
+      return packageTime['hour5']!;
+    } else {
+      return 0;
+    }
+  }
+
+  Future<Map<String, dynamic>> _tableConfiguration({
     required String bicycleID,
     required String stationID,
     required String lang,
@@ -296,8 +465,7 @@ class RideBloc extends Bloc<RideEvent, RideState> {
         "startLocation": station
       });
 
-      debugPrint(
-          """
+      debugPrint("""
 ---------------------------------------
 
 ${pathResponse.toString()}
@@ -325,10 +493,15 @@ ${pathResponse.toString()}
       debugPrint('Bicycle Status has updated successfully!');
       debugPrint(bicyclePatchResponse.toString());
 
-      return 1;
+      return {
+        'result': 1,
+        'pathID': pathResponse['body']['path']['pathId'].toString(),
+      };
     } catch (e) {
       debugPrint(e.toString());
-      return 0;
+      return {
+        'result': 0,
+      };
     }
   }
 
@@ -352,6 +525,31 @@ ${pathResponse.toString()}
       debugPrint(transactionResponse.toString());
 
       await Future.delayed(const Duration(milliseconds: 1200));
+    }
+  }
+
+  Future<int> _bicycleStateRollBack({required String bicycleID}) async {
+    var bicycleLockResponse =
+        await BicyclePatchRepository(api: BicyclePatchApi())
+            .bicyclePatch(bicycleID: bicycleID, bicycleStatus: '1');
+    if (bicycleLockResponse['result'] == 1) {
+      debugPrint(bicycleLockResponse.toString());
+      debugPrint('bicycle has roll back');
+      return 1;
+    } else {
+      debugPrint('bicycle cannot roll back');
+      return 0;
+    }
+  }
+
+  Future<int> _updatePathData(
+      {required String pathID, required Map<String, String> reqBody}) async {
+    var pathPatchResponse = await PathPatchRepository(api: PathPatchApi())
+        .pathPatch(pathID: pathID, reqBody: reqBody);
+    if (pathPatchResponse['result'] == 1) {
+      return 1;
+    } else {
+      return 0;
     }
   }
 }

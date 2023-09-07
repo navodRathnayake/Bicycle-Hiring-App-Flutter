@@ -23,7 +23,7 @@ class RecentActivityApi {
           'Authorization': 'Bearer $bearerToken'
         },
       );
-      debugPrint('API {transaction} - Completed');
+      debugPrint('API {recent Activity} - Completed');
       debugPrint(response.statusCode.toString());
       debugPrint(response.body);
       debugPrint(bearerToken);

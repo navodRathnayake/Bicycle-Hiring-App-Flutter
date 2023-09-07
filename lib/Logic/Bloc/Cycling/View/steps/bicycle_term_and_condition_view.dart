@@ -101,6 +101,8 @@ class BicycleTermAndConditionView extends StatelessWidget {
                       bicycle:
                           BlocProvider.of<StepperBloc>(context).state.bicycle,
                     ));
+                    BlocProvider.of<StepperBloc>(context)
+                        .add(StepperAcceptEvent());
                   },
                 ),
               ],

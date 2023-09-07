@@ -1,12 +1,15 @@
 library cycling_ride_page;
 
+import 'package:final_project/Account/account_bloc.dart';
 import 'package:final_project/Const/Widget/column_spacer.dart';
+import 'package:final_project/Constraints/constraints.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/map_launcher.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/modal%20bottom%20sheets/bicycle_profile_modal_bottom_sheet.dart';
 import 'package:final_project/Logic/Bloc/Cycling/View/validation_dialog_box.dart';
 import 'package:final_project/Logic/Bloc/Cycling/bloc/qr_scan_bloc.dart';
 import 'package:final_project/Logic/Bloc/Cycling/bloc/ride_bloc.dart';
 import 'package:final_project/Logic/Bloc/Cycling/bloc/stepper_bloc.dart';
+import 'package:final_project/Logic/Bloc/Cycling/src/validate_location.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/avatar.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/custom_settings_icon.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/points.dart';
@@ -55,7 +58,7 @@ class _CyclingRidePageState extends State<CyclingRidePage> {
                 return GestureDetector(
                   onTap: () async {
                     BlocProvider.of<RideBloc>(context)
-                        .add(RideMapRollBackOnPressed());
+                        .add(RideMapRollBackOnPressedEvent());
                   },
                   child: Row(
                     children: [
@@ -267,7 +270,7 @@ class CyclingSuccess extends StatelessWidget {
                       await Geolocator.isLocationServiceEnabled();
                   if (serviceEnabled) {
                     BlocProvider.of<RideBloc>(context)
-                        .add(RideMapLauncherOnPressed());
+                        .add(RideMapLauncherOnPressedEvent());
                   } else {
                     validationDialogBox(
                         context: context,
@@ -293,10 +296,9 @@ class CyclingSuccess extends StatelessWidget {
                             const Text('CURRENT LOCATION'),
                             const ColumnSpacer(height: 10),
                             Text(
-                              BlocProvider.of<StepperBloc>(context)
+                              BlocProvider.of<RideBloc>(context)
                                   .state
-                                  .bicycle
-                                  .station,
+                                  .startLocation,
                               style: TextStyle(
                                   fontSize: 30,
                                   fontWeight: FontWeight.bold,
@@ -624,7 +626,47 @@ class CyclingSuccess extends StatelessWidget {
                   backgroundColor: Colors.amber,
                   shape: const RoundedRectangleBorder(),
                 ),
-                onPressed: () {},
+                onPressed: () async {
+                  var currentLocationResponse = await getCurrentLocation();
+                  var isValidateResponse = isValidLocation(
+                      lang: currentLocationResponse.latitude.toString(),
+                      long: currentLocationResponse.longitude.toString(),
+                      stations: stations);
+                  if (isValidateResponse['validate']) {
+                    try {
+                      debugPrint('The location has validated');
+                      BlocProvider.of<RideBloc>(context).add(
+                          RideEndLocationDataEvent(
+                              endLang:
+                                  currentLocationResponse.latitude.toString(),
+                              endLong:
+                                  currentLocationResponse.longitude.toString(),
+                              endLocation:
+                                  isValidateResponse['station'].toString()));
+                      // ignore: use_build_context_synchronously
+                      BlocProvider.of<RideBloc>(context)
+                          .add(RideCompleteOnPressedEvent(
+                        date: DateTime.now().toString(),
+                        user: BlocProvider.of<AccountBloc>(context).state.user,
+                        // ignore: use_build_context_synchronously
+                        package:
+                            BlocProvider.of<StepperBloc>(context).state.package,
+                        bicycle:
+                            BlocProvider.of<StepperBloc>(context).state.bicycle,
+                      ));
+                    } catch (e) {
+                      debugPrint(e.toString());
+                    }
+                  } else {
+                    debugPrint('The location has not validated!');
+                    // ignore: use_build_context_synchronously
+                    validationDialogBox(
+                        context: context,
+                        themeData: themeData,
+                        msg:
+                            'The relevent location cannot identify as a service station. Please complete your route at a nearby service station');
+                  }
+                },
                 child: const Row(
                   children: [
                     Padding(

@@ -86,5 +86,12 @@ class StepperBloc extends Bloc<StepperEvent, StepperState> {
   Future<void> _onStepperAccept(
     StepperAcceptEvent event,
     Emitter<StepperState> emit,
-  ) async {}
+  ) async {
+    try {
+      emit(state.copyWith(date: DateTime.now().toString()));
+      debugPrint('Date time has set : ${DateTime.now()}');
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
 }
