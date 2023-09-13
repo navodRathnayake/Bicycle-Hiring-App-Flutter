@@ -73,3 +73,19 @@ class RideEndLocationDataEvent extends RideEvent {
   @override
   List<Object> get props => [endLang, endLong, endLocation];
 }
+
+class RideDescriptionOnChanged extends RideEvent {
+  final String description;
+  const RideDescriptionOnChanged({required this.description});
+
+  @override
+  List<Object> get props => [description];
+}
+
+class RideEmergencyIDChanged extends RideEvent {
+  final String emergencyID;
+  const RideEmergencyIDChanged({required this.emergencyID});
+
+  @override
+  List<Object> get props => [emergencyID];
+}

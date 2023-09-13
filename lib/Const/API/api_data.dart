@@ -17,7 +17,7 @@ Map<String, String> auth = const {
 Map<String, String> user = const {
   '/transactions': '/api/v1/transactions',
   '/updatePatch': '/api/v1/users/',
-  '/recentActivity': '/api/v1/users/19/recent-activities',
+  '/recentActivity': '/api/v1/users/37/recent-activities',
   '/user': '/api/v1/users/',
 };
 
@@ -36,4 +36,9 @@ Map<String, String> postRecentActivity = const {
 
 Map<String, String> patchRecentActivity = const {
   '/patch': '/api/v1/recentactivities/'
+};
+
+Map<String, String> emergency = const {
+  '/post': '/api/v1/emergencies',
+  '/patch': '/api/v1/emergencies'
 };

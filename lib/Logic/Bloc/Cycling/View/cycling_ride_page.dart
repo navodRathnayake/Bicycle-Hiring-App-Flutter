@@ -1,5 +1,9 @@
 library cycling_ride_page;
 
+import 'package:final_project/Logic/Bloc/Cycling/View/description_dialog_box.dart';
+import 'package:final_project/Logic/Bloc/Cycling/data/data%20provider/emergency_patch_api.dart';
+import 'package:final_project/Logic/Bloc/Cycling/data/repository%20provider/emergency_patch_repository.dart';
+import 'package:intl/intl.dart';
 import 'package:final_project/Account/account_bloc.dart';
 import 'package:final_project/Const/Widget/column_spacer.dart';
 import 'package:final_project/Constraints/constraints.dart';
@@ -9,6 +13,9 @@ import 'package:final_project/Logic/Bloc/Cycling/View/validation_dialog_box.dart
 import 'package:final_project/Logic/Bloc/Cycling/bloc/qr_scan_bloc.dart';
 import 'package:final_project/Logic/Bloc/Cycling/bloc/ride_bloc.dart';
 import 'package:final_project/Logic/Bloc/Cycling/bloc/stepper_bloc.dart';
+import 'package:final_project/Logic/Bloc/Cycling/data/data%20provider/emergency_post_api.dart';
+import 'package:final_project/Logic/Bloc/Cycling/data/data%20provider/emergency_post_api.dart';
+import 'package:final_project/Logic/Bloc/Cycling/data/repository%20provider/emergency_post_repository.dart';
 import 'package:final_project/Logic/Bloc/Cycling/src/validate_location.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/avatar.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/custom_settings_icon.dart';
@@ -156,7 +163,8 @@ class InfoCard extends StatelessWidget {
 }
 
 class CustomToggleWidget extends StatefulWidget {
-  const CustomToggleWidget({super.key});
+  final ThemeData themeData;
+  const CustomToggleWidget({super.key, required this.themeData});
 
   @override
   State<CustomToggleWidget> createState() => _CustomToggleWidgetState();
@@ -168,7 +176,47 @@ class _CustomToggleWidgetState extends State<CustomToggleWidget> {
     return RollingSwitch.icon(
       circularColor: Colors.amber,
       height: 60,
-      onChanged: (bool state) {},
+      onChanged: (bool state) async {
+        if (state) {
+          await descriptionDialogBox(
+            context: context,
+            themeData: widget.themeData,
+          );
+          var currentLocation = await getCurrentLocation();
+          var emergencyPostResponse =
+              await EmergencyPostRepository(api: EmergencyPostApi())
+                  .postEmergency(reqBody: {
+            "bicycleID": BlocProvider.of<StepperBloc>(context)
+                .state
+                .bicycle
+                .bicycleID
+                .toString(),
+            "emergencyStatusID": '1',
+            "lang": currentLocation.latitude.toString(),
+            "long": currentLocation.longitude.toString(),
+            "date": DateFormat('yyyy-MM-dd').format(DateTime.now()).toString(),
+            "time": DateFormat('kk:mm').format(DateTime.now()).toString(),
+            "description":
+                BlocProvider.of<RideBloc>(context).state.description.toString()
+          });
+          debugPrint(emergencyPostResponse.toString());
+          debugPrint(
+              'Emergency ID : ${emergencyPostResponse['body']['emergency']['emergencyId']}');
+
+          BlocProvider.of<RideBloc>(context).add(RideEmergencyIDChanged(
+              emergencyID: emergencyPostResponse['body']['emergency']
+                      ['emergencyId']
+                  .toString()));
+        } else {
+          var patchResponse =
+              await EmergencyPatchRepository(api: EmergencyPatchApi())
+                  .emergencyPatch(
+                      emergencyID:
+                          BlocProvider.of<RideBloc>(context).state.emergencyID);
+
+          debugPrint(patchResponse.toString());
+        }
+      },
       rollingInfoRight: const RollingIconInfo(
         icon: Icons.emergency,
         text: Text('ON'),
@@ -431,7 +479,7 @@ class CyclingSuccess extends StatelessWidget {
                           child: Column(
                             children: [
                               const ColumnSpacer(height: 20),
-                              const CustomToggleWidget(),
+                              CustomToggleWidget(themeData: themeData),
                               const ColumnSpacer(height: 10),
                               Text(
                                 'EMERGENCY',

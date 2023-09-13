@@ -48,6 +48,8 @@ class RideBloc extends Bloc<RideEvent, RideState> {
     on<RideCompleteOnPressedEvent>(_onRideCompleteOnPressed);
     on<RideStartLocationDataEvent>(_onRideStartLocation);
     on<RideEndLocationDataEvent>(_onRideEndLocation);
+    on<RideDescriptionOnChanged>(_onRideDescriptionOnChanged);
+    on<RideEmergencyIDChanged>(_onRideEmergencyIDChanged);
   }
 
   Future<void> _onRideInitial(
@@ -402,6 +404,22 @@ class RideBloc extends Bloc<RideEvent, RideState> {
     ));
   }
 
+  Future<void> _onRideDescriptionOnChanged(
+    RideDescriptionOnChanged event,
+    Emitter<RideState> emit,
+  ) async {
+    emit(state.copyWith(
+      description: event.description,
+    ));
+  }
+
+  Future<void> _onRideEmergencyIDChanged(
+    RideEmergencyIDChanged event,
+    Emitter<RideState> emit,
+  ) async {
+    emit(state.copyWith(emergencyID: event.emergencyID));
+  }
+
   bool _validatePayment(
       {required Package currentPackage, required double balance}) {
     if (currentPackage == Package.min30 && (balance >= packagePool['min30']!)) {
@@ -465,7 +483,8 @@ class RideBloc extends Bloc<RideEvent, RideState> {
         "startLocation": station
       });
 
-      debugPrint("""
+      debugPrint(
+          """
 ---------------------------------------
 
 ${pathResponse.toString()}

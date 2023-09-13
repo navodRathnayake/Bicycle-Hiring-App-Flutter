@@ -88,7 +88,7 @@ List<Map<String, dynamic>> stations = [
   },
   {
     'id': '3',
-    'name': 'Colombo',
+    'name': 'Kandy',
     'location': [
       {
         'lang': '555',

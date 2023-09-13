@@ -56,6 +56,7 @@ class StepperState extends Equatable {
       'bicycle': bicycle,
       'currentStep': currentStep,
       'package': package,
+      'date': date
     };
   }
 
@@ -63,7 +64,8 @@ class StepperState extends Equatable {
     return StepperState(
         bicycle: map['bicycle'] as Bicycle,
         currentStep: map['currentStep'] as int,
-        package: map['package'] as Package);
+        package: map['package'] as Package,
+        date: map['date'] as String);
   }
 
   String toJson() => json.encode(toMap());
