@@ -8,11 +8,13 @@ import 'package:final_project/Logic/Bloc/Cycling/data/data%20provider/bicycle_pa
 import 'package:final_project/Logic/Bloc/Cycling/data/data%20provider/path_patch_api.dart';
 import 'package:final_project/Logic/Bloc/Cycling/data/data%20provider/path_post_api.dart';
 import 'package:final_project/Logic/Bloc/Cycling/data/data%20provider/recent_activity_post_api.dart';
+import 'package:final_project/Logic/Bloc/Cycling/data/data%20provider/service_post_api.dart';
 import 'package:final_project/Logic/Bloc/Cycling/data/data%20provider/transaction_post_api.dart';
 import 'package:final_project/Logic/Bloc/Cycling/data/repository%20provider/bicycle_patch_repository.dart';
 import 'package:final_project/Logic/Bloc/Cycling/data/repository%20provider/path_patch_repository.dart';
 import 'package:final_project/Logic/Bloc/Cycling/data/repository%20provider/path_post_repository.dart';
 import 'package:final_project/Logic/Bloc/Cycling/data/repository%20provider/recent_activity_post_repository.dart';
+import 'package:final_project/Logic/Bloc/Cycling/data/repository%20provider/service_post_repository.dart';
 import 'package:final_project/Logic/Bloc/Cycling/data/repository%20provider/transaction_post_repository.dart';
 import 'package:final_project/Logic/Bloc/Cycling/model/bicycle_model.dart';
 import 'package:final_project/Logic/Bloc/Cycling/src/validate_location.dart';
@@ -26,6 +28,9 @@ import 'package:final_project/Services/repository/auth%20repository/auth_reposit
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
+
+import '../data/data provider/service_delete_api.dart';
+import '../data/repository provider/service_delete_repository.dart';
 
 part 'ride_event.dart';
 part 'ride_state.dart';
@@ -327,6 +332,24 @@ class RideBloc extends Bloc<RideEvent, RideState> {
         }
       }
 
+      emit(state.copyWith(msg: 'Service Configuration'));
+      Future.delayed(const Duration(milliseconds: 1200));
+
+      debugPrint(event.bicycle.bicycleID.toString());
+
+      var serviceDeleteResponse =
+          await ServiceDeleteRepository(api: ServiceDeleteApi())
+              .deleteService(bicycleID: event.bicycle.bicycleID.toString());
+      debugPrint(serviceDeleteResponse.toString());
+
+      // if (serviceDeleteResponse['result'] == 1) {
+      //   debugPrint('Service temporary data deleted successfully');
+      // } else {
+      //   await Future.delayed(const Duration(milliseconds: 1200));
+      //   emit(state.copyWith(msg: 'Cannot Complete the service configuration'));
+      //   throw Exception('service temporary data deleted Failure');
+      // }
+
       emit(state.copyWith(msg: 'Bicycle Configuration'));
       Future.delayed(const Duration(milliseconds: 1200));
 
@@ -379,6 +402,8 @@ class RideBloc extends Bloc<RideEvent, RideState> {
     } catch (e) {
       debugPrint(e.toString());
       emit(state.copyWith(msg: 'Completion Failure'));
+      await Future.delayed(const Duration(milliseconds: 1200));
+      emit(state.copyWith(completeStatus: CompleteStatus.failure));
     }
   }
 
@@ -511,6 +536,18 @@ ${pathResponse.toString()}
 
       debugPrint('Bicycle Status has updated successfully!');
       debugPrint(bicyclePatchResponse.toString());
+
+      var serviceResponse = await ServicePostRepository(api: ServicePostApi())
+          .postService(reqBody: {
+        "bicycleID": bicycleID,
+        "pathID": pathResponse['body']['path']['pathId'].toString(),
+        "recentActivityID": recentActivityResponse['body']['recentActivities']
+                ['activityId']!
+            .toString()
+      });
+
+      debugPrint(serviceResponse.toString());
+      debugPrint('Service information has added!');
 
       return {
         'result': 1,

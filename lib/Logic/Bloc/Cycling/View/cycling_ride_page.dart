@@ -27,6 +27,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:rolling_switch/rolling_switch.dart';
+import 'package:stop_watch_timer/stop_watch_timer.dart';
 
 class CyclingRidePage extends StatefulWidget {
   final ThemeData themeData;
@@ -51,6 +52,17 @@ class CyclingRidePage extends StatefulWidget {
 }
 
 class _CyclingRidePageState extends State<CyclingRidePage> {
+  final stopWatchTimer = StopWatchTimer(
+    mode: StopWatchMode.countDown,
+    presetMillisecond:
+        StopWatchTimer.getMilliSecFromMinute(1), // millisecond => minute.
+  );
+  @override
+  void dispose() async {
+    super.dispose();
+    await stopWatchTimer.dispose(); // Need to call dispose function.
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
@@ -107,7 +119,9 @@ class _CyclingRidePageState extends State<CyclingRidePage> {
           if (state.status == RideStatus.inProcess) {
             return const CyclingInProcess();
           } else if (state.status == RideStatus.success) {
-            return CyclingSuccess(themeData: themeData);
+            return CyclingSuccess(
+                themeData: themeData,
+                milliseconds: BlocProvider.of<RideBloc>(context).state.seconds);
           } else if (state.status == RideStatus.failure) {
             return CyclingFailure(
               themeData: themeData,
@@ -298,9 +312,33 @@ class CyclingInProcess extends StatelessWidget {
   }
 }
 
-class CyclingSuccess extends StatelessWidget {
+class CyclingSuccess extends StatefulWidget {
+  final int milliseconds;
   final ThemeData themeData;
-  const CyclingSuccess({super.key, required this.themeData});
+  const CyclingSuccess(
+      {super.key, required this.themeData, required this.milliseconds});
+
+  @override
+  State<CyclingSuccess> createState() => _CyclingSuccessState();
+}
+
+class _CyclingSuccessState extends State<CyclingSuccess> {
+  final stopWatchTimer = StopWatchTimer(
+    mode: StopWatchMode.countUp,
+    presetMillisecond: 0,
+    // millisecond => minute.
+  );
+  @override
+  void dispose() async {
+    super.dispose();
+    await stopWatchTimer.dispose(); // Need to call dispose function.
+  }
+
+  @override
+  void initState() {
+    stopWatchTimer.onStartTimer();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -322,14 +360,14 @@ class CyclingSuccess extends StatelessWidget {
                   } else {
                     validationDialogBox(
                         context: context,
-                        themeData: themeData,
+                        themeData: widget.themeData,
                         msg:
                             'The following device has denied the google location service. Please turn on the location service in your app settings or give the permission to this app.');
                   }
                 },
                 child: Container(
                   decoration: BoxDecoration(
-                    color: themeData.colorScheme.secondaryContainer,
+                    color: widget.themeData.colorScheme.secondaryContainer,
                     borderRadius: BorderRadius.circular(30),
                   ),
                   child: Padding(
@@ -350,14 +388,16 @@ class CyclingSuccess extends StatelessWidget {
                               style: TextStyle(
                                   fontSize: 30,
                                   fontWeight: FontWeight.bold,
-                                  color: themeData.colorScheme.onBackground),
+                                  color: widget
+                                      .themeData.colorScheme.onBackground),
                             ),
                             Text(
                               'Station',
                               style: TextStyle(
                                   fontSize: 30,
                                   fontWeight: FontWeight.bold,
-                                  color: themeData.colorScheme.onBackground),
+                                  color: widget
+                                      .themeData.colorScheme.onBackground),
                             ),
                             const ColumnSpacer(height: 20),
                           ],
@@ -391,8 +431,8 @@ class CyclingSuccess extends StatelessWidget {
                                           child: Image.asset(
                                             'Assets/icons/navigation.png',
                                             scale: 2,
-                                            color: themeData
-                                                .colorScheme.background,
+                                            color: widget.themeData.colorScheme
+                                                .background,
                                           ),
                                         ),
                                       ),
@@ -417,12 +457,13 @@ class CyclingSuccess extends StatelessWidget {
                     child: GestureDetector(
                       onTap: () {
                         bicycleProfileModalBottomSheet(
-                            context: context, themeData: themeData);
+                            context: context, themeData: widget.themeData);
                       },
                       child: Container(
                         height: 330,
                         decoration: BoxDecoration(
-                          color: themeData.colorScheme.secondaryContainer,
+                          color:
+                              widget.themeData.colorScheme.secondaryContainer,
                           borderRadius: BorderRadius.circular(30),
                         ),
                         child: Stack(
@@ -441,7 +482,8 @@ class CyclingSuccess extends StatelessWidget {
                                   Text(
                                     'CYCLE',
                                     style: TextStyle(
-                                      color: themeData.colorScheme.background,
+                                      color: widget
+                                          .themeData.colorScheme.background,
                                       fontSize: 20,
                                       fontWeight: FontWeight.normal,
                                     ),
@@ -450,8 +492,8 @@ class CyclingSuccess extends StatelessWidget {
                                   Text(
                                     'PROFILE',
                                     style: TextStyle(
-                                        color:
-                                            themeData.colorScheme.onBackground,
+                                        color: widget
+                                            .themeData.colorScheme.onBackground,
                                         fontSize: 20,
                                         fontWeight: FontWeight.normal,
                                         letterSpacing: 5),
@@ -479,12 +521,13 @@ class CyclingSuccess extends StatelessWidget {
                           child: Column(
                             children: [
                               const ColumnSpacer(height: 20),
-                              CustomToggleWidget(themeData: themeData),
+                              CustomToggleWidget(themeData: widget.themeData),
                               const ColumnSpacer(height: 10),
                               Text(
                                 'EMERGENCY',
                                 style: TextStyle(
-                                  color: themeData.colorScheme.background,
+                                  color:
+                                      widget.themeData.colorScheme.background,
                                   fontSize: 20,
                                   fontWeight: FontWeight.normal,
                                 ),
@@ -492,7 +535,8 @@ class CyclingSuccess extends StatelessWidget {
                               Text(
                                 'MODE',
                                 style: TextStyle(
-                                  color: themeData.colorScheme.background,
+                                  color:
+                                      widget.themeData.colorScheme.background,
                                   fontSize: 20,
                                   fontWeight: FontWeight.normal,
                                 ),
@@ -514,7 +558,8 @@ class CyclingSuccess extends StatelessWidget {
                           child: Container(
                             height: 160,
                             decoration: BoxDecoration(
-                              color: themeData.colorScheme.secondaryContainer,
+                              color: widget
+                                  .themeData.colorScheme.secondaryContainer,
                               borderRadius: BorderRadius.circular(30),
                             ),
                             child: Row(
@@ -539,7 +584,7 @@ class CyclingSuccess extends StatelessWidget {
                                                 style: TextStyle(
                                                   fontSize: 17,
                                                   fontWeight: FontWeight.bold,
-                                                  color: themeData
+                                                  color: widget.themeData
                                                       .colorScheme.onBackground,
                                                 ),
                                               );
@@ -550,7 +595,7 @@ class CyclingSuccess extends StatelessWidget {
                                                 style: TextStyle(
                                                   fontSize: 20,
                                                   fontWeight: FontWeight.bold,
-                                                  color: themeData
+                                                  color: widget.themeData
                                                       .colorScheme.onBackground,
                                                 ),
                                               );
@@ -561,7 +606,7 @@ class CyclingSuccess extends StatelessWidget {
                                                 style: TextStyle(
                                                   fontSize: 17,
                                                   fontWeight: FontWeight.bold,
-                                                  color: themeData
+                                                  color: widget.themeData
                                                       .colorScheme.onBackground,
                                                 ),
                                               );
@@ -579,7 +624,7 @@ class CyclingSuccess extends StatelessWidget {
                                                 style: TextStyle(
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.normal,
-                                                  color: themeData
+                                                  color: widget.themeData
                                                       .colorScheme.onBackground,
                                                 ),
                                               );
@@ -592,7 +637,7 @@ class CyclingSuccess extends StatelessWidget {
                                                 style: TextStyle(
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.normal,
-                                                  color: themeData
+                                                  color: widget.themeData
                                                       .colorScheme.onBackground,
                                                 ),
                                               );
@@ -653,18 +698,36 @@ class CyclingSuccess extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  InfoCard(
-                      themeData: themeData,
-                      title: 'Usage time',
-                      subtitle: '42h 16m'),
-                  InfoCard(
-                      themeData: themeData,
-                      title: 'Usage time',
-                      subtitle: '42h 16m'),
-                  InfoCard(
-                      themeData: themeData,
-                      title: 'Usage time',
-                      subtitle: '42h 16m'),
+                  StreamBuilder<int>(
+                    stream: stopWatchTimer.rawTime,
+                    initialData: 0,
+                    builder: (context, snap) {
+                      final value = snap.data;
+                      final displayTime = StopWatchTimer.getDisplayTime(value!);
+                      return Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Text(
+                              displayTime,
+                              style: TextStyle(
+                                  fontSize: 40, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Text(
+                              value.toString(),
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontFamily: 'Helvetica',
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
@@ -710,7 +773,7 @@ class CyclingSuccess extends StatelessWidget {
                     // ignore: use_build_context_synchronously
                     validationDialogBox(
                         context: context,
-                        themeData: themeData,
+                        themeData: widget.themeData,
                         msg:
                             'The relevent location cannot identify as a service station. Please complete your route at a nearby service station');
                   }

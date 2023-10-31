@@ -1,6 +1,6 @@
 library api_data;
 
-String domain = '192.168.1.161:8000';
+String domain = '192.168.1.131:8000';
 
 Map<String, String> register = const {
   '/register': '/api/register',
@@ -41,4 +41,9 @@ Map<String, String> patchRecentActivity = const {
 Map<String, String> emergency = const {
   '/post': '/api/v1/emergencies',
   '/patch': '/api/v1/emergencies'
+};
+
+Map<String, String> service = const {
+  '/post': '/api/service/store',
+  '/delete': '/api/service/delete'
 };

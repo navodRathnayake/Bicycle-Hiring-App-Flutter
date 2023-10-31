@@ -20,6 +20,7 @@ class RideState extends Equatable {
   final String endLong;
   final String description;
   final String emergencyID;
+  final int seconds;
 
   const RideState({
     this.status = RideStatus.inProcess,
@@ -35,6 +36,7 @@ class RideState extends Equatable {
     this.endLocation = '',
     this.description = 'This is default description',
     this.emergencyID = '1',
+    this.seconds = 0,
   });
 
   RideState copyWith({
@@ -51,6 +53,7 @@ class RideState extends Equatable {
     String? endLocation,
     String? description,
     String? emergencyID,
+    int? seconds,
   }) {
     return RideState(
       status: status ?? this.status,
@@ -66,6 +69,7 @@ class RideState extends Equatable {
       endLocation: endLocation ?? this.endLocation,
       description: description ?? this.description,
       emergencyID: emergencyID ?? this.emergencyID,
+      seconds: seconds ?? this.seconds,
     );
   }
 
@@ -84,5 +88,6 @@ class RideState extends Equatable {
         endLocation,
         description,
         emergencyID,
+        seconds,
       ];
 }
