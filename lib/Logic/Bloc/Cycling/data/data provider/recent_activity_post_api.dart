@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:final_project/Const/API/api_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class RecentActivityPostApi {
   String baseUrl = domain;
@@ -19,6 +20,8 @@ class RecentActivityPostApi {
 
       debugPrint(url.toString());
 
+      String date = DateFormat("yyyy-MM-dd").format(DateTime.now());
+
       var response = await http.post(url,
           headers: {
             'Content-type': 'application/vnd.api+json',
@@ -31,7 +34,7 @@ class RecentActivityPostApi {
             "stationId": int.parse(reqBody['stationID']!.toString()),
             "bicycleId": int.parse(reqBody['bicycleID']!.toString()),
             "paymentTypeId": 1,
-            "date": "1985-03-14",
+            "date": date.toString(),
             "startTime": "19:26:22",
             "amount": double.parse(reqBody['amount']!.toString()),
             "endTime": "07:21:50"

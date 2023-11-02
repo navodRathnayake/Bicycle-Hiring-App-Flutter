@@ -27,49 +27,55 @@ class RoutePageAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return Container(
+      color: themeData.colorScheme.background,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'My Route',
-              style: TextStyle(
-                color: themeData.colorScheme.onSecondaryContainer,
-              ),
-            ),
-            Text(
-              '$startLocation to $endLocation',
-              style: themeData.textTheme.headlineMedium,
-            ),
-            Row(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Padding(
-                  padding: EdgeInsets.only(right: 5),
-                  child: Icon(Icons.lock_clock),
-                ),
                 Text(
-                  '$day $date - $startTime',
+                  'My Route',
                   style: TextStyle(
                     color: themeData.colorScheme.onSecondaryContainer,
                   ),
                 ),
+                Text(
+                  '$startLocation to $endLocation',
+                  style: themeData.textTheme.headlineMedium,
+                ),
+                Row(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(right: 5),
+                      child: Icon(Icons.lock_clock),
+                    ),
+                    Text(
+                      '$day $date - $startTime',
+                      style: TextStyle(
+                        color: themeData.colorScheme.onSecondaryContainer,
+                      ),
+                    ),
+                  ],
+                )
               ],
-            )
+            ),
+            PopUpSettingsMenu(
+              authenticationRepository:
+                  RepositoryProvider.of<AuthenticationRepository>(context),
+              icon: SizedBox(
+                width: 40,
+                child: CustomSettingsIcon(
+                  themeData: themeData,
+                ),
+              ),
+            ),
           ],
         ),
-        PopUpSettingsMenu(
-          authenticationRepository:
-              RepositoryProvider.of<AuthenticationRepository>(context),
-          icon: SizedBox(
-            width: 40,
-            child: CustomSettingsIcon(
-              themeData: themeData,
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

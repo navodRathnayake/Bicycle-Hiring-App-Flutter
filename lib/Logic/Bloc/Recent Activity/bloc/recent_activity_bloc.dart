@@ -1,9 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:final_project/Logic/Bloc/Recent%20Activity/data/data%20provider/gps_get_api.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/data/data%20provider/recent_activity_api.dart';
+import 'package:final_project/Logic/Bloc/Recent%20Activity/data/repository%20provider/gps_get_repository.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/data/repository%20provider/recent_activity_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:intl/intl.dart';
 
@@ -20,6 +23,7 @@ class RecentActivityBloc
         _onRecentActivityCurrentActivityIndexChanged);
     on<RecentActivityItemScrollController>(
         _onRecentActivityItemScrollController);
+    on<RecentAcrivityViewEvent>(_onRecentActivityViewEent);
   }
 
   Future<void> _onRecentActivityClickEvent(
@@ -98,6 +102,54 @@ class RecentActivityBloc
     emit(state.copyWith(
       currentRecentActivityIndex: state.currentRecentActivityIndex,
     ));
+  }
+
+  Future<void> _onRecentActivityViewEent(
+    RecentAcrivityViewEvent event,
+    Emitter<RecentActivityState> emit,
+  ) async {
+    emit(state.copyWith(routeStatus: RecentActivityRouteStatus.inProcess));
+
+    debugPrint(state.activities[event.index].toString());
+    debugPrint("\n");
+    debugPrint(state.activities[event.index][2][event.nested].toString());
+
+    emit(state.copyWith(
+        tempActivityDetails: state.activities[event.index][2][event.nested]));
+
+    // (state.activities[event.index][2][event.nested]['path']['pathId'] == 25)
+
+    var gpsResponse = await GPSGetRepository(api: GPSGetApi()).getGPSResponse(
+        pathID: state.activities[event.index][2][event.nested]['path']
+            ['pathId']);
+
+    debugPrint(gpsResponse.toString());
+
+    List<LatLng> tempGPSPoints = [];
+
+    if (gpsResponse['result'] == 1) {
+      await Future.delayed(const Duration(milliseconds: 800));
+
+      for (int i = 0; i < gpsResponse['body']['gpsDetails'].length; i++) {
+        tempGPSPoints.add(LatLng(
+            double.parse(
+                gpsResponse['body']['gpsDetails'][i]['gps_points_lang']),
+            double.parse(
+                gpsResponse['body']['gpsDetails'][i]['gps_points_long'])));
+      }
+
+      debugPrint(tempGPSPoints.toString());
+
+      emit(state.copyWith(gpsPoints: tempGPSPoints));
+
+      emit(state.copyWith(routeStatus: RecentActivityRouteStatus.success));
+
+      debugPrint('Nested Activity Reads');
+      debugPrint(state.tempActivityDetails.toString());
+    } else {
+      await Future.delayed(const Duration(milliseconds: 800));
+      emit(state.copyWith(routeStatus: RecentActivityRouteStatus.failure));
+    }
   }
 }
 

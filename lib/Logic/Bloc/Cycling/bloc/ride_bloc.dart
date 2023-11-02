@@ -342,13 +342,13 @@ class RideBloc extends Bloc<RideEvent, RideState> {
               .deleteService(bicycleID: event.bicycle.bicycleID.toString());
       debugPrint(serviceDeleteResponse.toString());
 
-      // if (serviceDeleteResponse['result'] == 1) {
-      //   debugPrint('Service temporary data deleted successfully');
-      // } else {
-      //   await Future.delayed(const Duration(milliseconds: 1200));
-      //   emit(state.copyWith(msg: 'Cannot Complete the service configuration'));
-      //   throw Exception('service temporary data deleted Failure');
-      // }
+      if (serviceDeleteResponse['result'] == 1) {
+        debugPrint('Service temporary data deleted successfully');
+      } else {
+        await Future.delayed(const Duration(milliseconds: 1200));
+        emit(state.copyWith(msg: 'Cannot Complete the service configuration'));
+        throw Exception('service temporary data deleted Failure');
+      }
 
       emit(state.copyWith(msg: 'Bicycle Configuration'));
       Future.delayed(const Duration(milliseconds: 1200));

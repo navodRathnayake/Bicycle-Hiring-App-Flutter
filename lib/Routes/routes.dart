@@ -140,8 +140,8 @@ class Routes {
         return MaterialPageRoute(
             builder: (context) => const ProfileCompletion());
 
-      case '/mapSample':
-        return MaterialPageRoute(builder: (context) => const MapSample());
+      // case '/mapSample':
+      //   return MaterialPageRoute(builder: (context) => const MapSample());
 
       case '/mapLauncher':
         return MaterialPageRoute(

@@ -19,3 +19,9 @@ class RecentActivityCurrentActivityChanged extends RecentActivityEvent {
   const RecentActivityCurrentActivityChanged(
       {required this.currentRecentActivityIndex});
 }
+
+class RecentAcrivityViewEvent extends RecentActivityEvent {
+  final int index;
+  final int nested;
+  const RecentAcrivityViewEvent({required this.index, required this.nested});
+}

@@ -183,13 +183,19 @@ class RecentActivitySuccess extends StatelessWidget {
                             itemCount: int.parse(
                                 state.activities[index][2].length.toString()),
                             shrinkWrap: true,
-                            itemBuilder: (sddsd, nested) => int.parse(state
-                                        .activities[index][2].length
-                                        .toString()) ==
+                            itemBuilder: (nestedContext, nested) => int.parse(
+                                        state.activities[index][2].length
+                                            .toString()) ==
                                     0
                                 ? Expanded(child: Container())
                                 : GestureDetector(
                                     onTap: () {
+                                      BlocProvider.of<RecentActivityBloc>(
+                                              context)
+                                          .add(RecentAcrivityViewEvent(
+                                        index: index,
+                                        nested: nested,
+                                      ));
                                       Navigator.of(context)
                                           .pushNamed('/recentActivityRoute');
                                     },

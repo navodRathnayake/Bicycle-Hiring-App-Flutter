@@ -1,22 +1,22 @@
-library recent_activity_repository;
+library gps_get_repository;
 
 import 'dart:convert' as convert;
-import 'package:final_project/Logic/Bloc/Recent%20Activity/data/data%20provider/recent_activity_api.dart';
+import 'package:final_project/Logic/Bloc/Recent%20Activity/data/data%20provider/gps_get_api.dart';
 import 'package:final_project/Services/database/sqlite_helper.dart';
 import 'package:flutter/foundation.dart';
 
-class RecentActivityRepository {
-  final RecentActivityApi api;
+class GPSGetRepository {
+  final GPSGetApi api;
 
-  const RecentActivityRepository({required this.api});
+  const GPSGetRepository({required this.api});
 
-  Future<Map<String, dynamic>> getLoginResponse() async {
+  Future<Map<String, dynamic>> getGPSResponse({required int pathID}) async {
     try {
       var userBearerToken = await SqfliteHelper.instance.readBearerToken();
       debugPrint(userBearerToken.toString());
 
       final rawResponseData =
-          await api.getRecentActivity(bearerToken: userBearerToken);
+          await api.getGPS(bearerToken: userBearerToken, pathID: pathID);
       final response =
           convert.jsonDecode(rawResponseData['body']) as Map<String, dynamic>;
       debugPrint('Hellooooooooo');

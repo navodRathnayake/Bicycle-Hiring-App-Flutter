@@ -11,6 +11,8 @@ class RecentActivityState extends Equatable {
   final int currentRecentActivityIndex;
   final ItemScrollController itemScrollController;
   final RecentActivityRouteStatus routeStatus;
+  final List<LatLng> gpsPoints;
+  final Map<String, dynamic> tempActivityDetails;
 
   const RecentActivityState({
     this.status = RecentActivityStatus.inProcess,
@@ -19,6 +21,8 @@ class RecentActivityState extends Equatable {
     this.selectedIndex = 0,
     this.currentRecentActivityIndex = 0,
     this.routeStatus = RecentActivityRouteStatus.inProcess,
+    this.gpsPoints = const [],
+    this.tempActivityDetails = const {},
   });
 
   RecentActivityState copyWith({
@@ -28,6 +32,8 @@ class RecentActivityState extends Equatable {
     int? selectedIndex,
     int? currentRecentActivityIndex,
     RecentActivityRouteStatus? routeStatus,
+    List<LatLng>? gpsPoints,
+    Map<String, dynamic>? tempActivityDetails,
   }) {
     return RecentActivityState(
       status: status ?? this.status,
@@ -37,6 +43,8 @@ class RecentActivityState extends Equatable {
       currentRecentActivityIndex:
           currentRecentActivityIndex ?? this.currentRecentActivityIndex,
       routeStatus: routeStatus ?? this.routeStatus,
+      gpsPoints: gpsPoints ?? this.gpsPoints,
+      tempActivityDetails: tempActivityDetails ?? this.tempActivityDetails,
     );
   }
 
@@ -46,6 +54,8 @@ class RecentActivityState extends Equatable {
         activities,
         selectedIndex,
         currentRecentActivityIndex,
-        routeStatus
+        routeStatus,
+        gpsPoints,
+        tempActivityDetails
       ];
 }
