@@ -27,10 +27,15 @@ class VerifyDrivingLicenseSelection extends StatelessWidget {
             },
             child: Row(
               children: [
-                Image.asset(
-                  'Assets/icons/back_arrow.png',
-                  scale: 2,
-                  color: themeData.colorScheme.onBackground,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pushNamed('/profileCompletion');
+                  },
+                  child: Image.asset(
+                    'Assets/icons/back_arrow.png',
+                    scale: 2,
+                    color: themeData.colorScheme.onBackground,
+                  ),
                 ),
               ],
             ),

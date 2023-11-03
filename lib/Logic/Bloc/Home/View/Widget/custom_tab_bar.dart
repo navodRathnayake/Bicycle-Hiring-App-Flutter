@@ -16,7 +16,7 @@ class CustomTabBar extends StatefulWidget {
 
 class _CustomTabBar extends State<CustomTabBar> {
   List<String> tabs = [
-    "Recent Activities",
+    // "Recent Activities",
     "Locations",
     "News",
   ];

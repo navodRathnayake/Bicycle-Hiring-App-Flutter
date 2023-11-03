@@ -71,13 +71,13 @@ class RecentActivityInProcess extends StatelessWidget {
         ColumnSpacer(height: 10),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 50),
-          child: Text('Adding Creadit',
+          child: Text('Finding Your',
               style: TextStyle(
                 fontSize: 25,
               )),
         ),
         ColumnSpacer(height: 5),
-        Text('Card',
+        Text('Routes',
             style: TextStyle(
               fontSize: 25,
             )),
@@ -258,7 +258,7 @@ class RecentActivityFailure extends StatelessWidget {
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 30),
             child: Text(
-              'Try again to fill your account with points',
+              'Try again May the second try will be work',
               textAlign: TextAlign.center,
             ),
           ),
@@ -307,17 +307,18 @@ class REcentActivityEmpty extends StatelessWidget {
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 30),
           child: Text(
-            'Try again to fill your account with points',
+            '',
             textAlign: TextAlign.center,
           ),
         ),
         const ColumnSpacer(height: 30),
         ElevatedButton(
           onPressed: () {
-            BlocProvider.of<RecentActivityBloc>(context)
-                .add(RecentActivityClickedEvent());
+            // BlocProvider.of<RecentActivityBloc>(context)
+            //     .add(RecentActivityClickedEvent());
+            Navigator.of(context).pop();
           },
-          child: const Text('Try Again'),
+          child: const Text('Go Back'),
         )
       ],
     );

@@ -24,7 +24,7 @@ class BlocLayout extends StatelessWidget {
               Row(children: [
                 Text('Rs', style: themeData.textTheme.labelLarge),
                 const RowSpacer(width: 5),
-                Text('0.81/=', style: themeData.textTheme.headlineMedium),
+                Text('45/=', style: themeData.textTheme.headlineMedium),
               ]),
               const Column(
                 children: [

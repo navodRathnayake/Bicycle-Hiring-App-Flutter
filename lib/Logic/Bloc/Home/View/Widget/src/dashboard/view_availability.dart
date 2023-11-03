@@ -23,9 +23,9 @@ class ViewAvailability extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
-              Image.asset('Assets/icons/bicycle.png', scale: 2),
+              Image.asset('Assets/icons/info.png', scale: 2),
               const RowSpacer(width: 5),
-              const Text('Availability',
+              const Text('Instructions',
                   style: TextStyle(
                       color: Colors.black, fontWeight: FontWeight.bold)),
             ],

@@ -50,7 +50,11 @@ class VerifyInitialBody extends StatelessWidget {
                               scale: 2,
                               color: themeData.colorScheme.onBackground,
                             ),
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.of(context).pop();
+                              BlocProvider.of<OCRBloc>(context)
+                                  .add(OCRExtractingTextFromCamera());
+                            },
                           ),
                         ],
                       ),

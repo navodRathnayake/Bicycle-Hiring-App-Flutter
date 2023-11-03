@@ -71,7 +71,7 @@ Future<Object?> profileInfoDialogBox(
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      ColumnSpacer(height: 30),
+                                      const ColumnSpacer(height: 30),
                                       const Text('USER',
                                           style: TextStyle(
                                               fontSize: 25,

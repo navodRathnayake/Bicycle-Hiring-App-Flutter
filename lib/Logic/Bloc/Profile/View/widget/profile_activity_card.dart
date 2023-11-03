@@ -1,9 +1,11 @@
 library profile_activity_card;
 
+import 'package:final_project/Account/account_bloc.dart';
 import 'package:final_project/Const/Widget/column_spacer.dart';
 import 'package:final_project/Const/Widget/row_spacer.dart';
 import 'package:final_project/Logic/Bloc/Profile/View/widget/charts/profile_line_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfileActivityCard extends StatelessWidget {
   final ThemeData themeData;
@@ -64,7 +66,12 @@ class ProfileActivityCard extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
                           children: [
-                            Text('2,576',
+                            Text(
+                                BlocProvider.of<AccountBloc>(context)
+                                    .state
+                                    .user
+                                    .points
+                                    .toString(),
                                 style: themeData.textTheme.headlineSmall),
                             Text(
                               'Total Points',

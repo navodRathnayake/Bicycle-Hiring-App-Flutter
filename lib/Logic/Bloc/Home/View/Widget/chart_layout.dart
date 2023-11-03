@@ -24,36 +24,37 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      child: Container(
-        decoration: BoxDecoration(
-          color: widget.themeData.colorScheme.secondaryContainer,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: SfCartesianChart(
-              // title: ChartTitle(text: 'Yearly sales analysis'),
-              legend: Legend(isVisible: false),
-              tooltipBehavior: _tooltipBehavior,
-              series: <ChartSeries>[
-                AreaSeries<SalesData, double>(
-                    name: 'Sales',
-                    dataSource: _chartData,
-                    xValueMapper: (SalesData sales, _) => sales.year,
-                    yValueMapper: (SalesData sales, _) => sales.sales,
-                    dataLabelSettings:
-                        const DataLabelSettings(isVisible: false),
-                    enableTooltip: true)
-              ],
-              primaryXAxis: NumericAxis(
-                edgeLabelPlacement: EdgeLabelPlacement.shift,
-              ),
-              primaryYAxis: NumericAxis(
-                  labelFormat: '{value}M',
-                  numberFormat: NumberFormat.simpleCurrency(decimalDigits: 0)),
-            )),
+        child: Container(
+      decoration: BoxDecoration(
+        color: widget.themeData.colorScheme.secondaryContainer,
+        borderRadius: BorderRadius.circular(20),
       ),
-    );
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Image.asset('Assets/icons/bicycle_sharing.png'),
+        // child: SfCartesianChart(
+        //   // title: ChartTitle(text: 'Yearly sales analysis'),
+        //   legend: Legend(isVisible: false),
+        //   tooltipBehavior: _tooltipBehavior,
+        //   series: <ChartSeries>[
+        //     AreaSeries<SalesData, double>(
+        //         name: 'Sales',
+        //         dataSource: _chartData,
+        //         xValueMapper: (SalesData sales, _) => sales.year,
+        //         yValueMapper: (SalesData sales, _) => sales.sales,
+        //         dataLabelSettings:
+        //             const DataLabelSettings(isVisible: false),
+        //         enableTooltip: true)
+        //   ],
+        //   primaryXAxis: NumericAxis(
+        //     edgeLabelPlacement: EdgeLabelPlacement.shift,
+        //   ),
+        //   primaryYAxis: NumericAxis(
+        //       labelFormat: '{value}M',
+        //       numberFormat: NumberFormat.simpleCurrency(decimalDigits: 0)),
+        // )),
+      ),
+    ));
   }
 
   List<SalesData> getChartData() {

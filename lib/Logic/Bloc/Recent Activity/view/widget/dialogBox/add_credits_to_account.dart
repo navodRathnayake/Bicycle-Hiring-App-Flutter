@@ -78,11 +78,24 @@ class PaymentProcedureInfo extends StatelessWidget {
   }
 }
 
-class DoPaymentInitialView extends StatelessWidget {
+class DoPaymentInitialView extends StatefulWidget {
   final ThemeData themeData;
   final List<String> cardNumbers;
   const DoPaymentInitialView(
       {super.key, required this.themeData, required this.cardNumbers});
+
+  @override
+  State<DoPaymentInitialView> createState() => _DoPaymentInitialViewState();
+}
+
+class _DoPaymentInitialViewState extends State<DoPaymentInitialView> {
+  final TextEditingController pointsController = TextEditingController();
+
+  @override
+  void dispose() {
+    pointsController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,8 +105,8 @@ class DoPaymentInitialView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text('Refill Your Account',
-                style: themeData.textTheme.headlineSmall),
-            DialogBoxCloseButton(themeData: themeData),
+                style: widget.themeData.textTheme.headlineSmall),
+            DialogBoxCloseButton(themeData: widget.themeData),
           ],
         ),
         const Divider(),
@@ -104,7 +117,7 @@ class DoPaymentInitialView extends StatelessWidget {
               child: Column(
                 children: [
                   DropdownButtonFormField(
-                    items: cardNumbers
+                    items: widget.cardNumbers
                         .map((item) => DropdownMenuItem<String>(
                             value: item, child: Text(item)))
                         .toList(),
@@ -125,7 +138,7 @@ class DoPaymentInitialView extends StatelessWidget {
                       suffixIcon: Image.asset(
                         'Assets/icons/card_payment.png',
                         scale: 2,
-                        color: themeData.colorScheme.secondary,
+                        color: widget.themeData.colorScheme.secondary,
                       ),
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
@@ -145,7 +158,8 @@ class DoPaymentInitialView extends StatelessWidget {
                       hintText: '550.00',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                       suffixIcon: Image.asset('Assets/icons/coin.png',
-                          scale: 2, color: themeData.colorScheme.secondary),
+                          scale: 2,
+                          color: widget.themeData.colorScheme.secondary),
                     ),
                     cursorWidth: 5,
                     keyboardType: TextInputType.number,
@@ -160,7 +174,7 @@ class DoPaymentInitialView extends StatelessWidget {
           },
         ),
         const ColumnSpacer(height: 20),
-        PaymentProcedureInfo(themeData: themeData),
+        PaymentProcedureInfo(themeData: widget.themeData),
         const ColumnSpacer(height: 30),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -169,7 +183,7 @@ class DoPaymentInitialView extends StatelessWidget {
                 label: 'Ok, Re-Fill!',
                 onTap: () {
                   BlocProvider.of<AddCreaditFormBloc>(context)
-                      .add(AddCreaditFormSubmittedEvent());
+                      .add(AddCreaditFormSubmittedEvent(points: ''));
                 }),
           ],
         ),

@@ -3,8 +3,6 @@ library pin_confirm_dialogBox;
 import 'package:final_project/Const/Widget/column_spacer.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dialogBox/dialogbox_close_button.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dialogBox/dialogbox_ok_button.dart';
-import 'package:final_project/Logic/Bloc/Login/auth/forget%20password/confirm%20otp/confirm_otp_bloc.dart';
-import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/local_pin_bloc.dart';
 import 'package:final_project/Logic/Bloc/SecurePin/secure_confirm_otp_bloc.dart';
 import 'package:final_project/Services/database/sqlite_helper.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +18,7 @@ Future<void> pinConfirmDialogBox({
     barrierDismissible: false,
     builder: (BuildContext context) {
       return AlertDialog(
-        content: Container(
+        content: SizedBox(
           height: 250,
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,

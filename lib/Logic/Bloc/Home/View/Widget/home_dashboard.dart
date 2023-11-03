@@ -36,7 +36,7 @@ class HomeDashboard extends StatelessWidget {
           Positioned(
             top: 80,
             left: 0,
-            child: RoundedLayout(themeData: themeData),
+            child: RoundedLayoutBottom(themeData: themeData),
           ),
           Positioned(
             top: 160,
@@ -51,14 +51,14 @@ class HomeDashboard extends StatelessWidget {
             height: 120,
             child: MyHomePage(themeData: themeData),
           ),
-          const Positioned(
-            top: 290,
-            left: 40,
-            child: InfoLayout(),
-          ),
+          // const Positioned(
+          //   top: 290,
+          //   left: 40,
+          //   child: InfoLayout(),
+          // ),
           Positioned(
             top: 290,
-            left: 180,
+            left: 40,
             child: ViewAvailability(themeData: themeData),
           ),
         ],

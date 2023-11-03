@@ -89,7 +89,9 @@ class App extends StatelessWidget {
                 authenticationRepository: authenticationRepository,
                 accountCompletionBloc: accountCompletionBloc),
           ),
-          BlocProvider<AddCreaditFormBloc>(create: (_) => AddCreaditFormBloc()),
+          BlocProvider<AddCreaditFormBloc>(
+              create: (_) => AddCreaditFormBloc(
+                  accountStreamRepository: accountStreamRepository)),
           BlocProvider<TransactionBloc>(create: (_) => TransactionBloc()),
           BlocProvider<TransactionChartBloc>(
               create: (_) => TransactionChartBloc()),

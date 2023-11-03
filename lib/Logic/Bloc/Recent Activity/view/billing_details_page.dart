@@ -5,6 +5,7 @@ import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dialogBox/dialogBo
 import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dialogBox/dialogbox_close_button.dart';
 import 'package:final_project/Logic/Bloc/Home/View/Widget/src/dialogBox/dialogbox_secondary_button.dart';
 import 'package:final_project/Logic/Bloc/Profile/View/widget/custom_list_tile.dart';
+import 'package:final_project/Logic/Bloc/Recent%20Activity/bloc/add_creadit_form_bloc.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/view/widget/credit_card.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/view/widget/dialogBox/add_credits_to_account.dart';
 import 'package:final_project/Logic/Bloc/Recent%20Activity/view/widget/dialogBox/add_new_credit_card.dart';
@@ -12,6 +13,7 @@ import 'package:final_project/Logic/Bloc/Recent%20Activity/view/widget/recent_ac
 import 'package:final_project/Services/database/sqlite_helper.dart';
 import 'package:final_project/Services/repository/auth%20repository/auth_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 
 class BillingDetailsPage extends StatelessWidget {
@@ -90,6 +92,8 @@ class BillingDetailsPage extends StatelessWidget {
                     title: 'Add Creadits to Account',
                     url: 'Assets/icons/deposit.png',
                     onTap: () async {
+                      BlocProvider.of<AddCreaditFormBloc>(context)
+                          .add(AddCreaditFormClearEvent());
                       debugPrint(authenticationRepository.status.toString());
                       var res = await authenticationRepository
                           .getCurrentAuthenticationStatus();

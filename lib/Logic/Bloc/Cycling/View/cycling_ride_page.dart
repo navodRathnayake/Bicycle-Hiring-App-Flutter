@@ -548,6 +548,11 @@ class _CyclingSuccessState extends State<CyclingSuccess> {
                         const ColumnSpacer(height: 10),
                         GestureDetector(
                           onTap: () {
+                            // validationDialogBox(
+                            //     context: context,
+                            //     themeData: widget.themeData,
+                            //     msg: 'hello ');
+
                             BlocProvider.of<RideBloc>(context).add(
                               RideLockPressedEvent(
                                   bicycle: BlocProvider.of<StepperBloc>(context)
@@ -568,12 +573,12 @@ class _CyclingSuccessState extends State<CyclingSuccess> {
                                 Flexible(
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 10),
+                                        horizontal: 0),
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                          CrossAxisAlignment.center,
                                       children: [
                                         BlocBuilder<RideBloc, RideState>(
                                           builder: (context, state) {
@@ -591,7 +596,7 @@ class _CyclingSuccessState extends State<CyclingSuccess> {
                                             } else if (state.lockStatus ==
                                                 LockStatus.lock) {
                                               return Text(
-                                                'LOCK',
+                                                'PARKING\nMODE\nON',
                                                 style: TextStyle(
                                                   fontSize: 20,
                                                   fontWeight: FontWeight.bold,
@@ -602,7 +607,7 @@ class _CyclingSuccessState extends State<CyclingSuccess> {
                                             } else if (state.lockStatus ==
                                                 LockStatus.unlock) {
                                               return Text(
-                                                'UNLOCK',
+                                                'PARKING\nMODE\nOFF',
                                                 style: TextStyle(
                                                   fontSize: 17,
                                                   fontWeight: FontWeight.bold,
@@ -650,39 +655,40 @@ class _CyclingSuccessState extends State<CyclingSuccess> {
                                     ),
                                   ),
                                 ),
-                                Flexible(
-                                  child: SizedBox(
-                                    height: 160,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          BlocBuilder<RideBloc, RideState>(
-                                            builder: (context, state) {
-                                              if (state.lockStatus ==
-                                                  LockStatus.inProcess) {
-                                                return const CircularProgressIndicator();
-                                              } else if (state.lockStatus ==
-                                                  LockStatus.lock) {
-                                                return Image.asset(
-                                                    'Assets/icons/lock.png');
-                                              } else if (state.lockStatus ==
-                                                  LockStatus.unlock) {
-                                                return Image.asset(
-                                                    'Assets/icons/unlock.png');
-                                              } else {
-                                                return Image.asset(
-                                                    'Assets/icons/unlock.png');
-                                              }
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                                // Flexible(
+                                //   child: SizedBox(
+                                //     height: 160,
+                                //     child: Padding(
+                                //       padding: const EdgeInsets.all(8.0),
+                                //       child: Container(),
+                                // Column(
+                                //   mainAxisAlignment:
+                                //       MainAxisAlignment.center,
+                                //   children: [
+                                //     BlocBuilder<RideBloc, RideState>(
+                                //       builder: (context, state) {
+                                //         if (state.lockStatus ==
+                                //             LockStatus.inProcess) {
+                                //           return const CircularProgressIndicator();
+                                //         } else if (state.lockStatus ==
+                                //             LockStatus.lock) {
+                                //           return Image.asset(
+                                //               'Assets/icons/lock.png');
+                                //         } else if (state.lockStatus ==
+                                //             LockStatus.unlock) {
+                                //           return Image.asset(
+                                //               'Assets/icons/unlock.png');
+                                //         } else {
+                                //           return Image.asset(
+                                //               'Assets/icons/unlock.png');
+                                //         }
+                                //       },
+                                //     ),
+                                //   ],
+                                // ),
+                                //     ),
+                                //   ),
+                                // ),
                               ],
                             ),
                           ),

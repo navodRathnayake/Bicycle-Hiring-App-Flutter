@@ -25,6 +25,9 @@ class AddCreaditFormAmountChangedEvent extends AddCreaditFormEvent {
 
 class AddCreaditFormClearEvent extends AddCreaditFormEvent {}
 
-class AddCreaditFormSubmittedEvent extends AddCreaditFormEvent {}
+class AddCreaditFormSubmittedEvent extends AddCreaditFormEvent {
+  final String points;
+  const AddCreaditFormSubmittedEvent({required this.points});
+}
 
 class AddCreaditFormRollBackEvent extends AddCreaditFormEvent {}
